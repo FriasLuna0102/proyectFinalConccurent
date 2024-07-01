@@ -65,49 +65,6 @@ public class Semaforo {
 
     //Metodos:
 
-    public boolean puedeAvanzar() {
-        return this.estado == EstadoSemaforo.VERDE;
-    }
 
-    public void cambiarEstado() {
-        // Lógica para cambiar el estado del semáforo
-        switch (this.estado) {
-            case ROJO:
-                this.estado = EstadoSemaforo.VERDE;
-                break;
-            case VERDE:
-                this.estado = EstadoSemaforo.AMARILLO;
-                break;
-            case AMARILLO:
-                this.estado = EstadoSemaforo.ROJO;
-                break;
-        }
-        System.out.println("Semaforo " + id + " cambiando a " + estado);
-    }
-
-    public void iniciarCiclo() {
-        // Ciclo de cambio de luces
-        while (true) {
-            cambiarEstado();
-            try {
-                Thread.sleep(getTiempoEstadoActual());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private int getTiempoEstadoActual() {
-        switch (this.estado) {
-            case VERDE:
-                return tiempoVerde;
-            case ROJO:
-                return tiempoRojo;
-            case AMARILLO:
-                return tiempoAmarillo;
-            default:
-                return 0;
-        }
-    }
 
 }
