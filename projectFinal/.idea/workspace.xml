@@ -4,23 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="commit inicial">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/controladores/ControladorSimulacion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/controladores/MainController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/EstadoSemaforo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/EstadoVehiculo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/TipoVehiculo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Autopista.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Calle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Interseccion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Semaforo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/simulaciones/SimulacionPrueba.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/org/example/projectfinal/vistas/Main.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="cruces.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -36,6 +20,23 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="projectFinal" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -48,18 +49,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "FriasLuna0102"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;FriasLuna0102&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/FriasLuna0102/proyectFinalConccurent",
-    "accountId": "d7ebb63a-7f86-4707-8726-dc33a700f5c7"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/FriasLuna0102/proyectFinalConccurent&quot;,
+    &quot;accountId&quot;: &quot;d7ebb63a-7f86-4707-8726-dc33a700f5c7&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
 }</component>
@@ -87,6 +88,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "vcs.Git",
     "show.migrate.to.gradle.popup": "false",
     "vue.rearranger.settings.migration": "true"
   }
@@ -129,7 +131,10 @@
       <updated>1718990152918</updated>
       <workItem from="1718990153950" duration="2001000" />
       <workItem from="1719001222887" duration="332000" />
-      <workItem from="1719852089999" duration="6179000" />
+      <workItem from="1719852089999" duration="7096000" />
+      <workItem from="1719910878371" duration="15000" />
+      <workItem from="1720095396042" duration="76000" />
+      <workItem from="1720095507100" duration="3248000" />
     </task>
     <task id="LOCAL-00001" summary="commit inicial">
       <option name="closed" value="true" />
@@ -147,7 +152,23 @@
       <option name="project" value="LOCAL" />
       <updated>1718990566825</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Definiciones de clases.">
+      <option name="closed" value="true" />
+      <created>1719858948172</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1719858948172</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Definiciones de clases.">
+      <option name="closed" value="true" />
+      <created>1719859081132</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1719859081132</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -155,6 +176,12 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit inicial" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit inicial" />
+    <MESSAGE value="Definiciones de clases." />
+    <MESSAGE value="cruces." />
+    <option name="LAST_COMMIT_MESSAGE" value="cruces." />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
