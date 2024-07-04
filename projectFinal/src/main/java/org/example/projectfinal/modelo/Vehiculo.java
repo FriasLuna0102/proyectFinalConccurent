@@ -1,68 +1,58 @@
 package org.example.projectfinal.modelo;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
 
 public class Vehiculo {
-    private String id;                  // Identificador único del vehículo
-    private TipoVehiculo tipo;          // Tipo de vehículo (normal o emergencia)
-    private Direccion direccion;        // Dirección del vehículo (derecha, recto, izquierda, vuelta en U)
-    private EstadoVehiculo estado;      // Estado del vehículo (esperando, en movimiento, detenido, etc.)
+    private String id;
+    private TipoVehiculo tipo;
+    private Direccion direccion;
+    private EstadoVehiculo estado;
+    private double x;
+    private double y;
+    private double velocidad;
 
-
-    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado) {
+    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double x, double y, double velocidad) {
         this.id = id;
         this.tipo = tipo;
         this.direccion = direccion;
         this.estado = estado;
+        this.x = x;
+        this.y = y;
+        this.velocidad = velocidad;
     }
 
-    public String getId() {
-        return id;
+    public void dibujar(GraphicsContext gc) {
+        if (tipo == TipoVehiculo.NORMAL) {
+            gc.setFill(Color.BLUE);
+        } else if (tipo == TipoVehiculo.EMERGENCIA) {
+            gc.setFill(Color.RED);
+        }
+        gc.fillRect(x, y, 10, 10);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void mover() {
+        if (estado == EstadoVehiculo.EN_MOVIMIENTO) {
+            switch (direccion) {
+                case DERECHA:
+                    x += velocidad;
+                    break;
+                case IZQUIERDA:
+                    x -= velocidad;
+                    break;
+                case RECTO:
+                    y -= velocidad;
+                    break;
+                case VUELTA_EN_U:
+                    // Aquí podríamos hacer un giro en U, por simplicidad, volvemos a la posición original
+                    y += velocidad;
+                    break;
+            }
+        }
     }
 
-    public TipoVehiculo getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoVehiculo tipo) {
-        this.tipo = tipo;
-    }
-
-    public int getDireccion() {
-        return direccion.ordinal();
-    }
-
-    public void setDireccion(Direccion direccion) {
-        this.direccion = direccion;
-    }
-
-    public EstadoVehiculo getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoVehiculo estado) {
-        this.estado = estado;
-    }
-
-    //Metodos para el manejo de la clase
-
-    public void avanzar() {
-        this.estado = EstadoVehiculo.EN_MOVIMIENTO;
-        System.out.println("Vehiculo " + id + " avanzando.");
-    }
-
-    public void detener() {
-        this.estado = EstadoVehiculo.DETENIDO;
-        System.out.println("Vehiculo " + id + " detenido.");
-    }
-
-    public boolean esEmergencia() {
-        return this.tipo == TipoVehiculo.EMERGENCIA;
-    }
+    // Getters y setters
 }
