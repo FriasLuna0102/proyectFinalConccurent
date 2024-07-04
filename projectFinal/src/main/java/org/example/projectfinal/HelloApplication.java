@@ -1,6 +1,7 @@
 package org.example.projectfinal;
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -11,13 +12,15 @@ import javafx.stage.Stage;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
+import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Vehiculo;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HelloApplication extends Application {
-    private List<Vehiculo> vehiculos = new ArrayList<>();
+    private Interseccion interseccion;
+    private Timeline timeline;
 
     @Override
     public void start(Stage stage) {
@@ -27,70 +30,74 @@ public class HelloApplication extends Application {
         Canvas canvas = new Canvas(400, 400);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        // Añade algunos vehículos
-        vehiculos.add(new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.EN_MOVIMIENTO, 50, 200, 2));
-        vehiculos.add(new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.EN_MOVIMIENTO, 350, 200, 3));
+        interseccion = new Interseccion("1");
 
-        new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                dibujarInterseccion(gc);
-                moverYdibujarVehiculos(gc);
-            }
-        }.start();
+        // Añadir algunos vehículos para pruebas
+        interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 200, 2));
+        interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 200, 3));
+
+        // Configurar timeline para controlar semáforos cada 2 segundos
+        timeline = new Timeline(
+                new KeyFrame(
+                        javafx.util.Duration.seconds(2),
+                        event -> {
+                            interseccion.controlarSemaforos();
+                            dibujarInterseccion(gc);
+                            moverYdibujarVehiculos(gc);
+                        }
+                )
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
 
         root.getChildren().add(canvas);
         stage.setScene(new Scene(root));
         stage.show();
-
     }
 
-
-
     private void dibujarInterseccion(GraphicsContext gc) {
-        // Dibujar fondo
         gc.setFill(Color.DARKGRAY);
         gc.fillRect(0, 0, 400, 400);
 
-        // Dibujar carreteras
         gc.setFill(Color.GRAY);
-        gc.fillRect(150, 0, 100, 400); // Carretera vertical
-        gc.fillRect(0, 150, 400, 100); // Carretera horizontal
+        gc.fillRect(150, 0, 100, 400);
+        gc.fillRect(0, 150, 400, 100);
 
-        // Dibujar líneas de carril
         gc.setStroke(Color.WHITE);
         gc.setLineDashes(10);
         gc.setLineWidth(5);
 
-        // Líneas de carril vertical
         gc.strokeLine(200, 0, 200, 150);
         gc.strokeLine(200, 250, 200, 400);
-
-        // Líneas de carril horizontal
         gc.strokeLine(0, 200, 150, 200);
         gc.strokeLine(250, 200, 400, 200);
 
-        // Dibujar semáforos
         gc.setFill(Color.BLACK);
-        gc.fillRect(185, 140, 30, 20); // Semáforo vertical superior
-        gc.fillRect(185, 240, 30, 20); // Semáforo vertical inferior
-        gc.fillRect(140, 185, 20, 30); // Semáforo horizontal izquierdo
-        gc.fillRect(240, 185, 20, 30); // Semáforo horizontal derecho
+        gc.fillRect(185, 140, 30, 20);
+        gc.fillRect(185, 240, 30, 20);
+        gc.fillRect(140, 185, 20, 30);
+        gc.fillRect(240, 185, 20, 30);
 
-        // Dibujar luces rojas
         gc.setFill(Color.RED);
-        gc.fillOval(195, 145, 10, 10); // Luz roja vertical superior
-        gc.fillOval(195, 245, 10, 10); // Luz roja vertical inferior
-        gc.fillOval(145, 195, 10, 10); // Luz roja horizontal izquierda
-        gc.fillOval(245, 195, 10, 10); // Luz roja horizontal derecha
+        gc.fillOval(195, 145, 10, 10);
+        gc.fillOval(195, 245, 10, 10);
+        gc.fillOval(145, 195, 10, 10);
+        gc.fillOval(245, 195, 10, 10);
     }
 
     private void moverYdibujarVehiculos(GraphicsContext gc) {
-        gc.clearRect(0, 0, 400, 400); // Limpiar el canvas antes de redibujar
-        dibujarInterseccion(gc); // Redibujar la intersección
-        for (Vehiculo vehiculo : vehiculos) {
-            vehiculo.mover();
-            vehiculo.dibujar(gc);
+        gc.clearRect(0, 0, 400, 400);
+        dibujarInterseccion(gc);
+
+        Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion = interseccion.getVehiculosPorDireccion();
+        for (Map.Entry<Direccion, ConcurrentLinkedQueue<Vehiculo>> entry : vehiculosPorDireccion.entrySet()) {
+            Direccion direccion = entry.getKey();
+            ConcurrentLinkedQueue<Vehiculo> colaVehiculos = entry.getValue();
+
+            for (Vehiculo vehiculo : colaVehiculos) {
+                vehiculo.dibujar(gc);
+                vehiculo.mover(); // Este método debería mover el vehículo
+            }
         }
     }
 

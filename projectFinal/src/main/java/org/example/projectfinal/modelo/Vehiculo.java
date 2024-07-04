@@ -11,48 +11,66 @@ public class Vehiculo {
     private TipoVehiculo tipo;
     private Direccion direccion;
     private EstadoVehiculo estado;
-    private double x;
-    private double y;
+    private double posX;
+    private double posY;
     private double velocidad;
 
-    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double x, double y, double velocidad) {
+    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad) {
         this.id = id;
         this.tipo = tipo;
         this.direccion = direccion;
         this.estado = estado;
-        this.x = x;
-        this.y = y;
+        this.posX = posX;
+        this.posY = posY;
         this.velocidad = velocidad;
     }
 
     public void dibujar(GraphicsContext gc) {
-        if (tipo == TipoVehiculo.NORMAL) {
-            gc.setFill(Color.BLUE);
-        } else if (tipo == TipoVehiculo.EMERGENCIA) {
-            gc.setFill(Color.RED);
-        }
-        gc.fillRect(x, y, 10, 10);
+        gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED); // Color azul para vehículos normales y rojo para emergencia
+        gc.fillOval(posX, posY, 20, 10); // Ejemplo de dibujo de vehículo como óvalo
     }
 
     public void mover() {
-        if (estado == EstadoVehiculo.EN_MOVIMIENTO) {
-            switch (direccion) {
-                case DERECHA:
-                    x += velocidad;
-                    break;
-                case IZQUIERDA:
-                    x -= velocidad;
-                    break;
-                case RECTO:
-                    y -= velocidad;
-                    break;
-                case VUELTA_EN_U:
-                    // Aquí podríamos hacer un giro en U, por simplicidad, volvemos a la posición original
-                    y += velocidad;
-                    break;
-            }
+        switch (direccion) {
+            case DERECHA:
+                posX += velocidad * 5; // Aumento de velocidad ()
+                break;
+            case IZQUIERDA:
+                posX -= velocidad * 5;
+                break;
+            case RECTO:
+                posX += velocidad * 5;
+                break;
+            case VUELTA_EN_U:
+                posX -= velocidad * 5;
+                break;
+            default:
+                break;
         }
     }
 
-    // Getters y setters
+    // Getters y setters según sea necesario
+    public double getPosX() {
+        return posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(double posY) {
+        this.posY = posY;
+    }
+
+    public double getVelocidad() {
+        return velocidad;
+    }
+
+    public void setVelocidad(double velocidad) {
+        this.velocidad = velocidad;
+    }
 }

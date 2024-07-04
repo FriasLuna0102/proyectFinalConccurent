@@ -3,12 +3,11 @@ package org.example.projectfinal.modelo;
 import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 
 public class Semaforo {
-    private String id;               // Identificador único del semáforo
-    private EstadoSemaforo estado;   // Estado del semáforo (rojo, amarillo, verde)
-    private int tiempoVerde;         // Tiempo que el semáforo permanece en verde
-    private int tiempoRojo;          // Tiempo que el semáforo permanece en rojo
-    private int tiempoAmarillo;      // Tiempo que el semáforo permanece en amarillo
-
+    private String id;
+    private EstadoSemaforo estado;
+    private int tiempoVerde;
+    private int tiempoRojo;
+    private int tiempoAmarillo;
 
     public Semaforo(String id, EstadoSemaforo estado, int tiempoVerde, int tiempoRojo, int tiempoAmarillo) {
         this.id = id;
@@ -18,53 +17,13 @@ public class Semaforo {
         this.tiempoAmarillo = tiempoAmarillo;
     }
 
-    public Semaforo(){
-
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public EstadoSemaforo getEstado() {
         return estado;
     }
 
-    public void setEstado(EstadoSemaforo estado) {
-        this.estado = estado;
+    public void cambiarEstado(EstadoSemaforo nuevoEstado) {
+        this.estado = nuevoEstado;
     }
 
-    public int getTiempoVerde() {
-        return tiempoVerde;
-    }
-
-    public void setTiempoVerde(int tiempoVerde) {
-        this.tiempoVerde = tiempoVerde;
-    }
-
-    public int getTiempoRojo() {
-        return tiempoRojo;
-    }
-
-    public void setTiempoRojo(int tiempoRojo) {
-        this.tiempoRojo = tiempoRojo;
-    }
-
-    public int getTiempoAmarillo() {
-        return tiempoAmarillo;
-    }
-
-    public void setTiempoAmarillo(int tiempoAmarillo) {
-        this.tiempoAmarillo = tiempoAmarillo;
-    }
-
-
-    //Metodos:
-
-
-
+    // Métodos para manejar los tiempos y cambios de estado
 }

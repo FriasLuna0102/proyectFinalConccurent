@@ -1,57 +1,61 @@
 package org.example.projectfinal.modelo;
 
 import org.example.projectfinal.enumeraciones.Direccion;
+import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Interseccion {
-    private String id;                        // Identificador único de la intersección
-    private List<Vehiculo> vehiculos;         // Lista de vehículos en la intersección
-    private Map<Direccion, Semaforo> semaforos; // Mapa de semáforos por dirección
-
-
-    public Interseccion(String id, List<Vehiculo> vehiculos, Map<Direccion, Semaforo> semaforos) {
-        this.id = id;
-        this.vehiculos = vehiculos;
-        this.semaforos = semaforos;
-    }
-
+    private String id;
+    private Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion;
+    private Map<Direccion, Semaforo> semaforos;
 
     public Interseccion(String id) {
         this.id = id;
-        this.vehiculos = new ArrayList<>();
-        this.semaforos = new HashMap<>(); // Inicializar el mapa de semáforos
+        this.vehiculosPorDireccion = new HashMap<>();
+        this.semaforos = new HashMap<>();
+
+        // Inicializar semáforos
+        for (Direccion direccion : Direccion.values()) {
+            semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 10, 5, 2)); // Valores de ejemplo para tiempo de cada estado
+        }
     }
 
-    public String getId() {
-        return id;
+    public void agregarVehiculo(Direccion direccion, Vehiculo vehiculo) {
+        vehiculosPorDireccion.computeIfAbsent(direccion, k -> new ConcurrentLinkedQueue<>()).add(vehiculo);
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void controlarSemaforos() {
+        // Lógica para cambiar los semáforos
+        for (Semaforo semaforo : semaforos.values()) {
+            EstadoSemaforo nuevoEstado = determinarNuevoEstado(semaforo); // Método para determinar el nuevo estado según la lógica deseada
+            semaforo.cambiarEstado(nuevoEstado); // Cambiar el estado del semáforo
+        }
     }
 
-    public List<Vehiculo> getVehiculos() {
-        return vehiculos;
+    private EstadoSemaforo determinarNuevoEstado(Semaforo semaforo) {
+        // Implementar lógica para determinar el nuevo estado del semáforo aquí
+        // Por ejemplo, alternar entre verde y rojo, o basado en un temporizador
+        switch (semaforo.getEstado()) {
+            case ROJO:
+                return EstadoSemaforo.VERDE;
+            case VERDE:
+                return EstadoSemaforo.ROJO;
+            default:
+                return semaforo.getEstado(); // En caso de algún estado adicional, mantener el estado actual
+        }
     }
 
-    public void setVehiculos(List<Vehiculo> vehiculos) {
-        this.vehiculos = vehiculos;
+    public void gestionarCruce() {
+        // Lógica para gestionar el cruce de vehículos, prioridades, evitar colisiones, etc.
+    }
+
+    public Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> getVehiculosPorDireccion() {
+        return vehiculosPorDireccion;
     }
 
     public Map<Direccion, Semaforo> getSemaforos() {
         return semaforos;
     }
-
-    public void setSemaforos(Map<Direccion, Semaforo> semaforos) {
-        this.semaforos = semaforos;
-    }
-
-    //Metodos:
-
-
-
 }
