@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
@@ -33,13 +34,13 @@ public class HelloApplication extends Application {
         interseccion = new Interseccion("1");
 
         // Añadir algunos vehículos para pruebas
-        interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 200, 2));
-        interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 200, 3));
+        interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 2));
+        interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 3));
 
         // Configurar timeline para controlar semáforos cada 0.5 segundos
         timeline = new Timeline(
                 new KeyFrame(
-                        javafx.util.Duration.seconds(0.5),
+                        Duration.seconds(0.5),
                         event -> {
                             interseccion.controlarSemaforos();
                             dibujarInterseccion(gc);
@@ -92,12 +93,12 @@ public class HelloApplication extends Application {
 
             for (Vehiculo vehiculo : colaVehiculos) {
                 // Verificar si el vehículo está cerca del semáforo y detenerlo
-                if (estaCercaDelSemaforo(vehiculo)) {
+                if (estaCercaDelSemaforo(vehiculo) && !vehiculo.isDetenidoUnaVez()) {
                     vehiculo.detenerPorTresSegundos();
                 }
 
-                vehiculo.dibujar(gc);
                 vehiculo.mover(); // Este método debería mover el vehículo
+                vehiculo.dibujar(gc);
             }
         }
     }
@@ -108,12 +109,12 @@ public class HelloApplication extends Application {
 
         // Para la dirección DERECHA, detenerse en el semáforo en la calle oeste (aproximadamente posX 140, posY 200)
         if (vehiculo.getDireccion() == Direccion.DERECHA) {
-            return (posX >= 130 && posX <= 150 && posY == 200);
+            return (posX >= 130 && posX <= 150 && posY == 210);
         }
 
         // Para la dirección IZQUIERDA, detenerse en el semáforo en la calle este (aproximadamente posX 240, posY 200)
         if (vehiculo.getDireccion() == Direccion.IZQUIERDA) {
-            return (posX >= 230 && posX <= 250 && posY == 200);
+            return (posX >= 230 && posX <= 250 && posY == 180);
         }
 
         return false;

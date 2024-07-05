@@ -1,9 +1,7 @@
 package org.example.projectfinal.modelo;
 
-import javafx.animation.PauseTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
@@ -17,6 +15,8 @@ public class Vehiculo {
     private double posY;
     private double velocidad;
     private boolean detenido;
+    private boolean detenidoUnaVez;
+    private long tiempoDetenido;
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad) {
         this.id = id;
@@ -27,6 +27,8 @@ public class Vehiculo {
         this.posY = posY;
         this.velocidad = velocidad;
         this.detenido = false;
+        this.detenidoUnaVez = false;
+        this.tiempoDetenido = 0;
     }
 
     public void dibujar(GraphicsContext gc) {
@@ -56,10 +58,15 @@ public class Vehiculo {
     }
 
     public void detenerPorTresSegundos() {
-        this.detenido = true;
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(event -> this.detenido = false);
-        pause.play();
+        if (!detenidoUnaVez) {
+            if (!detenido) {
+                this.detenido = true;
+                this.tiempoDetenido = System.currentTimeMillis();
+            } else if (System.currentTimeMillis() - this.tiempoDetenido >= 3000) {
+                this.detenido = false;
+                this.detenidoUnaVez = true;
+            }
+        }
     }
 
     // Getters y setters según sea necesario
@@ -97,5 +104,17 @@ public class Vehiculo {
 
     public EstadoVehiculo getEstado() {
         return estado;
+    }
+
+    public boolean isDetenido() {
+        return detenido;
+    }
+
+    public boolean isDetenidoUnaVez() {
+        return detenidoUnaVez;
+    }
+
+    public long getTiempoDetenido() {
+        return tiempoDetenido;
     }
 }
