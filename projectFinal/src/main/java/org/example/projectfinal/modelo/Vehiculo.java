@@ -1,7 +1,9 @@
 package org.example.projectfinal.modelo;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
@@ -14,6 +16,7 @@ public class Vehiculo {
     private double posX;
     private double posY;
     private double velocidad;
+    private boolean detenido;
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad) {
         this.id = id;
@@ -23,6 +26,7 @@ public class Vehiculo {
         this.posX = posX;
         this.posY = posY;
         this.velocidad = velocidad;
+        this.detenido = false;
     }
 
     public void dibujar(GraphicsContext gc) {
@@ -31,22 +35,31 @@ public class Vehiculo {
     }
 
     public void mover() {
-        switch (direccion) {
-            case DERECHA:
-                posX += velocidad * 5; // Aumento de velocidad ()
-                break;
-            case IZQUIERDA:
-                posX -= velocidad * 5;
-                break;
-            case RECTO:
-                posX += velocidad * 5;
-                break;
-            case VUELTA_EN_U:
-                posX -= velocidad * 5;
-                break;
-            default:
-                break;
+        if (!detenido) {
+            switch (direccion) {
+                case DERECHA:
+                    posX += velocidad * 5; // Aumento de velocidad
+                    break;
+                case IZQUIERDA:
+                    posX -= velocidad * 5;
+                    break;
+                case RECTO:
+                    posY -= velocidad * 5;
+                    break;
+                case VUELTA_EN_U:
+                    posY += velocidad * 5;
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    public void detenerPorTresSegundos() {
+        this.detenido = true;
+        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        pause.setOnFinished(event -> this.detenido = false);
+        pause.play();
     }
 
     // Getters y setters según sea necesario
@@ -72,5 +85,17 @@ public class Vehiculo {
 
     public void setVelocidad(double velocidad) {
         this.velocidad = velocidad;
+    }
+
+    public TipoVehiculo getTipo() {
+        return tipo;
+    }
+
+    public Direccion getDireccion() {
+        return direccion;
+    }
+
+    public EstadoVehiculo getEstado() {
+        return estado;
     }
 }
