@@ -58,16 +58,25 @@ public class Vehiculo {
     }
 
     public void detenerPorTresSegundos() {
-        if (!detenidoUnaVez) {
-            if (!detenido) {
-                this.detenido = true;
-                this.tiempoDetenido = System.currentTimeMillis();
-            } else if (System.currentTimeMillis() - this.tiempoDetenido >= 3000) {
-                this.detenido = false;
-                this.detenidoUnaVez = true;
-            }
+        if (!detenido) {
+            this.detenido = true;
+            this.tiempoDetenido = System.currentTimeMillis();
+        } else if (System.currentTimeMillis() - this.tiempoDetenido >= 3000) {
+            this.detenido = false;
         }
     }
+
+    public void detener() {
+        this.detenido = true;
+        this.tiempoDetenido = System.currentTimeMillis();
+    }
+
+    public void reanudar() {
+        this.detenido = false;
+        this.detenidoUnaVez = false;
+    }
+
+
 
     // Getters y setters según sea necesario
     public double getPosX() {

@@ -3,7 +3,8 @@ package org.example.projectfinal.modelo;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Interseccion {
@@ -29,26 +30,8 @@ public class Interseccion {
     public void controlarSemaforos() {
         // Lógica para cambiar los semáforos
         for (Semaforo semaforo : semaforos.values()) {
-            EstadoSemaforo nuevoEstado = determinarNuevoEstado(semaforo); // Método para determinar el nuevo estado según la lógica deseada
-            semaforo.cambiarEstado(nuevoEstado); // Cambiar el estado del semáforo
+            semaforo.actualizarEstado();
         }
-    }
-
-    private EstadoSemaforo determinarNuevoEstado(Semaforo semaforo) {
-        // Implementar lógica para determinar el nuevo estado del semáforo aquí
-        // Por ejemplo, alternar entre verde y rojo, o basado en un temporizador
-        switch (semaforo.getEstado()) {
-            case ROJO:
-                return EstadoSemaforo.VERDE;
-            case VERDE:
-                return EstadoSemaforo.ROJO;
-            default:
-                return semaforo.getEstado(); // En caso de algún estado adicional, mantener el estado actual
-        }
-    }
-
-    public void gestionarCruce() {
-        // Lógica para gestionar el cruce de vehículos, prioridades, evitar colisiones, etc.
     }
 
     public Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> getVehiculosPorDireccion() {

@@ -11,9 +11,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.Direccion;
+import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
 import org.example.projectfinal.modelo.Interseccion;
+import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
 
 import java.util.Map;
@@ -78,8 +80,15 @@ public class HelloApplication extends Application {
         gc.fillRect(140, 185, 20, 30); // Semáforo en la calle oeste
         gc.fillRect(240, 185, 20, 30); // Semáforo en la calle este
 
-        gc.setFill(Color.RED);
+        Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
+        Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
+
+        gc.setFill(semaforoOeste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoOeste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
         gc.fillOval(145, 195, 10, 10); // Semáforo en la calle oeste
+
+        gc.setFill(semaforoEste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoEste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
         gc.fillOval(245, 195, 10, 10); // Semáforo en la calle este
     }
 
@@ -92,12 +101,21 @@ public class HelloApplication extends Application {
             ConcurrentLinkedQueue<Vehiculo> colaVehiculos = entry.getValue();
 
             for (Vehiculo vehiculo : colaVehiculos) {
-                // Verificar si el vehículo está cerca del semáforo y detenerlo
-                if (estaCercaDelSemaforo(vehiculo) && !vehiculo.isDetenidoUnaVez()) {
-                    vehiculo.detenerPorTresSegundos();
+                Direccion direccion = vehiculo.getDireccion();
+                EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
+
+                // Verificar si el vehículo está cerca del semáforo
+                if (estaCercaDelSemaforo(vehiculo) && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA) {
+                    if (estadoSemaforo == EstadoSemaforo.ROJO) {
+                        vehiculo.detener();
+                    } else if (estadoSemaforo == EstadoSemaforo.VERDE) {
+                        vehiculo.reanudar();
+                    }
+                } else if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                    vehiculo.reanudar();
                 }
 
-                vehiculo.mover(); // Este método debería mover el vehículo
+                vehiculo.mover(); // Este método debería mover el vehículo si no está detenido
                 vehiculo.dibujar(gc);
             }
         }
@@ -119,6 +137,8 @@ public class HelloApplication extends Application {
 
         return false;
     }
+
+
 
     public static void main(String[] args) {
         launch(args);

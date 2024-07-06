@@ -8,6 +8,7 @@ public class Semaforo {
     private int tiempoVerde;
     private int tiempoRojo;
     private int tiempoAmarillo;
+    private long tiempoInicio;
 
     public Semaforo(String id, EstadoSemaforo estado, int tiempoVerde, int tiempoRojo, int tiempoAmarillo) {
         this.id = id;
@@ -15,6 +16,7 @@ public class Semaforo {
         this.tiempoVerde = tiempoVerde;
         this.tiempoRojo = tiempoRojo;
         this.tiempoAmarillo = tiempoAmarillo;
+        this.tiempoInicio = System.currentTimeMillis();
     }
 
     public EstadoSemaforo getEstado() {
@@ -23,7 +25,29 @@ public class Semaforo {
 
     public void cambiarEstado(EstadoSemaforo nuevoEstado) {
         this.estado = nuevoEstado;
+        this.tiempoInicio = System.currentTimeMillis();
     }
 
-    // Métodos para manejar los tiempos y cambios de estado
+    public void actualizarEstado() {
+        long tiempoActual = System.currentTimeMillis();
+        long tiempoTranscurrido = (tiempoActual - tiempoInicio) / 1000;
+
+        switch (estado) {
+            case ROJO:
+                if (tiempoTranscurrido >= tiempoRojo) {
+                    cambiarEstado(EstadoSemaforo.VERDE);
+                }
+                break;
+            case VERDE:
+                if (tiempoTranscurrido >= tiempoVerde) {
+                    cambiarEstado(EstadoSemaforo.AMARILLO);
+                }
+                break;
+            case AMARILLO:
+                if (tiempoTranscurrido >= tiempoAmarillo) {
+                    cambiarEstado(EstadoSemaforo.ROJO);
+                }
+                break;
+        }
+    }
 }
