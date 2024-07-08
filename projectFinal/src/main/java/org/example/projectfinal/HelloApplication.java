@@ -134,7 +134,9 @@ public class HelloApplication extends Application {
         String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
         double posX = direccion == Direccion.DERECHA ? 50 : 350;
         double posY = direccion == Direccion.DERECHA ? 210 : 180;
-        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2;
+//        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2; //Velocidad diferente para vehículos de emergencia
+        int velocidad = 2; // Velocidad igual para todos los vehículos
+
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
@@ -180,42 +182,70 @@ public class HelloApplication extends Application {
 
         Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion = interseccion.getVehiculosPorDireccion();
         for (Map.Entry<Direccion, ConcurrentLinkedQueue<Vehiculo>> entry : vehiculosPorDireccion.entrySet()) {
+            Direccion direccion = entry.getKey();
             ConcurrentLinkedQueue<Vehiculo> colaVehiculos = entry.getValue();
 
+            Vehiculo vehiculoAnterior = null;
+
             for (Vehiculo vehiculo : colaVehiculos) {
-                Direccion direccion = vehiculo.getDireccion();
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
 
-                if (estaCercaDelSemaforo(vehiculo) && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA) {
-                    if (estadoSemaforo == EstadoSemaforo.ROJO) {
+                // Verificar si hay un vehículo de emergencia detrás
+                boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
+
+                // Lógica de movimiento del vehículo
+                if (estadoSemaforo == EstadoSemaforo.ROJO &&
+                        vehiculo.getTipo() != TipoVehiculo.EMERGENCIA && // Nueva condición
+                        !hayEmergenciaDetras &&
+                        estaCercaDelSemaforo(vehiculo)) {
+                    vehiculo.detener();
+                } else if (vehiculoAnterior != null) {
+                    double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
+                    if (distancia < 30) {
                         vehiculo.detener();
-                    } else if (estadoSemaforo == EstadoSemaforo.VERDE) {
+                    } else {
                         vehiculo.reanudar();
                     }
-                } else if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                } else {
                     vehiculo.reanudar();
                 }
 
-                vehiculo.mover(); // Este método debería mover el vehículo si no está detenido
+                vehiculo.mover();
                 vehiculo.dibujar(gc);
+
+                vehiculoAnterior = vehiculo;
             }
         }
+    }
+
+    private double calcularDistancia(Vehiculo v1, Vehiculo v2) {
+        return Math.sqrt(Math.pow(v1.getPosX() - v2.getPosX(), 2) + Math.pow(v1.getPosY() - v2.getPosY(), 2));
     }
 
     private boolean estaCercaDelSemaforo(Vehiculo vehiculo) {
         double posX = vehiculo.getPosX();
         double posY = vehiculo.getPosY();
 
-        // Para la dirección DERECHA, detenerse en el semáforo en la calle oeste (aproximadamente posX 140, posY 200)
         if (vehiculo.getDireccion() == Direccion.DERECHA) {
             return (posX >= 130 && posX <= 150 && posY == 210);
         }
 
-        // Para la dirección IZQUIERDA, detenerse en el semáforo en la calle este (aproximadamente posX 240, posY 200)
         if (vehiculo.getDireccion() == Direccion.IZQUIERDA) {
             return (posX >= 230 && posX <= 250 && posY == 180);
         }
 
+        return false;
+    }
+
+    private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
+        boolean encontrado = false;
+        for (Vehiculo v : colaVehiculos) {
+            if (v == vehiculo) {
+                encontrado = true;
+            } else if (encontrado && v.getTipo() == TipoVehiculo.EMERGENCIA) {
+                return true;
+            }
+        }
         return false;
     }
 

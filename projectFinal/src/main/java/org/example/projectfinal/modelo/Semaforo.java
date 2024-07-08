@@ -30,7 +30,7 @@ public class Semaforo {
 
     public void actualizarEstado() {
         long tiempoActual = System.currentTimeMillis();
-        long tiempoTranscurrido = (tiempoActual - tiempoInicio) / 1000;
+        long tiempoTranscurrido = (tiempoActual - tiempoInicio) / 2000;
 
         switch (estado) {
             case ROJO:
