@@ -1,7 +1,7 @@
 package org.example.projectfinal.modelo;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
@@ -17,6 +17,8 @@ public class Vehiculo {
     private boolean detenido;
     private boolean detenidoUnaVez;
     private long tiempoDetenido;
+    private final Image iconoVehiculoNormal;
+    private final Image iconoVehiculoEmergencia;
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad) {
         this.id = id;
@@ -29,27 +31,35 @@ public class Vehiculo {
         this.detenido = false;
         this.detenidoUnaVez = false;
         this.tiempoDetenido = 0;
+        iconoVehiculoNormal = new Image(getClass().getResource("/image/car.png").toString());
+        iconoVehiculoEmergencia = new Image(getClass().getResource("/image/medical.png").toString());
     }
 
     public void dibujar(GraphicsContext gc) {
-        gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED); // Color azul para vehículos normales y rojo para emergencia
-        gc.fillOval(posX, posY, 20, 10); // Ejemplo de dibujo de vehículo como óvalo
+        Image imagenVehiculo = tipo == TipoVehiculo.NORMAL ? iconoVehiculoNormal : iconoVehiculoEmergencia;
+        gc.drawImage(imagenVehiculo, posX, posY, 20, 10); // Dibujar imagen del vehículo
     }
 
     public void mover() {
         if (!detenido) {
             switch (direccion) {
                 case DERECHA:
-                    posX += velocidad * 5; // Aumento de velocidad
+                    posX += velocidad * 20; // Aumento de velocidad
                     break;
                 case IZQUIERDA:
-                    posX -= velocidad * 5;
+                    posX -= velocidad * 20;
                     break;
                 case RECTO:
-                    posY -= velocidad * 5;
+                    posY -= velocidad * 20;
                     break;
                 case VUELTA_EN_U:
-                    posY += velocidad * 5;
+                    posY += velocidad * 20;
+                    break;
+                case ARRIBA: // Movimiento hacia ARRIBA
+                    posY -= velocidad * 20;
+                    break;
+                case ABAJO: // Movimiento hacia ABAJO
+                    posY += velocidad * 20;
                     break;
                 default:
                     break;
@@ -75,8 +85,6 @@ public class Vehiculo {
         this.detenido = false;
         this.detenidoUnaVez = false;
     }
-
-
 
     // Getters y setters según sea necesario
     public double getPosX() {

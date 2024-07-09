@@ -1,7 +1,6 @@
 package org.example.projectfinal;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,11 +12,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
@@ -26,31 +25,37 @@ import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HelloApplication extends Application {
     private Interseccion interseccion;
-    private Timeline timeline;
+    private AnimationTimer animationTimer;
     private Canvas canvas;
     private GraphicsContext gc;
     private boolean simulacionIniciada = false; // Variable para rastrear si la simulación ha sido iniciada
+    private Image iconoVehiculoNormal;
+    private Image iconoVehiculoEmergencia;
 
     @Override
     public void start(Stage stage) {
         stage.setTitle("Traffic Intersection");
+
+        iconoVehiculoNormal = new Image(getClass().getResource("/image/car.png").toString());
+        iconoVehiculoEmergencia = new Image(getClass().getResource("/image/medical.png").toString());
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.CENTER);
 
         Group canvasGroup = new Group();
-        canvas = new Canvas(400, 400);
+        canvas = new Canvas(800, 600);
         gc = canvas.getGraphicsContext2D();
 
         // Crear controles de interfaz
         ComboBox<String> escenarioComboBox = new ComboBox<>();
-        escenarioComboBox.getItems().addAll("Escenario 1");
+        escenarioComboBox.getItems().addAll("Escenario 1", "Escenario 2");
         escenarioComboBox.setValue("Escenario 1");
 
         Button iniciarButton = new Button("Iniciar Simulación");
@@ -63,8 +68,9 @@ public class HelloApplication extends Application {
 
         Label direccionLabel = new Label("Dirección:");
         ComboBox<Direccion> direccionComboBox = new ComboBox<>();
-        direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA);
+        direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA, Direccion.RECTO, Direccion.VUELTA_EN_U, Direccion.ARRIBA, Direccion.ABAJO);
         direccionComboBox.setValue(Direccion.DERECHA);
+
 
         Button agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 14px;");
@@ -97,7 +103,9 @@ public class HelloApplication extends Application {
         root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvasGroup);
         canvasGroup.getChildren().add(canvas);
 
-        stage.setScene(new Scene(root));
+        // Set scene
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
         stage.show();
     }
 
@@ -106,67 +114,106 @@ public class HelloApplication extends Application {
 
         if ("Escenario 1".equals(escenario)) {
             // Añadir vehículos para el escenario 1
-            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 2));
-            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 3));
+            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1)); // Velocidad ajustada a la mitad
+            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1)); // Velocidad ajustada a la mitad
+            interseccion.agregarVehiculo(Direccion.RECTO, new Vehiculo("3", TipoVehiculo.NORMAL, Direccion.RECTO, EstadoVehiculo.ESPERANDO, 180, 50, 0.1)); // Velocidad ajustada a la mitad
+            interseccion.agregarVehiculo(Direccion.VUELTA_EN_U, new Vehiculo("4", TipoVehiculo.EMERGENCIA, Direccion.VUELTA_EN_U, EstadoVehiculo.ESPERANDO, 180, 350, 0.1)); // Velocidad ajustada a la mitad
         }
 
-        if (timeline != null) {
-            timeline.stop();
+        if (animationTimer != null) {
+            animationTimer.stop();
         }
 
-        // Configurar timeline para controlar semáforos cada 0.5 segundos
-        timeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.5),
-                        event -> {
-                            interseccion.controlarSemaforos();
-                            dibujarInterseccion(gc);
-                            moverYdibujarVehiculos(gc);
-                        }
-                )
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        // Configurar AnimationTimer para actualizar la simulación continuamente
+        animationTimer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                interseccion.controlarSemaforos();
+                dibujarInterseccion(gc);
+                moverVehiculos();
+            }
+        };
+        animationTimer.start();
     }
+
 
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion) {
         // Generar un ID único para el nuevo vehículo
         String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
-        double posX = direccion == Direccion.DERECHA ? 50 : 350;
-        double posY = direccion == Direccion.DERECHA ? 210 : 180;
-//        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2; //Velocidad diferente para vehículos de emergencia
-        int velocidad = 2; // Velocidad igual para todos los vehículos
+        double posX = 0;
+        double posY = 0;
 
+        switch (direccion) {
+            case DERECHA:
+                posX = canvas.getWidth() + 20;
+                posY = 210; // Ajustar la posición vertical según sea necesario
+                break;
+            case IZQUIERDA:
+                posX = -20;
+                posY = 180; // Ajustar la posición vertical según sea necesario
+                break;
+            case RECTO:
+                posX = 180; // Ajustar la posición horizontal según sea necesario
+                posY = -20;
+                break;
+            case VUELTA_EN_U:
+                posX = 180; // Ajustar la posición horizontal según sea necesario
+                posY = canvas.getHeight() + 20;
+                break;
+            case ARRIBA:
+                posX = direccion == Direccion.DERECHA ? 50 : 350; // Ajustar la posición horizontal según sea necesario
+                posY = -20;
+                break;
+            case ABAJO:
+                posX =  direccion == Direccion.DERECHA ? 50 : 350; // Ajustar la posición horizontal según sea necesario
+                posY = canvas.getHeight() + 20;
+                break;
+            default:
+                break;
+        }
+
+        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1; // Velocidad ajustada a la mitad
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
     }
 
+
+
     private void dibujarInterseccion(GraphicsContext gc) {
         gc.setFill(Color.DARKGRAY);
-        gc.fillRect(0, 0, 400, 400);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         gc.setFill(Color.GRAY);
-        gc.fillRect(150, 0, 100, 400);
-        gc.fillRect(0, 150, 400, 100);
+        gc.fillRect(150, 0, 100, canvas.getHeight());
+        gc.fillRect(0, 150, canvas.getWidth(), 100);
 
         gc.setStroke(Color.WHITE);
-        gc.setLineDashes(10);
         gc.setLineWidth(5);
 
+        // Dibujar las líneas de las calles y las intersecciones
+        gc.strokeLine(200, 0, 200, canvas.getHeight()); // Línea vertical central
+        gc.strokeLine(0, 200, canvas.getWidth(), 200); // Línea horizontal central
 
-        gc.strokeLine(200, 0, 200, 150);
-        gc.strokeLine(200, 250, 200, 400);
-        gc.strokeLine(0, 200, 150, 200);
-        gc.strokeLine(250, 200, 400, 200);
+        // Calle vertical
+        gc.strokeLine(150, 0, 150, canvas.getHeight());
+        gc.strokeLine(250, 0, 250, canvas.getHeight());
+
+        // Calle horizontal
+        gc.strokeLine(0, 150, canvas.getWidth(), 150);
+        gc.strokeLine(0, 250, canvas.getWidth(), 250);
 
         // Dibujar los semáforos en las posiciones correctas
         gc.setFill(Color.BLACK);
         gc.fillRect(140, 185, 20, 30); // Semáforo en la calle oeste
         gc.fillRect(240, 185, 20, 30); // Semáforo en la calle este
+        gc.fillRect(185, 140, 30, 20); // Semáforo en la calle norte
+        gc.fillRect(185, 240, 30, 20); // Semáforo en la calle sur
 
         Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
         Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
+        Semaforo semaforoNorte = interseccion.getSemaforos().get(Direccion.RECTO);
+        Semaforo semaforoSur = interseccion.getSemaforos().get(Direccion.VUELTA_EN_U);
 
         gc.setFill(semaforoOeste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoOeste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
@@ -175,82 +222,130 @@ public class HelloApplication extends Application {
         gc.setFill(semaforoEste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoEste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
         gc.fillOval(245, 195, 10, 10); // Semáforo en la calle este
+
+        gc.setFill(semaforoNorte.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoNorte.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 145, 10, 10); // Semáforo en la calle norte
+
+        gc.setFill(semaforoSur.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoSur.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 245, 10, 10); // Semáforo en la calle sur
     }
 
-    private void moverYdibujarVehiculos(GraphicsContext gc) {
-        gc.clearRect(0, 0, 400, 400);
-        dibujarInterseccion(gc);
 
+
+    private void moverVehiculos() {
         Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion = interseccion.getVehiculosPorDireccion();
-        for (Map.Entry<Direccion, ConcurrentLinkedQueue<Vehiculo>> entry : vehiculosPorDireccion.entrySet()) {
-            Direccion direccion = entry.getKey();
-            ConcurrentLinkedQueue<Vehiculo> colaVehiculos = entry.getValue();
 
-            Vehiculo vehiculoAnterior = null;
+        // Limpiar y redibujar el fondo y las intersecciones
+        gc.setFill(Color.DARKGRAY);
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-            for (Vehiculo vehiculo : colaVehiculos) {
-                EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
+        gc.setFill(Color.GRAY);
+        gc.fillRect(150, 0, 100, canvas.getHeight());
+        gc.fillRect(0, 150, canvas.getWidth(), 100);
 
-                // Verificar si hay un vehículo de emergencia detrás
-                boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
+        gc.setStroke(Color.WHITE);
+        gc.setLineWidth(5);
 
-                // Lógica de movimiento del vehículo
-                if (estadoSemaforo == EstadoSemaforo.ROJO &&
-                        vehiculo.getTipo() != TipoVehiculo.EMERGENCIA && // Nueva condición
-                        !hayEmergenciaDetras &&
-                        estaCercaDelSemaforo(vehiculo)) {
-                    vehiculo.detener();
-                } else if (vehiculoAnterior != null) {
-                    double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                    if (distancia < 30) {
-                        vehiculo.detener();
-                    } else {
-                        vehiculo.reanudar();
-                    }
-                } else {
-                    vehiculo.reanudar();
+        // Dibujar las líneas de las calles y las intersecciones
+        gc.strokeLine(200, 0, 200, canvas.getHeight()); // Línea vertical central
+        gc.strokeLine(0, 200, canvas.getWidth(), 200); // Línea horizontal central
+
+        // Calle vertical
+        gc.strokeLine(150, 0, 150, canvas.getHeight());
+        gc.strokeLine(250, 0, 250, canvas.getHeight());
+
+        // Calle horizontal
+        gc.strokeLine(0, 150, canvas.getWidth(), 150);
+        gc.strokeLine(0, 250, canvas.getWidth(), 250);
+
+        // Dibujar los semáforos en las posiciones correctas
+        gc.setFill(Color.BLACK);
+        gc.fillRect(140, 185, 20, 30); // Semáforo en la calle oeste
+        gc.fillRect(240, 185, 20, 30); // Semáforo en la calle este
+        gc.fillRect(185, 140, 30, 20); // Semáforo en la calle norte
+        gc.fillRect(185, 240, 30, 20); // Semáforo en la calle sur
+
+        Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
+        Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
+        Semaforo semaforoNorte = interseccion.getSemaforos().get(Direccion.RECTO);
+        Semaforo semaforoSur = interseccion.getSemaforos().get(Direccion.VUELTA_EN_U);
+
+        gc.setFill(semaforoOeste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoOeste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(145, 195, 10, 10); // Semáforo en la calle oeste
+
+        gc.setFill(semaforoEste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoEste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(245, 195, 10, 10); // Semáforo en la calle este
+
+        gc.setFill(semaforoNorte.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoNorte.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 145, 10, 10); // Semáforo en la calle norte
+
+        gc.setFill(semaforoSur.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoSur.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 245, 10, 10); // Semáforo en la calle sur
+
+        // Mover los vehículos y dibujarlos
+        for (Direccion direccion : vehiculosPorDireccion.keySet()) {
+            ConcurrentLinkedQueue<Vehiculo> vehiculos = vehiculosPorDireccion.get(direccion);
+            Iterator<Vehiculo> iterator = vehiculos.iterator();
+
+            while (iterator.hasNext()) {
+                Vehiculo vehiculo = iterator.next();
+                moverVehiculo(vehiculo);
+                dibujarVehiculo(gc, vehiculo);
+            }
+        }
+    }
+
+    private void moverVehiculo(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                vehiculo.setPosX(vehiculo.getPosX() + vehiculo.getVelocidad());
+                if (vehiculo.getPosX() > canvas.getWidth() + 20) {
+                    vehiculo.setPosX(-20);
                 }
-
-                vehiculo.mover();
-                vehiculo.dibujar(gc);
-
-                vehiculoAnterior = vehiculo;
-            }
+                break;
+            case IZQUIERDA:
+                vehiculo.setPosX(vehiculo.getPosX() - vehiculo.getVelocidad());
+                if (vehiculo.getPosX() < -20) {
+                    vehiculo.setPosX(canvas.getWidth() + 20);
+                }
+                break;
+            case RECTO:
+                vehiculo.setPosY(vehiculo.getPosY() - vehiculo.getVelocidad());
+                if (vehiculo.getPosY() < -20) {
+                    vehiculo.setPosY(canvas.getHeight() + 20);
+                }
+                break;
+            case VUELTA_EN_U:
+                vehiculo.setPosY(vehiculo.getPosY() + vehiculo.getVelocidad());
+                if (vehiculo.getPosY() > canvas.getHeight() + 20) {
+                    vehiculo.setPosY(-20);
+                }
+                break;
+            default:
+                break;
         }
     }
 
-    private double calcularDistancia(Vehiculo v1, Vehiculo v2) {
-        return Math.sqrt(Math.pow(v1.getPosX() - v2.getPosX(), 2) + Math.pow(v1.getPosY() - v2.getPosY(), 2));
+    private void dibujarVehiculo(GraphicsContext gc, Vehiculo vehiculo) {
+        Image imagenVehiculo = vehiculo.getTipo() == TipoVehiculo.NORMAL ? iconoVehiculoNormal : iconoVehiculoEmergencia;
+        gc.drawImage(imagenVehiculo, vehiculo.getPosX(), vehiculo.getPosY(), 20, 20);
     }
 
-    private boolean estaCercaDelSemaforo(Vehiculo vehiculo) {
-        double posX = vehiculo.getPosX();
-        double posY = vehiculo.getPosY();
 
-        if (vehiculo.getDireccion() == Direccion.DERECHA) {
-            return (posX >= 130 && posX <= 150 && posY == 210);
+    private void actualizarEstadoSemaforos() {
+        for (Direccion direccion : interseccion.getSemaforos().keySet()) {
+            Semaforo semaforo = interseccion.getSemaforos().get(direccion);
+            semaforo.actualizarEstado();
         }
-
-        if (vehiculo.getDireccion() == Direccion.IZQUIERDA) {
-            return (posX >= 230 && posX <= 250 && posY == 180);
-        }
-
-        return false;
-    }
-
-    private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
-        boolean encontrado = false;
-        for (Vehiculo v : colaVehiculos) {
-            if (v == vehiculo) {
-                encontrado = true;
-            } else if (encontrado && v.getTipo() == TipoVehiculo.EMERGENCIA) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public static void main(String[] args) {
-        launch(args);
+        launch();
     }
 }
