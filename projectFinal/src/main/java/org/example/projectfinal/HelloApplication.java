@@ -154,6 +154,7 @@ public class HelloApplication extends Application {
         gc.setLineDashes(10);
         gc.setLineWidth(5);
 
+
         gc.strokeLine(200, 0, 200, 150);
         gc.strokeLine(200, 250, 200, 400);
         gc.strokeLine(0, 200, 150, 200);
