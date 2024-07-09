@@ -146,6 +146,7 @@ public class HelloApplication extends Application {
         gc.setFill(Color.DARKGRAY);
         gc.fillRect(0, 0, 400, 400);
 
+
         gc.setFill(Color.GRAY);
         gc.fillRect(150, 0, 100, 400);
         gc.fillRect(0, 150, 400, 100);
