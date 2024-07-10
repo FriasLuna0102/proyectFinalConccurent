@@ -63,8 +63,9 @@ public class HelloApplication extends Application {
 
         Label direccionLabel = new Label("Dirección:");
         ComboBox<Direccion> direccionComboBox = new ComboBox<>();
-        direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA);
+        direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA, Direccion.ARRIBA, Direccion.ABAJO);
         direccionComboBox.setValue(Direccion.DERECHA);
+
 
         Button agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 14px;");
@@ -132,20 +133,38 @@ public class HelloApplication extends Application {
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion) {
         // Generar un ID único para el nuevo vehículo
         String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
-        double posX = direccion == Direccion.DERECHA ? 50 : 350;
-        double posY = direccion == Direccion.DERECHA ? 210 : 180;
-//        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2; //Velocidad diferente para vehículos de emergencia
-        int velocidad = 2; // Velocidad igual para todos los vehículos
+        double posX = 50; // Valor por defecto para posición X
+        double posY = 50; // Valor por defecto para posición Y
 
+        switch (direccion) {
+            case DERECHA:
+                posX = 50;
+                posY = 210;
+                break;
+            case IZQUIERDA:
+                posX = 350;
+                posY = 180;
+                break;
+            case ABAJO:
+                posX = 200; // Centrado horizontalmente
+                posY = 0;   // Empieza desde la parte superior
+                break;
+            case ARRIBA:
+                posX = 200; // Centrado horizontalmente
+                posY = 400; // Empieza desde la parte inferior
+                break;
+        }
+
+        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2; // Velocidad diferente para vehículos de emergencia
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
     }
 
+
     private void dibujarInterseccion(GraphicsContext gc) {
         gc.setFill(Color.DARKGRAY);
         gc.fillRect(0, 0, 400, 400);
-
 
         gc.setFill(Color.GRAY);
         gc.fillRect(150, 0, 100, 400);
@@ -164,9 +183,13 @@ public class HelloApplication extends Application {
         gc.setFill(Color.BLACK);
         gc.fillRect(140, 185, 20, 30); // Semáforo en la calle oeste
         gc.fillRect(240, 185, 20, 30); // Semáforo en la calle este
+        gc.fillRect(185, 140, 30, 20); // Semáforo en la calle norte
+        gc.fillRect(185, 240, 30, 20); // Semáforo en la calle sur
 
         Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
         Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
+        Semaforo semaforoNorte = interseccion.getSemaforos().get(Direccion.ABAJO);
+        Semaforo semaforoSur = interseccion.getSemaforos().get(Direccion.ARRIBA);
 
         gc.setFill(semaforoOeste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoOeste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
@@ -175,7 +198,16 @@ public class HelloApplication extends Application {
         gc.setFill(semaforoEste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoEste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
         gc.fillOval(245, 195, 10, 10); // Semáforo en la calle este
+
+        gc.setFill(semaforoNorte.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoNorte.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 145, 10, 10); // Semáforo en la calle norte
+
+        gc.setFill(semaforoSur.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
+                (semaforoSur.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
+        gc.fillOval(195, 245, 10, 10); // Semáforo en la calle sur
     }
+
 
     private void moverYdibujarVehiculos(GraphicsContext gc) {
         gc.clearRect(0, 0, 400, 400);
@@ -235,8 +267,17 @@ public class HelloApplication extends Application {
             return (posX >= 230 && posX <= 250 && posY == 180);
         }
 
+        if (vehiculo.getDireccion() == Direccion.ABAJO) {
+            return (posY >= 130 && posY <= 150 && posX == 200);
+        }
+
+        if (vehiculo.getDireccion() == Direccion.ARRIBA) {
+            return (posY >= 250 && posY <= 270 && posX == 200);
+        }
+
         return false;
     }
+
 
     private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
         boolean encontrado = false;

@@ -45,11 +45,11 @@ public class Vehiculo {
                 case IZQUIERDA:
                     posX -= velocidad * 5;
                     break;
-                case RECTO:
-                    posY -= velocidad * 5;
+                case ABAJO:
+                    posY += velocidad * 5; // Movimiento hacia abajo
                     break;
-                case VUELTA_EN_U:
-                    posY += velocidad * 5;
+                case ARRIBA:
+                    posY -= velocidad * 5; // Movimiento hacia arriba
                     break;
                 default:
                     break;
