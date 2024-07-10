@@ -65,7 +65,7 @@ public class HelloApplication extends Application {
 
         Label direccionLabel = new Label("Dirección:");
         ComboBox<Direccion> direccionComboBox = new ComboBox<>();
-        direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA, Direccion.ARRIBA, Direccion.ABAJO);
+        direccionComboBox.getItems().addAll(Direccion.IZQUIERDA, Direccion.DERECHA, Direccion.ABAJO, Direccion.ARRIBA);
         direccionComboBox.setValue(Direccion.DERECHA);
         direccionLabel.setStyle("-fx-font-size: 16px;");
 
@@ -272,9 +272,7 @@ public class HelloApplication extends Application {
                         }
                     }
                 } else {
-                    if (estadoSemaforo == EstadoSemaforo.ROJO &&
-                            !hayEmergenciaDetras &&
-                            estaCercaDelSemaforo(vehiculo)) {
+                    if (estadoSemaforo == EstadoSemaforo.ROJO && !hayEmergenciaDetras && estaCercaDelSemaforo(vehiculo)) {
                         vehiculo.detener();
                     } else if (vehiculoAnterior != null) {
                         double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
@@ -287,8 +285,8 @@ public class HelloApplication extends Application {
                             vehiculo.reanudar();
                         }
                     } else {
-                        if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
-                            vehiculo.detener();
+                        if (hayEmergenciaDetras || (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo))) {
+                            vehiculo.reanudar();
                         } else {
                             vehiculo.reanudar();
                         }
@@ -335,6 +333,20 @@ public class HelloApplication extends Application {
         return Math.sqrt(Math.pow(v1.getPosX() - v2.getPosX(), 2) + Math.pow(v1.getPosY() - v2.getPosY(), 2));
     }
 
+
+    // Método para verificar si hay un vehículo de emergencia detrás
+    private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
+        boolean encontrado = false;
+        for (Vehiculo v : colaVehiculos) {
+            if (v == vehiculo) {
+                encontrado = true;
+            } else if (encontrado && v.getTipo() == TipoVehiculo.EMERGENCIA) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean estaCercaDelSemaforo(Vehiculo vehiculo) {
         double posX = vehiculo.getPosX();
         double posY = vehiculo.getPosY();
@@ -355,18 +367,6 @@ public class HelloApplication extends Application {
             return (posY >= 250 && posY <= 270 && posX == 210);
         }
 
-        return false;
-    }
-
-    private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
-        boolean encontrado = false;
-        for (Vehiculo v : colaVehiculos) {
-            if (v == vehiculo) {
-                encontrado = true;
-            } else if (encontrado && v.getTipo() == TipoVehiculo.EMERGENCIA) {
-                return true;
-            }
-        }
         return false;
     }
 
