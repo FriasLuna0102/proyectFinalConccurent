@@ -54,21 +54,23 @@ public class HelloApplication extends Application {
         escenarioComboBox.setValue("Escenario 1");
 
         Button iniciarButton = new Button("Iniciar Simulación");
-        iniciarButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px;");
+        iniciarButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 18px;"); // Ajusta el valor de -fx-font-size
 
         Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
         ComboBox<TipoVehiculo> tipoVehiculoComboBox = new ComboBox<>();
         tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
         tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
+        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;"); // Ajusta el valor de -fx-font-size
 
         Label direccionLabel = new Label("Dirección:");
         ComboBox<Direccion> direccionComboBox = new ComboBox<>();
         direccionComboBox.getItems().addAll(Direccion.DERECHA, Direccion.IZQUIERDA, Direccion.ARRIBA, Direccion.ABAJO);
         direccionComboBox.setValue(Direccion.DERECHA);
+        direccionLabel.setStyle("-fx-font-size: 16px;");
 
 
         Button agregarVehiculoButton = new Button("Agregar Vehículo");
-        agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 14px;");
+        agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 18px;");
 
         // Configurar la acción del botón iniciar
         iniciarButton.setOnAction(event -> {
@@ -98,6 +100,8 @@ public class HelloApplication extends Application {
         root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvas);
 
         stage.setScene(new Scene(root));
+        stage.setFullScreen(true); // Pantalla completa
+
         stage.show();
     }
 
@@ -106,8 +110,8 @@ public class HelloApplication extends Application {
 
         if ("Escenario 1".equals(escenario)) {
             // Añadir vehículos para el escenario 1
-            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.2));
-            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.2));
+            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1));
+            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1));
         }
 
         if (timeline != null) {
@@ -154,7 +158,7 @@ public class HelloApplication extends Application {
                 break;
         }
 
-        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2; // Velocidad diferente para vehículos de emergencia
+        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1; // Velocidad diferente para vehículos de emergencia
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);

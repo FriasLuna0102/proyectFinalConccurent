@@ -153,4 +153,36 @@ public class Vehiculo {
     public long getTiempoDetenido() {
         return tiempoDetenido;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTipo(TipoVehiculo tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setDireccion(Direccion direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setEstado(EstadoVehiculo estado) {
+        this.estado = estado;
+    }
+
+    public void setDetenido(boolean detenido) {
+        this.detenido = detenido;
+    }
+
+    public void setDetenidoUnaVez(boolean detenidoUnaVez) {
+        this.detenidoUnaVez = detenidoUnaVez;
+    }
+
+    public void setTiempoDetenido(long tiempoDetenido) {
+        this.tiempoDetenido = tiempoDetenido;
+    }
 }

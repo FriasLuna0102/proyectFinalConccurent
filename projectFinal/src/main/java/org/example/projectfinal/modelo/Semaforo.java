@@ -50,4 +50,48 @@ public class Semaforo {
                 break;
         }
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setEstado(EstadoSemaforo estado) {
+        this.estado = estado;
+    }
+
+    public int getTiempoVerde() {
+        return tiempoVerde;
+    }
+
+    public void setTiempoVerde(int tiempoVerde) {
+        this.tiempoVerde = tiempoVerde;
+    }
+
+    public int getTiempoRojo() {
+        return tiempoRojo;
+    }
+
+    public void setTiempoRojo(int tiempoRojo) {
+        this.tiempoRojo = tiempoRojo;
+    }
+
+    public int getTiempoAmarillo() {
+        return tiempoAmarillo;
+    }
+
+    public void setTiempoAmarillo(int tiempoAmarillo) {
+        this.tiempoAmarillo = tiempoAmarillo;
+    }
+
+    public long getTiempoInicio() {
+        return tiempoInicio;
+    }
+
+    public void setTiempoInicio(long tiempoInicio) {
+        this.tiempoInicio = tiempoInicio;
+    }
 }
