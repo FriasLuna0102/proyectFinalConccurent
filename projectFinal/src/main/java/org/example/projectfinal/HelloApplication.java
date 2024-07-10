@@ -162,7 +162,7 @@ public class HelloApplication extends Application {
 
 
     private void dibujarInterseccion(GraphicsContext gc) {
-        gc.setFill(Color.DARKGRAY);
+        gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, 400, 400);
 
         gc.setFill(Color.GRAY);
