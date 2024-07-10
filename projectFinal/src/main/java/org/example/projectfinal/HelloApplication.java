@@ -152,10 +152,41 @@ public class HelloApplication extends Application {
                 break;
         }
 
+        // Verificar que no haya otro vehículo en la posición inicial propuesta
+        if (!esPosicionValida(posX, posY, direccion)) {
+            Alert alerta = new Alert(Alert.AlertType.WARNING);
+            alerta.setTitle("Posición no válida");
+            alerta.setHeaderText(null);
+            alerta.setContentText("No se puede agregar un vehículo en la posición especificada porque no cumple la distancia mínima.");
+            alerta.showAndWait();
+            return;
+        }
+
         double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1;
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
+    }
+
+    private boolean esPosicionValida(double posX, double posY, Direccion direccion) {
+        ConcurrentLinkedQueue<Vehiculo> colaVehiculos = interseccion.getVehiculosPorDireccion().get(direccion);
+
+        if (colaVehiculos == null) {
+            return true; // No hay vehículos en esta dirección, posición válida
+        }
+
+        for (Vehiculo vehiculo : colaVehiculos) {
+            double distancia = calcularDistancia(vehiculo.getPosX(), vehiculo.getPosY(), posX, posY);
+            if (distancia < 40) {
+                return false; // La distancia mínima no se cumple
+            }
+        }
+
+        return true; // La posición es válida
+    }
+
+    private double calcularDistancia(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
     private void dibujarInterseccion(GraphicsContext gc) {
@@ -233,6 +264,13 @@ public class HelloApplication extends Application {
                             vehiculosEnInterseccion.remove(vehiculo);
                         }
                     }
+                    // Verificación de distancia mínima para vehículos de emergencia
+                    if (vehiculoAnterior != null) {
+                        double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
+                        if (distancia < 40) {
+                            vehiculo.detener();
+                        }
+                    }
                 } else {
                     if (estadoSemaforo == EstadoSemaforo.ROJO &&
                             !hayEmergenciaDetras &&
@@ -240,13 +278,20 @@ public class HelloApplication extends Application {
                         vehiculo.detener();
                     } else if (vehiculoAnterior != null) {
                         double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                        if (distancia < 40) {
+                        // Verificar si hay un vehículo de emergencia en la intersección y si el vehículo está demasiado cerca
+                        if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
+                            vehiculo.detener();
+                        } else if (distancia < 40) {
                             vehiculo.detener();
                         } else {
                             vehiculo.reanudar();
                         }
                     } else {
-                        vehiculo.reanudar();
+                        if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
+                            vehiculo.detener();
+                        } else {
+                            vehiculo.reanudar();
+                        }
                     }
                 }
 
@@ -256,6 +301,27 @@ public class HelloApplication extends Application {
                 vehiculoAnterior = vehiculo;
             }
         }
+    }
+
+    private boolean hayVehiculoEmergenciaEnInterseccion() {
+        for (Vehiculo vehiculo : vehiculosEnInterseccion) {
+            if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean estaCercaVehiculoEmergencia(Vehiculo vehiculo) {
+        for (Vehiculo vehiculoEnInterseccion : vehiculosEnInterseccion) {
+            if (vehiculoEnInterseccion.getTipo() == TipoVehiculo.EMERGENCIA) {
+                double distancia = calcularDistancia(vehiculo, vehiculoEnInterseccion);
+                if (distancia < 40) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private boolean estaEnInterseccion(Vehiculo vehiculo) {
