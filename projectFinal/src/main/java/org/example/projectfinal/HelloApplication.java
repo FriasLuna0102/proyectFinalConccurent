@@ -5,7 +5,6 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,13 +28,12 @@ import org.example.projectfinal.modelo.Vehiculo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-
 public class HelloApplication extends Application {
     private Interseccion interseccion;
     private Timeline timeline;
     private Canvas canvas;
     private GraphicsContext gc;
-    private boolean simulacionIniciada = false; // Variable para rastrear si la simulación ha sido iniciada
+    private boolean simulacionIniciada = false;
 
     @Override
     public void start(Stage stage) {
@@ -48,19 +46,18 @@ public class HelloApplication extends Application {
         canvas = new Canvas(400, 400);
         gc = canvas.getGraphicsContext2D();
 
-        // Crear controles de interfaz
         ComboBox<String> escenarioComboBox = new ComboBox<>();
         escenarioComboBox.getItems().addAll("Escenario 1");
         escenarioComboBox.setValue("Escenario 1");
 
         Button iniciarButton = new Button("Iniciar Simulación");
-        iniciarButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 18px;"); // Ajusta el valor de -fx-font-size
+        iniciarButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 18px;");
 
         Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
         ComboBox<TipoVehiculo> tipoVehiculoComboBox = new ComboBox<>();
         tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
         tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
-        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;"); // Ajusta el valor de -fx-font-size
+        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;");
 
         Label direccionLabel = new Label("Dirección:");
         ComboBox<Direccion> direccionComboBox = new ComboBox<>();
@@ -68,20 +65,17 @@ public class HelloApplication extends Application {
         direccionComboBox.setValue(Direccion.DERECHA);
         direccionLabel.setStyle("-fx-font-size: 16px;");
 
-
         Button agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 18px;");
 
-        // Configurar la acción del botón iniciar
         iniciarButton.setOnAction(event -> {
             String escenarioSeleccionado = escenarioComboBox.getValue();
             iniciarSimulacion(escenarioSeleccionado);
-            simulacionIniciada = true; // Actualizar la variable cuando se inicie la simulación
+            simulacionIniciada = true;
         });
 
-        // Configurar la acción del botón agregar vehículo
         agregarVehiculoButton.setOnAction(event -> {
-            if (!simulacionIniciada) { // Verificar si la simulación no ha sido iniciada
+            if (!simulacionIniciada) {
                 Alert alerta = new Alert(Alert.AlertType.WARNING);
                 alerta.setTitle("Simulación no iniciada");
                 alerta.setHeaderText(null);
@@ -100,7 +94,7 @@ public class HelloApplication extends Application {
         root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvas);
 
         stage.setScene(new Scene(root));
-        stage.setFullScreen(true); // Pantalla completa
+        stage.setFullScreen(true);
 
         stage.show();
     }
@@ -109,22 +103,19 @@ public class HelloApplication extends Application {
         interseccion = new Interseccion("1");
 
         if ("Escenario 1".equals(escenario)) {
-            // Añadir vehículos para el escenario 1
-            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1));
-            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1));
+            //interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1));
+            //interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1));
         }
 
         if (timeline != null) {
             timeline.stop();
         }
 
-        // Configurar timeline para controlar semáforos cada 0.5 segundos
         timeline = new Timeline(
                 new KeyFrame(
                         Duration.seconds(0.02),
                         event -> {
                             interseccion.controlarSemaforos();
-//                            dibujarInterseccion(gc);
                             moverYdibujarVehiculos(gc);
                         }
                 )
@@ -134,10 +125,9 @@ public class HelloApplication extends Application {
     }
 
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion) {
-        // Generar un ID único para el nuevo vehículo
         String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
-        double posX = 50; // Valor por defecto para posición X
-        double posY = 50; // Valor por defecto para posición Y
+        double posX = 50;
+        double posY = 50;
 
         switch (direccion) {
             case DERECHA:
@@ -149,21 +139,20 @@ public class HelloApplication extends Application {
                 posY = 180;
                 break;
             case ABAJO:
-                posX = 190; // Centrado horizontalmente
-                posY = 0;   // Empieza desde la parte superior
+                posX = 190;
+                posY = 0;
                 break;
             case ARRIBA:
-                posX = 210; // Centrado horizontalmente
-                posY = 400; // Empieza desde la parte inferior
+                posX = 210;
+                posY = 400;
                 break;
         }
 
-        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1; // Velocidad diferente para vehículos de emergencia
+        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1;
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
     }
-
 
     private void dibujarInterseccion(GraphicsContext gc) {
         gc.setFill(Color.GREEN);
@@ -182,12 +171,11 @@ public class HelloApplication extends Application {
         gc.strokeLine(0, 200, 150, 200);
         gc.strokeLine(250, 200, 400, 200);
 
-        // Dibujar los semáforos en las posiciones correctas
         gc.setFill(Color.BLACK);
-        gc.fillRect(140, 185, 20, 30); // Semáforo en la calle oeste
-        gc.fillRect(240, 185, 20, 30); // Semáforo en la calle este
-        gc.fillRect(185, 140, 30, 20); // Semáforo en la calle norte
-        gc.fillRect(185, 240, 30, 20); // Semáforo en la calle sur
+        gc.fillRect(140, 185, 20, 30);
+        gc.fillRect(240, 185, 20, 30);
+        gc.fillRect(185, 140, 30, 20);
+        gc.fillRect(185, 240, 30, 20);
 
         Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
         Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
@@ -196,21 +184,20 @@ public class HelloApplication extends Application {
 
         gc.setFill(semaforoOeste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoOeste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
-        gc.fillOval(145, 195, 10, 10); // Semáforo en la calle oeste
+        gc.fillOval(145, 195, 10, 10);
 
         gc.setFill(semaforoEste.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoEste.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
-        gc.fillOval(245, 195, 10, 10); // Semáforo en la calle este
+        gc.fillOval(245, 195, 10, 10);
 
         gc.setFill(semaforoNorte.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoNorte.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
-        gc.fillOval(195, 145, 10, 10); // Semáforo en la calle norte
+        gc.fillOval(195, 145, 10, 10);
 
         gc.setFill(semaforoSur.getEstado() == EstadoSemaforo.VERDE ? Color.GREEN :
                 (semaforoSur.getEstado() == EstadoSemaforo.AMARILLO ? Color.YELLOW : Color.RED));
-        gc.fillOval(195, 245, 10, 10); // Semáforo en la calle sur
+        gc.fillOval(195, 245, 10, 10);
     }
-
 
     private void moverYdibujarVehiculos(GraphicsContext gc) {
         gc.clearRect(0, 0, 400, 400);
@@ -226,12 +213,10 @@ public class HelloApplication extends Application {
             for (Vehiculo vehiculo : colaVehiculos) {
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
 
-                // Verificar si hay un vehículo de emergencia detrás
                 boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
 
-                // Lógica de movimiento del vehículo
                 if (estadoSemaforo == EstadoSemaforo.ROJO &&
-                        vehiculo.getTipo() != TipoVehiculo.EMERGENCIA && // Nueva condición
+                        vehiculo.getTipo() != TipoVehiculo.EMERGENCIA &&
                         !hayEmergenciaDetras &&
                         estaCercaDelSemaforo(vehiculo)) {
                     vehiculo.detener();
@@ -280,7 +265,6 @@ public class HelloApplication extends Application {
 
         return false;
     }
-
 
     private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, ConcurrentLinkedQueue<Vehiculo> colaVehiculos) {
         boolean encontrado = false;

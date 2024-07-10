@@ -12,15 +12,20 @@ public class Interseccion {
     private Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion;
     private Map<Direccion, Semaforo> semaforos;
 
+    private Direccion direccionVerde; // Dirección del semáforo en verde actual
+
     public Interseccion(String id) {
         this.id = id;
         this.vehiculosPorDireccion = new HashMap<>();
         this.semaforos = new HashMap<>();
+        this.direccionVerde = Direccion.DERECHA; // Inicializar con un semáforo en verde
 
         // Inicializar semáforos
         for (Direccion direccion : Direccion.values()) {
             semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 10, 5, 2)); // Valores de ejemplo para tiempo de cada estado
         }
+
+        semaforos.get(direccionVerde).cambiarEstado(EstadoSemaforo.VERDE);
     }
 
     public void agregarVehiculo(Direccion direccion, Vehiculo vehiculo) {
@@ -29,9 +34,24 @@ public class Interseccion {
 
     public void controlarSemaforos() {
         // Lógica para cambiar los semáforos
-        for (Semaforo semaforo : semaforos.values()) {
-            semaforo.actualizarEstado();
+        Semaforo semaforoVerdeActual = semaforos.get(direccionVerde);
+        semaforoVerdeActual.actualizarEstado();
+
+        if (semaforoVerdeActual.getEstado() == EstadoSemaforo.ROJO) {
+            cambiarSemaforoVerde();
         }
+    }
+
+    private void cambiarSemaforoVerde() {
+        Direccion[] direcciones = Direccion.values();
+        int index = (direccionVerde.ordinal() + 1) % direcciones.length;
+        direccionVerde = direcciones[index];
+
+        for (Semaforo semaforo : semaforos.values()) {
+            semaforo.cambiarEstado(EstadoSemaforo.ROJO);
+        }
+
+        semaforos.get(direccionVerde).cambiarEstado(EstadoSemaforo.VERDE);
     }
 
     public Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> getVehiculosPorDireccion() {

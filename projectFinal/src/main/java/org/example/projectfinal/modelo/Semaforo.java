@@ -30,13 +30,11 @@ public class Semaforo {
 
     public void actualizarEstado() {
         long tiempoActual = System.currentTimeMillis();
-        long tiempoTranscurrido = (tiempoActual - tiempoInicio) / 2000;
+        long tiempoTranscurrido = (tiempoActual - tiempoInicio) / 1000;
 
         switch (estado) {
             case ROJO:
-                if (tiempoTranscurrido >= tiempoRojo) {
-                    cambiarEstado(EstadoSemaforo.VERDE);
-                }
+                // El semáforo debe permanecer en rojo hasta que otro semáforo lo ponga en verde
                 break;
             case VERDE:
                 if (tiempoTranscurrido >= tiempoVerde) {
@@ -57,10 +55,6 @@ public class Semaforo {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public void setEstado(EstadoSemaforo estado) {
-        this.estado = estado;
     }
 
     public int getTiempoVerde() {
