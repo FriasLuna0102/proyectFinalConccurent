@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="se evita que los de emergencia colisionen.">
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="trabajando con los normales.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
     </list>
@@ -269,7 +269,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720638873216</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="trabajando con los normales.">
+      <option name="closed" value="true" />
+      <created>1720639833838</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1720639833838</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,7 +306,8 @@
     <MESSAGE value="full" />
     <MESSAGE value="trabajando en colision" />
     <MESSAGE value="se evita que los de emergencia colisionen." />
-    <option name="LAST_COMMIT_MESSAGE" value="se evita que los de emergencia colisionen." />
+    <MESSAGE value="trabajando con los normales." />
+    <option name="LAST_COMMIT_MESSAGE" value="trabajando con los normales." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

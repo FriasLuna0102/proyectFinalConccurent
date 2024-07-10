@@ -37,6 +37,8 @@ public class HelloApplication extends Application {
     private GraphicsContext gc;
     private boolean simulacionIniciada = false;
     private Queue<Vehiculo> vehiculosEnInterseccion;
+    private Button agregarVehiculoButton; //
+    private Timeline validacionTimeline;
 
     @Override
     public void start(Stage stage) {
@@ -69,8 +71,9 @@ public class HelloApplication extends Application {
         direccionComboBox.setValue(Direccion.DERECHA);
         direccionLabel.setStyle("-fx-font-size: 16px;");
 
-        Button agregarVehiculoButton = new Button("Agregar Vehículo");
+        agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 18px;");
+        agregarVehiculoButton.setDisable(true); // Inicialmente deshabilitado
 
         iniciarButton.setOnAction(event -> {
             String escenarioSeleccionado = escenarioComboBox.getValue();
@@ -103,11 +106,13 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+
     private void iniciarSimulacion(String escenario) {
         interseccion = new Interseccion("1");
 
         if ("Escenario 1".equals(escenario)) {
             //interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1));
+            //interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350,
             //interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1));
         }
 
@@ -126,6 +131,47 @@ public class HelloApplication extends Application {
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+
+        // Inicialización y reinicio del validacionTimeline
+        validacionTimeline = new Timeline(
+                new KeyFrame(
+                        Duration.seconds(0.1),
+                        event -> {
+                            ComboBox<Direccion> direccionComboBox = (ComboBox<Direccion>) ((HBox) agregarVehiculoButton.getParent()).getChildren().get(3);
+                            Direccion direccion = direccionComboBox.getValue();
+                            double posX = 50;
+                            double posY = 50;
+
+                            switch (direccion) {
+                                case DERECHA:
+                                    posX = 50;
+                                    posY = 210;
+                                    break;
+                                case IZQUIERDA:
+                                    posX = 350;
+                                    posY = 180;
+                                    break;
+                                case ABAJO:
+                                    posX = 190;
+                                    posY = 0;
+                                    break;
+                                case ARRIBA:
+                                    posX = 210;
+                                    posY = 400;
+                                    break;
+                            }
+
+                            // Habilitar o deshabilitar el botón según la validez de la posición
+                            if (esPosicionValida(posX, posY, direccion)) {
+                                agregarVehiculoButton.setDisable(false);
+                            } else {
+                                agregarVehiculoButton.setDisable(true);
+                            }
+                        }
+                )
+        );
+        validacionTimeline.setCycleCount(Timeline.INDEFINITE);
+        validacionTimeline.play();
     }
 
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion) {
@@ -154,12 +200,7 @@ public class HelloApplication extends Application {
 
         // Verificar que no haya otro vehículo en la posición inicial propuesta
         if (!esPosicionValida(posX, posY, direccion)) {
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setTitle("Posición no válida");
-            alerta.setHeaderText(null);
-            alerta.setContentText("No se puede agregar un vehículo en la posición especificada porque no cumple la distancia mínima.");
-            alerta.showAndWait();
-            return;
+            return; // No agrega el vehículo si la posición no es válida
         }
 
         double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1;
