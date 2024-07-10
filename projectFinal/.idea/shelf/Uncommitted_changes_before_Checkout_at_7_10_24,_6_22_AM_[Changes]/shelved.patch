@@ -1,0 +1,459 @@
+Index: .idea/workspace.xml
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+deleted file mode 100644
+--- a/.idea/workspace.xml	(revision 3215153df66edbde119c405591c0eb435f4a4d25)
++++ /dev/null	(revision 3215153df66edbde119c405591c0eb435f4a4d25)
+@@ -1,241 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="AutoImportSettings">
+-    <option name="autoReloadType" value="SELECTIVE" />
+-  </component>
+-  <component name="ChangeListManager">
+-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="interfaz mejorada.">
+-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Semaforo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Semaforo.java" afterDir="false" />
+-    </list>
+-    <option name="SHOW_DIALOG" value="false" />
+-    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+-    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+-    <option name="LAST_RESOLUTION" value="IGNORE" />
+-  </component>
+-  <component name="CodyActiveAccount">
+-    <option name="activeAccountId" value="VXNlcjo0NTI5MzY=" />
+-  </component>
+-  <component name="ExternalProjectsData">
+-    <projectState path="$PROJECT_DIR$">
+-      <ProjectState />
+-    </projectState>
+-  </component>
+-  <component name="ExternalProjectsManager">
+-    <system id="GRADLE">
+-      <state>
+-        <projects_view>
+-          <tree_state>
+-            <expand>
+-              <path>
+-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+-                <item name="projectFinal" type="f1a62948:ProjectNode" />
+-              </path>
+-            </expand>
+-            <select />
+-          </tree_state>
+-        </projects_view>
+-      </state>
+-    </system>
+-  </component>
+-  <component name="FileTemplateManagerImpl">
+-    <option name="RECENT_TEMPLATES">
+-      <list>
+-        <option value="Enum" />
+-        <option value="FxmlFile" />
+-        <option value="Class" />
+-      </list>
+-    </option>
+-  </component>
+-  <component name="Git.Settings">
+-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+-  </component>
+-  <component name="GitHubPullRequestSearchHistory">{
+-  &quot;lastFilter&quot;: {
+-    &quot;state&quot;: &quot;OPEN&quot;,
+-    &quot;assignee&quot;: &quot;FriasLuna0102&quot;
+-  }
+-}</component>
+-  <component name="GithubPullRequestsUISettings">{
+-  &quot;selectedUrlAndAccountId&quot;: {
+-    &quot;url&quot;: &quot;https://github.com/FriasLuna0102/proyectFinalConccurent&quot;,
+-    &quot;accountId&quot;: &quot;d7ebb63a-7f86-4707-8726-dc33a700f5c7&quot;
+-  }
+-}</component>
+-  <component name="ProjectColorInfo">{
+-  &quot;associatedIndex&quot;: 0
+-}</component>
+-  <component name="ProjectId" id="2iCMYDO7DFCWUeRN2hBbTkBWhP5" />
+-  <component name="ProjectViewState">
+-    <option name="hideEmptyMiddlePackages" value="true" />
+-    <option name="showLibraryContents" value="true" />
+-  </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Gradle.projectFinal [:HelloApplication.main()].executor": "Run",
+-    "Gradle.projectFinal [:SimulacionPrueba.main()].executor": "Run",
+-    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+-    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+-    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+-    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "dart.analysis.tool.window.visible": "false",
+-    "git-widget-placeholder": "main",
+-    "kotlin-language-version-configured": "true",
+-    "last_opened_file_path": "/home/friasluna/Desktop/Proyecto Final_ConcurrentParallel/proyectFinalConccurent/projectFinal",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "settings.editor.selected.configurable": "preferences.pluginManager",
+-    "show.migrate.to.gradle.popup": "false",
+-    "vue.rearranger.settings.migration": "true"
+-  }
+-}]]></component>
+-  <component name="RunManager">
+-    <configuration name="HelloApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+-      <option name="MAIN_CLASS_NAME" value="org.example.projectfinal.HelloApplication" />
+-      <module name="projectFinal.main" />
+-      <extension name="coverage">
+-        <pattern>
+-          <option name="PATTERN" value="org.example.projectfinal.*" />
+-          <option name="ENABLED" value="true" />
+-        </pattern>
+-      </extension>
+-      <method v="2">
+-        <option name="Make" enabled="true" />
+-      </method>
+-    </configuration>
+-    <recent_temporary>
+-      <list>
+-        <item itemvalue="Application.HelloApplication" />
+-      </list>
+-    </recent_temporary>
+-  </component>
+-  <component name="SharedIndexes">
+-    <attachedChunks>
+-      <set>
+-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+-      </set>
+-    </attachedChunks>
+-  </component>
+-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+-  <component name="TaskManager">
+-    <task active="true" id="Default" summary="Default task">
+-      <changelist id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="" />
+-      <created>1718990152918</created>
+-      <option name="number" value="Default" />
+-      <option name="presentableId" value="Default" />
+-      <updated>1718990152918</updated>
+-      <workItem from="1718990153950" duration="2001000" />
+-      <workItem from="1719001222887" duration="332000" />
+-      <workItem from="1719852089999" duration="7096000" />
+-      <workItem from="1719910878371" duration="15000" />
+-      <workItem from="1720095396042" duration="76000" />
+-      <workItem from="1720095507100" duration="3354000" />
+-      <workItem from="1720098873928" duration="49000" />
+-      <workItem from="1720098940396" duration="1427000" />
+-      <workItem from="1720111701863" duration="20000" />
+-      <workItem from="1720119963641" duration="139000" />
+-      <workItem from="1720271553813" duration="1972000" />
+-      <workItem from="1720294263163" duration="1841000" />
+-      <workItem from="1720431989833" duration="7341000" />
+-    </task>
+-    <task id="LOCAL-00001" summary="commit inicial">
+-      <option name="closed" value="true" />
+-      <created>1718990534710</created>
+-      <option name="number" value="00001" />
+-      <option name="presentableId" value="LOCAL-00001" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1718990534710</updated>
+-    </task>
+-    <task id="LOCAL-00002" summary="commit inicial">
+-      <option name="closed" value="true" />
+-      <created>1718990566825</created>
+-      <option name="number" value="00002" />
+-      <option name="presentableId" value="LOCAL-00002" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1718990566825</updated>
+-    </task>
+-    <task id="LOCAL-00003" summary="Definiciones de clases.">
+-      <option name="closed" value="true" />
+-      <created>1719858948172</created>
+-      <option name="number" value="00003" />
+-      <option name="presentableId" value="LOCAL-00003" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1719858948172</updated>
+-    </task>
+-    <task id="LOCAL-00004" summary="Definiciones de clases.">
+-      <option name="closed" value="true" />
+-      <created>1719859081132</created>
+-      <option name="number" value="00004" />
+-      <option name="presentableId" value="LOCAL-00004" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1719859081132</updated>
+-    </task>
+-    <task id="LOCAL-00005" summary="cruces.">
+-      <option name="closed" value="true" />
+-      <created>1720098766453</created>
+-      <option name="number" value="00005" />
+-      <option name="presentableId" value="LOCAL-00005" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1720098766453</updated>
+-    </task>
+-    <task id="LOCAL-00006" summary="cruces.">
+-      <option name="closed" value="true" />
+-      <created>1720098957899</created>
+-      <option name="number" value="00006" />
+-      <option name="presentableId" value="LOCAL-00006" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1720098957899</updated>
+-    </task>
+-    <task id="LOCAL-00007" summary="cruces.">
+-      <option name="closed" value="true" />
+-      <created>1720099742676</created>
+-      <option name="number" value="00007" />
+-      <option name="presentableId" value="LOCAL-00007" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1720099742676</updated>
+-    </task>
+-    <task id="LOCAL-00008" summary="interfaz mejorada.">
+-      <option name="closed" value="true" />
+-      <created>1720295500200</created>
+-      <option name="number" value="00008" />
+-      <option name="presentableId" value="LOCAL-00008" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1720295500200</updated>
+-    </task>
+-    <option name="localTasksCounter" value="9" />
+-    <servers />
+-  </component>
+-  <component name="TypeScriptGeneratedFilesManager">
+-    <option name="version" value="3" />
+-  </component>
+-  <component name="Vcs.Log.Tabs.Properties">
+-    <option name="TAB_STATES">
+-      <map>
+-        <entry key="MAIN">
+-          <value>
+-            <State />
+-          </value>
+-        </entry>
+-      </map>
+-    </option>
+-  </component>
+-  <component name="VcsManagerConfiguration">
+-    <MESSAGE value="commit inicial" />
+-    <MESSAGE value="Definiciones de clases." />
+-    <MESSAGE value="cruces." />
+-    <MESSAGE value="interfaz mejorada." />
+-    <option name="LAST_COMMIT_MESSAGE" value="interfaz mejorada." />
+-  </component>
+-  <component name="XSLT-Support.FileAssociations.UIState">
+-    <expand />
+-    <select />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/cody_history.xml
+===================================================================
+diff --git a/.idea/cody_history.xml b/.idea/cody_history.xml
+deleted file mode 100644
+--- a/.idea/cody_history.xml	(revision 3215153df66edbde119c405591c0eb435f4a4d25)
++++ /dev/null	(revision 3215153df66edbde119c405591c0eb435f4a4d25)
+@@ -1,202 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ChatHistory">
+-    <accountData>
+-      <list>
+-        <AccountData>
+-          <accountId value="VXNlcjo0NTI5MzY=" />
+-          <chats>
+-            <list>
+-              <chat>
+-                <internalId value="5d9f28ee-5d77-4a64-9d60-914ae894e4d5" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="f089cf15-db48-49b9-843c-57310eb93c02" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="ebc1fede-d438-48b4-b415-9e9cb2d29195" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="54a8d5dc-00de-4e02-b6d5-5ad17516808b" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="513faf50-1df7-4d5e-8606-614b3aa9350f" />
+-              </chat>
+-              <chat>
+-                <internalId value="61a4743f-76ce-4035-b106-44652808386b" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="1ac05656-dcc6-4366-8add-cc44cf5ef1e5" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="652f1108-5824-4a42-a400-306c9e6136a9" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="83cfbfc1-a31b-4fa8-99d8-d6aa635ccfe0" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="43d6db02-1da8-45b9-a705-3f7c9d57fec4" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="b94fd94b-844c-4c0d-b409-4ac431d61813" />
+-              </chat>
+-              <chat>
+-                <internalId value="c787a0db-2ab3-48c9-8cd9-7d400f8a4c9d" />
+-              </chat>
+-              <chat>
+-                <internalId value="58048fa8-8a74-4fad-bc4f-360fe02069c7" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="2fc47b1e-88a1-4bfa-97cf-04f5a89ed808" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="717dd921-c9b3-478e-999f-7116708e1065" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="0652a8e1-79ab-48f4-bab3-2b4c7519aa21" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="a37044e2-d475-4e85-a677-0abbe4bcb701" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="fbc01fde-e7df-4641-84e2-f898ecee3599" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="1570d2d1-0cc3-441a-b2fa-7ff46aefde11" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-              <chat>
+-                <internalId value="184352a9-d190-4a3f-8046-d1e4bf6d1e89" />
+-                <llm>
+-                  <llm>
+-                    <model value="anthropic/claude-3-sonnet-20240229" />
+-                    <provider value="Anthropic" />
+-                    <title value="Claude 3 Sonnet" />
+-                  </llm>
+-                </llm>
+-              </chat>
+-            </list>
+-          </chats>
+-          <defaultLlm>
+-            <llm>
+-              <model value="anthropic/claude-3-sonnet-20240229" />
+-              <provider value="Anthropic" />
+-              <title value="Claude 3 Sonnet" />
+-            </llm>
+-          </defaultLlm>
+-        </AccountData>
+-      </list>
+-    </accountData>
+-  </component>
+-</project>
+\ No newline at end of file

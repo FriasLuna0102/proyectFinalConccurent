@@ -29,6 +29,7 @@ import org.example.projectfinal.modelo.Vehiculo;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+
 public class HelloApplication extends Application {
     private Interseccion interseccion;
     private Timeline timeline;
@@ -44,7 +45,6 @@ public class HelloApplication extends Application {
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.CENTER);
 
-        Group canvasGroup = new Group();
         canvas = new Canvas(400, 400);
         gc = canvas.getGraphicsContext2D();
 
@@ -95,8 +95,7 @@ public class HelloApplication extends Application {
         HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, agregarVehiculoButton);
         controlsBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvasGroup);
-        canvasGroup.getChildren().add(canvas);
+        root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvas);
 
         stage.setScene(new Scene(root));
         stage.show();
@@ -107,8 +106,8 @@ public class HelloApplication extends Application {
 
         if ("Escenario 1".equals(escenario)) {
             // Añadir vehículos para el escenario 1
-            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 2));
-            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 3));
+            interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.2));
+            interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.2));
         }
 
         if (timeline != null) {
@@ -118,10 +117,10 @@ public class HelloApplication extends Application {
         // Configurar timeline para controlar semáforos cada 0.5 segundos
         timeline = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(0.5),
+                        Duration.seconds(0.02),
                         event -> {
                             interseccion.controlarSemaforos();
-                            dibujarInterseccion(gc);
+//                            dibujarInterseccion(gc);
                             moverYdibujarVehiculos(gc);
                         }
                 )
@@ -155,7 +154,7 @@ public class HelloApplication extends Application {
                 break;
         }
 
-        int velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 3 : 2; // Velocidad diferente para vehículos de emergencia
+        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2; // Velocidad diferente para vehículos de emergencia
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
@@ -234,7 +233,7 @@ public class HelloApplication extends Application {
                     vehiculo.detener();
                 } else if (vehiculoAnterior != null) {
                     double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                    if (distancia < 30) {
+                    if (distancia < 40) {
                         vehiculo.detener();
                     } else {
                         vehiculo.reanudar();
