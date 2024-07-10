@@ -32,9 +32,36 @@ public class Vehiculo {
     }
 
     public void dibujar(GraphicsContext gc) {
-        gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED); // Color azul para vehículos normales y rojo para emergencia
-        gc.fillOval(posX, posY, 20, 10); // Ejemplo de dibujo de vehículo como óvalo
+        gc.save(); // Guardar el estado actual del contexto gráfico
+
+        switch (direccion) {
+            case DERECHA:
+                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+                gc.fillOval(posX, posY, 20, 10);
+                break;
+            case IZQUIERDA:
+                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+                gc.fillOval(posX, posY, 20, 10);
+                break;
+            case ABAJO:
+                gc.translate(posX, posY); // Trasladar el contexto gráfico al punto del vehículo
+                gc.rotate(90); // Rotar 90 grados para que apunte hacia abajo
+                gc.translate(-posX, -posY); // Volver a la traslación original
+                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+                gc.fillOval(posX, posY, 20, 10);
+                break;
+            case ARRIBA:
+                gc.translate(posX, posY); // Trasladar el contexto gráfico al punto del vehículo
+                gc.rotate(-90); // Rotar -90 grados para que apunte hacia arriba
+                gc.translate(-posX, -posY); // Volver a la traslación original
+                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+                gc.fillOval(posX, posY, 20, 10);
+                break;
+        }
+
+        gc.restore(); // Restaurar el estado original del contexto gráfico
     }
+
 
     public void mover() {
         if (!detenido) {

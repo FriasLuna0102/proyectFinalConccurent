@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="interfaz mejorada.">
-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="vehiculos de norte a sur">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -213,7 +210,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720295500200</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="vehiculos de norte a sur">
+      <option name="closed" value="true" />
+      <created>1720612388906</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1720612388906</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,7 +240,8 @@
     <MESSAGE value="Definiciones de clases." />
     <MESSAGE value="cruces." />
     <MESSAGE value="interfaz mejorada." />
-    <option name="LAST_COMMIT_MESSAGE" value="interfaz mejorada." />
+    <MESSAGE value="vehiculos de norte a sur" />
+    <option name="LAST_COMMIT_MESSAGE" value="vehiculos de norte a sur" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

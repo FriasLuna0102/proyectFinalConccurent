@@ -146,11 +146,11 @@ public class HelloApplication extends Application {
                 posY = 180;
                 break;
             case ABAJO:
-                posX = 200; // Centrado horizontalmente
+                posX = 190; // Centrado horizontalmente
                 posY = 0;   // Empieza desde la parte superior
                 break;
             case ARRIBA:
-                posX = 200; // Centrado horizontalmente
+                posX = 210; // Centrado horizontalmente
                 posY = 400; // Empieza desde la parte inferior
                 break;
         }
@@ -268,11 +268,11 @@ public class HelloApplication extends Application {
         }
 
         if (vehiculo.getDireccion() == Direccion.ABAJO) {
-            return (posY >= 130 && posY <= 150 && posX == 200);
+            return (posY >= 130 && posY <= 150 && posX == 190);
         }
 
         if (vehiculo.getDireccion() == Direccion.ARRIBA) {
-            return (posY >= 250 && posY <= 270 && posX == 200);
+            return (posY >= 250 && posY <= 270 && posX == 210);
         }
 
         return false;
