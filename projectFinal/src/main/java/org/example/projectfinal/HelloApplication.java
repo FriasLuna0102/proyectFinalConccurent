@@ -177,8 +177,8 @@ public class HelloApplication extends Application {
         gc.fillRect(185, 140, 30, 20);
         gc.fillRect(185, 240, 30, 20);
 
-        Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
-        Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.DERECHA);
+        Semaforo semaforoOeste = interseccion.getSemaforos().get(Direccion.DERECHA);
+        Semaforo semaforoEste = interseccion.getSemaforos().get(Direccion.IZQUIERDA);
         Semaforo semaforoNorte = interseccion.getSemaforos().get(Direccion.ABAJO);
         Semaforo semaforoSur = interseccion.getSemaforos().get(Direccion.ARRIBA);
 
