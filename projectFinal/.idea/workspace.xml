@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="color verde alrededor.">
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="full">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Semaforo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Semaforo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720612219391</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="full">
+      <option name="closed" value="true" />
+      <created>1720614549430</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1720614549430</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,7 +279,8 @@
     <MESSAGE value="borrador." />
     <MESSAGE value="aumento de timeline." />
     <MESSAGE value="color verde alrededor." />
-    <option name="LAST_COMMIT_MESSAGE" value="color verde alrededor." />
+    <MESSAGE value="full" />
+    <option name="LAST_COMMIT_MESSAGE" value="full" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

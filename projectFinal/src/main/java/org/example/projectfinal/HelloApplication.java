@@ -25,7 +25,9 @@ import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
 
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class HelloApplication extends Application {
@@ -34,6 +36,7 @@ public class HelloApplication extends Application {
     private Canvas canvas;
     private GraphicsContext gc;
     private boolean simulacionIniciada = false;
+    private Queue<Vehiculo> vehiculosEnInterseccion;
 
     @Override
     public void start(Stage stage) {
@@ -42,6 +45,7 @@ public class HelloApplication extends Application {
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.setAlignment(Pos.CENTER);
+        vehiculosEnInterseccion = new LinkedList<>();
 
         canvas = new Canvas(400, 400);
         gc = canvas.getGraphicsContext2D();
@@ -212,23 +216,38 @@ public class HelloApplication extends Application {
 
             for (Vehiculo vehiculo : colaVehiculos) {
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
-
                 boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
 
-                if (estadoSemaforo == EstadoSemaforo.ROJO &&
-                        vehiculo.getTipo() != TipoVehiculo.EMERGENCIA &&
-                        !hayEmergenciaDetras &&
-                        estaCercaDelSemaforo(vehiculo)) {
-                    vehiculo.detener();
-                } else if (vehiculoAnterior != null) {
-                    double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                    if (distancia < 40) {
+                if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                    if (!vehiculosEnInterseccion.isEmpty() && vehiculosEnInterseccion.peek() != vehiculo) {
+                        if (estaEnInterseccion(vehiculo)) {
+                            vehiculo.detener();
+                        }
+                    } else {
+                        vehiculo.reanudar();
+                        if (estaEnInterseccion(vehiculo)) {
+                            if (!vehiculosEnInterseccion.contains(vehiculo)) {
+                                vehiculosEnInterseccion.add(vehiculo);
+                            }
+                        } else {
+                            vehiculosEnInterseccion.remove(vehiculo);
+                        }
+                    }
+                } else {
+                    if (estadoSemaforo == EstadoSemaforo.ROJO &&
+                            !hayEmergenciaDetras &&
+                            estaCercaDelSemaforo(vehiculo)) {
                         vehiculo.detener();
+                    } else if (vehiculoAnterior != null) {
+                        double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
+                        if (distancia < 40) {
+                            vehiculo.detener();
+                        } else {
+                            vehiculo.reanudar();
+                        }
                     } else {
                         vehiculo.reanudar();
                     }
-                } else {
-                    vehiculo.reanudar();
                 }
 
                 vehiculo.mover();
@@ -237,6 +256,13 @@ public class HelloApplication extends Application {
                 vehiculoAnterior = vehiculo;
             }
         }
+    }
+
+    private boolean estaEnInterseccion(Vehiculo vehiculo) {
+        double posX = vehiculo.getPosX();
+        double posY = vehiculo.getPosY();
+
+        return (posX >= 150 && posX <= 250 && posY >= 150 && posY <= 250);
     }
 
     private double calcularDistancia(Vehiculo v1, Vehiculo v2) {
