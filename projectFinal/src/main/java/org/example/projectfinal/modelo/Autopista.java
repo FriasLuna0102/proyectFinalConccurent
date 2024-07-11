@@ -3,8 +3,8 @@ package org.example.projectfinal.modelo;
 import java.util.List;
 
 public class Autopista {
-    private String id;                   // Identificador único de la autopista
-    private List<Calle> calles;          // Lista de calles que conforman la autopista
+    private String id;
+    private List<Calle> calles;
 
     public Autopista(String id, List<Calle> calles) {
         this.id = id;

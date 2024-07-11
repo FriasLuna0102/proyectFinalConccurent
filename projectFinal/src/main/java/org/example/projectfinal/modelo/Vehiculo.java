@@ -84,15 +84,6 @@ public class Vehiculo {
         }
     }
 
-    public void detenerPorTresSegundos() {
-        if (!detenido) {
-            this.detenido = true;
-            this.tiempoDetenido = System.currentTimeMillis();
-        } else if (System.currentTimeMillis() - this.tiempoDetenido >= 3000) {
-            this.detenido = false;
-        }
-    }
-
     public void detener() {
         this.detenido = true;
         this.tiempoDetenido = System.currentTimeMillis();

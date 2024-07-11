@@ -279,6 +279,7 @@ public class HelloApplication extends Application {
         gc.clearRect(0, 0, 400, 400);
         dibujarInterseccion(gc);
 
+        // Iteramos sobre cada entrada en el mapa (cada dirección y su respectiva cola de vehículos).
         Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion = interseccion.getVehiculosPorDireccion();
         for (Map.Entry<Direccion, ConcurrentLinkedQueue<Vehiculo>> entry : vehiculosPorDireccion.entrySet()) {
             Direccion direccion = entry.getKey();
@@ -287,6 +288,8 @@ public class HelloApplication extends Application {
             Vehiculo vehiculoAnterior = null;
 
             for (Vehiculo vehiculo : colaVehiculos) {
+
+                // Obtiene el estado del semáforo asociado a la dirección actual.
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                 boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
 

@@ -3,9 +3,9 @@ package org.example.projectfinal.modelo;
 import java.util.List;
 
 public class Calle {
-    private String id;                   // Identificador único de la calle
-    private int numCarriles;             // Número de carriles
-    private List<Vehiculo> vehiculos;    // Lista de vehículos en la calle
+    private String id;
+    private int numCarriles;
+    private List<Vehiculo> vehiculos;
 
     public Calle(String id, int numCarriles, List<Vehiculo> vehiculos) {
         this.id = id;
