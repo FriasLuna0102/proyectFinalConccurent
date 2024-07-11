@@ -1,8 +1,8 @@
 ## Descripción del diseño del sistema.
 
-### El proyecto es una simulación de una intersección de tráfico que incluye normal y de emergencia, y controla los semáforos para dirigir el tráfico.
+El proyecto es una simulación de una intersección de tráfico que incluye normal y de emergencia, y controla los semáforos para dirigir el tráfico.
 
-### Paquete org.example.projectfinal.enumeraciones: Este paquete contiene las enumeraciones utilizadas en el proyecto, que definen los diferentes estados y tipos posibles para los componentes de la simulación (vehículos y semáforos).
+Paquete org.example.projectfinal.enumeraciones: Este paquete contiene las enumeraciones utilizadas en el proyecto, que definen los diferentes estados y tipos posibles para los componentes de la simulación (vehículos y semáforos).
 
 •	Dirección: Enumera las direcciones posibles para los vehículos (DERECHA, IZQUIERDA, ARRIBA, ABAJO).
 •	EstadoSemaforo: Enumera los posibles estados de los semáforos (ROJO, AMARILLO, VERDE).
