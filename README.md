@@ -1,8 +1,8 @@
-Descripción del diseño del sistema.
+## Descripción del diseño del sistema.
 
-El proyecto es una simulación de una intersección de tráfico que incluye vehículos y semáforos. La simulación permite la adición de vehículos de tipo normal y de emergencia, y controla los semáforos para dirigir el tráfico.
+### El proyecto es una simulación de una intersección de tráfico que incluye normal y de emergencia, y controla los semáforos para dirigir el tráfico.
 
-Paquete org.example.projectfinal.enumeraciones: Este paquete contiene las enumeraciones utilizadas en el proyecto, que definen los diferentes estados y tipos posibles para los componentes de la simulación (vehículos y semáforos).
+### Paquete org.example.projectfinal.enumeraciones: Este paquete contiene las enumeraciones utilizadas en el proyecto, que definen los diferentes estados y tipos posibles para los componentes de la simulación (vehículos y semáforos).
 
 •	Dirección: Enumera las direcciones posibles para los vehículos (DERECHA, IZQUIERDA, ARRIBA, ABAJO).
 •	EstadoSemaforo: Enumera los posibles estados de los semáforos (ROJO, AMARILLO, VERDE).
@@ -33,20 +33,23 @@ Explicación de los Algoritmos de Control.
 
 Instrucciones para Ejecutar la Aplicación.
 
-Prerrequisitos: 
+## Prerrequisitos: 
 •	Java 8 o superior
 •	JavaFX
 •	Un IDE compatible (por ejemplo, IntelliJ IDEA, Eclipse)
-Configuración del Proyecto:
+
+## Configuración del Proyecto:
+
 •	Importa el proyecto en tu IDE.
 •	Asegurarse de que todas las dependencias necesarias están incluidas y configuradas en el archivo module-info.java.
-Ejecución:
+
+## Ejecución:
 •	Ejecutar la clase HelloApplication como una aplicación Java.
 •	En la interfaz gráfica, seleccionar el escenario y hacer clic en "Iniciar Simulación".
 •	Agregar vehículos usando el combo box de tipo de vehículo y dirección, y hacer clic en agregar Vehículo.
 
 
-Resultados de pruebas y evaluación del sistema.
+## Resultados de pruebas y evaluación del sistema.
 
 El sistema de simulación de tráfico ha demostrado ser efectivo y funcional a través de una serie de pruebas rigurosas. Las pruebas de funcionalidad confirmaron que la simulación se inicia correctamente y los semáforos cambian de estado según lo esperado, sin errores. Los vehículos se agregan y se mueven conforme a la lógica definida, y los vehículos de emergencia tienen prioridad sobre los normales y los semáforos, comportándose adecuadamente incluso cuando los semáforos están en rojo. Estas pruebas validan que los componentes críticos del sistema funcionan de manera coherente y conforme a las expectativas.
 

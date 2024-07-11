@@ -203,7 +203,7 @@ public class HelloApplication extends Application {
             return; // No agrega el vehículo si la posición no es válida
         }
 
-        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.1 : 0.1;
+        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2;
 
         Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
@@ -290,6 +290,7 @@ public class HelloApplication extends Application {
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                 boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
 
+                // Procesar vehículos de emergencia
                 if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
                     if (!vehiculosEnInterseccion.isEmpty() && vehiculosEnInterseccion.peek() != vehiculo) {
                         if (estaEnInterseccion(vehiculo)) {
@@ -313,11 +314,19 @@ public class HelloApplication extends Application {
                         }
                     }
                 } else {
+                    // Procesar vehículos normales
+                    if (estaEnInterseccion(vehiculo)) {
+                        if (!vehiculosEnInterseccion.contains(vehiculo)) {
+                            vehiculosEnInterseccion.add(vehiculo);
+                        }
+                    } else {
+                        vehiculosEnInterseccion.remove(vehiculo);
+                    }
+
                     if (estadoSemaforo == EstadoSemaforo.ROJO && !hayEmergenciaDetras && estaCercaDelSemaforo(vehiculo)) {
                         vehiculo.detener();
                     } else if (vehiculoAnterior != null) {
                         double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                        // Verificar si hay un vehículo de emergencia en la intersección y si el vehículo está demasiado cerca
                         if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
                             vehiculo.detener();
                         } else if (distancia < 40) {
@@ -326,8 +335,17 @@ public class HelloApplication extends Application {
                             vehiculo.reanudar();
                         }
                     } else {
+                        // Verificar si hay vehículos en la intersección y si están en una dirección diferente
+                        boolean hayVehiculosEnDireccionDiferente = vehiculosEnInterseccion.stream()
+                                .anyMatch(v -> v.getDireccion() != direccion);
+
                         if (hayEmergenciaDetras || (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo))) {
-                            vehiculo.reanudar();
+                            if (vehiculosEnInterseccion.isEmpty() || !hayVehiculosEnDireccionDiferente) {
+                                vehiculo.reanudar();
+                            } else {
+                                System.out.println("cant: " + vehiculosEnInterseccion.size());
+                                vehiculo.detener();
+                            }
                         } else {
                             vehiculo.reanudar();
                         }
