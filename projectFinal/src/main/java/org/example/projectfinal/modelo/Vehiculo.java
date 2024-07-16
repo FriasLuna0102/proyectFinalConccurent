@@ -2,6 +2,7 @@ package org.example.projectfinal.modelo;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import org.example.projectfinal.enumeraciones.Accion;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoVehiculo;
 import org.example.projectfinal.enumeraciones.TipoVehiculo;
@@ -17,8 +18,10 @@ public class Vehiculo {
     private boolean detenido;
     private boolean detenidoUnaVez;
     private long tiempoDetenido;
+    private Accion accion;
+    private boolean accionAplicada = false;
 
-    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad) {
+    public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion) {
         this.id = id;
         this.tipo = tipo;
         this.direccion = direccion;
@@ -29,8 +32,16 @@ public class Vehiculo {
         this.detenido = false;
         this.detenidoUnaVez = false;
         this.tiempoDetenido = 0;
+        this.accion = accion;
+
+    }
+    public boolean getAccionAplicada() {
+        return accionAplicada;
     }
 
+    public void setAccionAplicada(boolean accionAplicada) {
+        this.accionAplicada = accionAplicada;
+    }
     public void dibujar(GraphicsContext gc) {
         gc.save(); // Guardar el estado actual del contexto gráfico
 
@@ -175,5 +186,13 @@ public class Vehiculo {
 
     public void setTiempoDetenido(long tiempoDetenido) {
         this.tiempoDetenido = tiempoDetenido;
+    }
+
+    public Accion getAccion() {
+        return accion;
+    }
+
+    public void setAccion(Accion accion) {
+        this.accion = accion;
     }
 }

@@ -4,5 +4,9 @@ public enum Direccion {
     DERECHA,
     IZQUIERDA,
     ARRIBA,
-    ABAJO
+    ARRIBA_CARRIL_OPUESTO,
+
+    ABAJO,
+    ABAJO_CARRIL_OPUESTO
+
 }

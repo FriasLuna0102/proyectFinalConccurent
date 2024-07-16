@@ -17,10 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.example.projectfinal.enumeraciones.Direccion;
-import org.example.projectfinal.enumeraciones.EstadoSemaforo;
-import org.example.projectfinal.enumeraciones.EstadoVehiculo;
-import org.example.projectfinal.enumeraciones.TipoVehiculo;
+import org.example.projectfinal.enumeraciones.*;
 import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
@@ -71,6 +68,13 @@ public class HelloApplication extends Application {
         direccionComboBox.setValue(Direccion.DERECHA);
         direccionLabel.setStyle("-fx-font-size: 16px;");
 
+        Label accionLabel = new Label("Acción:");
+        ComboBox<Accion> accionComboBox = new ComboBox<>();
+        accionComboBox.getItems().addAll(Accion.values());
+        accionComboBox.setValue(Accion.SEGUIR_RECTO);
+        accionLabel.setStyle("-fx-font-size: 16px;");
+
+
         agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 18px;");
         agregarVehiculoButton.setDisable(true); // Inicialmente deshabilitado
@@ -91,11 +95,12 @@ public class HelloApplication extends Application {
             } else {
                 TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
                 Direccion direccion = direccionComboBox.getValue();
-                agregarVehiculo(tipoVehiculo, direccion);
+                Accion accion = accionComboBox.getValue();
+                agregarVehiculo(tipoVehiculo, direccion, accion);
             }
         });
 
-        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, agregarVehiculoButton);
+        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, accionLabel, accionComboBox, agregarVehiculoButton);
         controlsBox.setAlignment(Pos.CENTER);
 
         root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvas);
@@ -174,7 +179,7 @@ public class HelloApplication extends Application {
         validacionTimeline.play();
     }
 
-    private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion) {
+    private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion, Accion accion) {
         String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
         double posX = 50;
         double posY = 50;
@@ -205,7 +210,7 @@ public class HelloApplication extends Application {
 
         double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2;
 
-        Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad);
+        Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad, accion);
         interseccion.agregarVehiculo(direccion, nuevoVehiculo);
     }
 
@@ -279,7 +284,6 @@ public class HelloApplication extends Application {
         gc.clearRect(0, 0, 400, 400);
         dibujarInterseccion(gc);
 
-        // Iteramos sobre cada entrada en el mapa (cada dirección y su respectiva cola de vehículos).
         Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion = interseccion.getVehiculosPorDireccion();
         for (Map.Entry<Direccion, ConcurrentLinkedQueue<Vehiculo>> entry : vehiculosPorDireccion.entrySet()) {
             Direccion direccion = entry.getKey();
@@ -288,71 +292,17 @@ public class HelloApplication extends Application {
             Vehiculo vehiculoAnterior = null;
 
             for (Vehiculo vehiculo : colaVehiculos) {
-
-                // Obtiene el estado del semáforo asociado a la dirección actual.
                 EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                 boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, colaVehiculos);
 
-                // Procesar vehículos de emergencia
                 if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
-                    if (!vehiculosEnInterseccion.isEmpty() && vehiculosEnInterseccion.peek() != vehiculo) {
-                        if (estaEnInterseccion(vehiculo)) {
-                            vehiculo.detener();
-                        }
-                    } else {
-                        vehiculo.reanudar();
-                        if (estaEnInterseccion(vehiculo)) {
-                            if (!vehiculosEnInterseccion.contains(vehiculo)) {
-                                vehiculosEnInterseccion.add(vehiculo);
-                            }
-                        } else {
-                            vehiculosEnInterseccion.remove(vehiculo);
-                        }
-                    }
-                    // Verificación de distancia mínima para vehículos de emergencia
-                    if (vehiculoAnterior != null) {
-                        double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                        if (distancia < 40) {
-                            vehiculo.detener();
-                        }
-                    }
+                    procesarVehiculoEmergencia(vehiculo, vehiculoAnterior);
                 } else {
-                    // Procesar vehículos normales
-                    if (estaEnInterseccion(vehiculo)) {
-                        if (!vehiculosEnInterseccion.contains(vehiculo)) {
-                            vehiculosEnInterseccion.add(vehiculo);
-                        }
-                    } else {
-                        vehiculosEnInterseccion.remove(vehiculo);
-                    }
+                    procesarVehiculoNormal(vehiculo, estadoSemaforo, hayEmergenciaDetras, vehiculoAnterior);
+                }
 
-                    if (estadoSemaforo == EstadoSemaforo.ROJO && !hayEmergenciaDetras && estaCercaDelSemaforo(vehiculo)) {
-                        vehiculo.detener();
-                    } else if (vehiculoAnterior != null) {
-                        double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
-                        if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
-                            vehiculo.detener();
-                        } else if (distancia < 40) {
-                            vehiculo.detener();
-                        } else {
-                            vehiculo.reanudar();
-                        }
-                    } else {
-                        // Verificar si hay vehículos en la intersección y si están en una dirección diferente
-                        boolean hayVehiculosEnDireccionDiferente = vehiculosEnInterseccion.stream()
-                                .anyMatch(v -> v.getDireccion() != direccion);
-
-                        if (hayEmergenciaDetras || (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo))) {
-                            if (vehiculosEnInterseccion.isEmpty() || !hayVehiculosEnDireccionDiferente) {
-                                vehiculo.reanudar();
-                            } else {
-                                System.out.println("cant: " + vehiculosEnInterseccion.size());
-                                vehiculo.detener();
-                            }
-                        } else {
-                            vehiculo.reanudar();
-                        }
-                    }
+                if (estaEnInterseccion(vehiculo)) {
+                    aplicarAccion(vehiculo);
                 }
 
                 vehiculo.mover();
@@ -362,6 +312,188 @@ public class HelloApplication extends Application {
             }
         }
     }
+
+    private void procesarVehiculoEmergencia(Vehiculo vehiculo, Vehiculo vehiculoAnterior) {
+        if (!vehiculosEnInterseccion.isEmpty() && vehiculosEnInterseccion.peek() != vehiculo) {
+            if (estaEnInterseccion(vehiculo)) {
+                vehiculo.detener();
+            }
+        } else {
+            vehiculo.reanudar();
+            actualizarVehiculoEnInterseccion(vehiculo);
+        }
+
+        if (vehiculoAnterior != null && calcularDistancia(vehiculo, vehiculoAnterior) < 40) {
+            vehiculo.detener();
+        }
+    }
+
+    private void procesarVehiculoNormal(Vehiculo vehiculo, EstadoSemaforo estadoSemaforo, boolean hayEmergenciaDetras, Vehiculo vehiculoAnterior) {
+        actualizarVehiculoEnInterseccion(vehiculo);
+
+        if (estadoSemaforo == EstadoSemaforo.ROJO && !hayEmergenciaDetras && estaCercaDelSemaforo(vehiculo)) {
+            vehiculo.detener();
+        } else if (vehiculoAnterior != null) {
+            manejarDistanciaConAnterior(vehiculo, vehiculoAnterior);
+        } else {
+            manejarSituacionSinAnterior(vehiculo, hayEmergenciaDetras);
+        }
+    }
+
+    private void actualizarVehiculoEnInterseccion(Vehiculo vehiculo) {
+        if (estaEnInterseccion(vehiculo)) {
+            if (!vehiculosEnInterseccion.contains(vehiculo)) {
+                vehiculosEnInterseccion.add(vehiculo);
+            }
+        } else {
+            vehiculosEnInterseccion.remove(vehiculo);
+        }
+    }
+
+    private void manejarDistanciaConAnterior(Vehiculo vehiculo, Vehiculo vehiculoAnterior) {
+        double distancia = calcularDistancia(vehiculo, vehiculoAnterior);
+        if (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo)) {
+            vehiculo.detener();
+        } else if (distancia < 40) {
+            vehiculo.detener();
+        } else {
+            vehiculo.reanudar();
+        }
+    }
+
+    private void manejarSituacionSinAnterior(Vehiculo vehiculo, boolean hayEmergenciaDetras) {
+        boolean hayVehiculosEnDireccionDiferente = vehiculosEnInterseccion.stream()
+                .anyMatch(v -> v.getDireccion() != vehiculo.getDireccion());
+
+        if (hayEmergenciaDetras || (hayVehiculoEmergenciaEnInterseccion() && estaCercaVehiculoEmergencia(vehiculo))) {
+            if (vehiculosEnInterseccion.isEmpty() || !hayVehiculosEnDireccionDiferente) {
+                vehiculo.reanudar();
+            } else {
+                System.out.println("cant: " + vehiculosEnInterseccion.size());
+                vehiculo.detener();
+            }
+        } else {
+            vehiculo.reanudar();
+        }
+    }
+
+    private void aplicarAccion(Vehiculo vehiculo) {
+        if (vehiculo.getAccionAplicada()) {
+            return; // La acción ya se aplicó, no hacer nada
+        }
+
+        switch (vehiculo.getAccion()) {
+            case DOBLAR_DERECHA:
+                doblarDerecha(vehiculo);
+                break;
+            case DOBLAR_IZQUIERDA:
+                doblarIzquierda(vehiculo);
+                break;
+            case GIRAR_U:
+                girarU(vehiculo);
+                break;
+            case SEGUIR_RECTO:
+            default:
+                // No es necesario hacer nada especial para seguir recto
+                break;
+        }
+        if (!estaEnInterseccion(vehiculo)) {
+            vehiculo.setAccionAplicada(false);
+        }
+        vehiculo.setAccionAplicada(true);
+    }
+
+    private void doblarDerecha(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                vehiculo.setDireccion(Direccion.ABAJO);
+                break;
+            case IZQUIERDA:
+                vehiculo.setDireccion(Direccion.ARRIBA);
+                break;
+            case ABAJO:
+                vehiculo.setDireccion(Direccion.IZQUIERDA);
+                break;
+            case ARRIBA:
+                vehiculo.setDireccion(Direccion.DERECHA);
+                break;
+        }
+    }
+
+    private void doblarIzquierda(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                vehiculo.setDireccion(Direccion.ARRIBA);
+                break;
+            case IZQUIERDA:
+                vehiculo.setDireccion(Direccion.ABAJO);
+                break;
+            case ABAJO:
+                vehiculo.setDireccion(Direccion.DERECHA);
+                break;
+            case ARRIBA:
+                vehiculo.setDireccion(Direccion.IZQUIERDA);
+                break;
+        }
+    }
+
+    // Método para girar el vehículo y actualizar la interfaz gráfica
+    private void girarU(Vehiculo vehiculo) {
+        // Guardar la dirección anterior antes de cambiarla
+        Direccion direccionAnterior = vehiculo.getDireccion();
+
+        // Configurar el Timeline para la animación del giro
+        timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.2), event -> {
+                    switch (direccionAnterior) {
+                        case DERECHA:
+                            vehiculo.setDireccion(Direccion.IZQUIERDA);
+                            vehiculo.setPosX(250);  // Ajustar posición X después del giro
+                            break;
+                        case IZQUIERDA:
+                            vehiculo.setDireccion(Direccion.DERECHA);
+                            vehiculo.setPosX(150);  // Ajustar posición X después del giro
+                            break;
+                        case ARRIBA:
+                            vehiculo.setDireccion(Direccion.ABAJO);
+                            vehiculo.setPosY(250);  // Ajustar posición Y después del giro
+                            break;
+                        case ABAJO:
+                            vehiculo.setDireccion(Direccion.ARRIBA);
+                            vehiculo.setPosY(150);  // Ajustar posición Y después del giro
+                            break;
+                    }
+                    ajustarPosicionDespuesDeGiroU(vehiculo);  // Ajustar posición final después del giro
+                }),
+                new KeyFrame(Duration.seconds(1))  // Duración de la animación (1 segundo, ajusta según necesites)
+        );
+
+        timeline.play();  // Iniciar la animación
+    }
+
+    // Método para ajustar la posición después del giro
+    private void ajustarPosicionDespuesDeGiroU(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case ARRIBA:
+                vehiculo.setPosX(210);  // Ajustar a la posición correcta en la calle vertical
+                vehiculo.setPosY(50);   // Colocar en la posición correcta para moverse hacia arriba
+                break;
+            case ABAJO:
+                vehiculo.setPosX(190);  // Ajustar a la posición correcta en la calle vertical
+                vehiculo.setPosY(350);  // Colocar en la posición correcta para moverse hacia abajo
+                break;
+            case DERECHA:
+                vehiculo.setPosX(350);  // Colocar en la posición correcta para moverse hacia la derecha
+                vehiculo.setPosY(210);  // Ajustar a la posición correcta en la calle horizontal
+                break;
+            case IZQUIERDA:
+                vehiculo.setPosX(50);   // Colocar en la posición correcta para moverse hacia la izquierda
+                vehiculo.setPosY(180);  // Ajustar a la posición correcta en la calle horizontal
+                break;
+        }
+    }
+
+
 
     private boolean hayVehiculoEmergenciaEnInterseccion() {
         for (Vehiculo vehiculo : vehiculosEnInterseccion) {
