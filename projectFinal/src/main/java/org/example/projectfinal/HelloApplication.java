@@ -561,24 +561,20 @@ public class HelloApplication extends Application {
     private boolean estaCercaDelSemaforo(Vehiculo vehiculo) {
         double posX = vehiculo.getPosX();
         double posY = vehiculo.getPosY();
+        int margenDetencion = 20; // Ajusta este valor según sea necesario
 
-        if (vehiculo.getDireccion() == Direccion.DERECHA) {
-            return (posX >= 130 && posX <= 150 && posY == 210);
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                return (posX >= 130 - margenDetencion && posX <= 150 && posY >= 200 && posY <= 220);
+            case IZQUIERDA:
+                return (posX >= 230 && posX <= 250 + margenDetencion && posY >= 170 && posY <= 190);
+            case ABAJO:
+                return (posY >= 130 - margenDetencion && posY <= 150 && posX >= 180 && posX <= 200);
+            case ARRIBA:
+                return (posY >= 250 && posY <= 270 + margenDetencion && posX >= 200 && posX <= 220);
+            default:
+                return false;
         }
-
-        if (vehiculo.getDireccion() == Direccion.IZQUIERDA) {
-            return (posX >= 230 && posX <= 250 && posY == 180);
-        }
-
-        if (vehiculo.getDireccion() == Direccion.ABAJO) {
-            return (posY >= 130 && posY <= 150 && posX == 190);
-        }
-
-        if (vehiculo.getDireccion() == Direccion.ARRIBA) {
-            return (posY >= 250 && posY <= 270 && posX == 210);
-        }
-
-        return false;
     }
 
     public static void main(String[] args) {
