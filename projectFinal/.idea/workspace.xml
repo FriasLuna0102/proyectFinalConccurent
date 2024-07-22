@@ -4,21 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="Listo.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Accion.java" afterDir="false" />
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="fix vehiculos normales.">
       <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_7_10_24,_6_22_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_7_10_24,_6_37_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_7_10_24__6_22_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_7_10_24__6_37_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_7_10_24,_6_37_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_7_10_24__6_37_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_10_24,_6_23_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_10_24__5_50_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_10_24__5_50_PM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_10_24__6_23_AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="CodyActiveAccount">
-    <option name="activeAccountId" value="VXNlcjo0NTI5MzY=" />
   </component>
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
@@ -45,9 +48,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Enum" />
         <option value="FxmlFile" />
         <option value="Class" />
-        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -157,9 +160,7 @@
       <workItem from="1720271553813" duration="1972000" />
       <workItem from="1720294263163" duration="1841000" />
       <workItem from="1720431989833" duration="7341000" />
-      <workItem from="1720685281444" duration="4068000" />
-      <workItem from="1720866500024" duration="206000" />
-      <workItem from="1721130258420" duration="9444000" />
+      <workItem from="1720685281444" duration="1054000" />
     </task>
     <task id="LOCAL-00001" summary="commit inicial">
       <option name="closed" value="true" />
@@ -297,15 +298,7 @@
       <option name="project" value="LOCAL" />
       <updated>1720657629539</updated>
     </task>
-    <task id="LOCAL-00018" summary="Listo.">
-      <option name="closed" value="true" />
-      <created>1720686474016</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1720686474016</updated>
-    </task>
-    <option name="localTasksCounter" value="19" />
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -335,8 +328,7 @@
     <MESSAGE value="trabajando en colision" />
     <MESSAGE value="se evita que los de emergencia colisionen." />
     <MESSAGE value="fix vehiculos normales." />
-    <MESSAGE value="Listo." />
-    <option name="LAST_COMMIT_MESSAGE" value="Listo." />
+    <option name="LAST_COMMIT_MESSAGE" value="fix vehiculos normales." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
