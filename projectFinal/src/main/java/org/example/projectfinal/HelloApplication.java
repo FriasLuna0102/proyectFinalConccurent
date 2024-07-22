@@ -432,23 +432,23 @@ public class HelloApplication extends Application {
         switch (vehiculo.getDireccion()) {
             case DERECHA:
                 vehiculo.setDireccion(Direccion.ARRIBA);
-                vehiculo.setPosX(200);  // Ajustar a la posición correcta en la intersección
-                vehiculo.setPosY(190);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosX(210);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosY(180);  // Ajustar a la posición correcta en la intersección
                 break;
             case IZQUIERDA:
                 vehiculo.setDireccion(Direccion.ABAJO);
-                vehiculo.setPosX(200);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosX(180);  // Ajustar a la posición correcta en la intersección
                 vehiculo.setPosY(210);  // Ajustar a la posición correcta en la intersección
                 break;
             case ABAJO:
                 vehiculo.setDireccion(Direccion.DERECHA);
-                vehiculo.setPosX(210);  // Ajustar a la posición correcta en la intersección
-                vehiculo.setPosY(200);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosX(200);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosY(210);  // Ajustar a la posición correcta en la intersección
                 break;
             case ARRIBA:
                 vehiculo.setDireccion(Direccion.IZQUIERDA);
-                vehiculo.setPosX(190);  // Ajustar a la posición correcta en la intersección
-                vehiculo.setPosY(200);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosX(180);  // Ajustar a la posición correcta en la intersección
+                vehiculo.setPosY(180);  // Ajustar a la posición correcta en la intersección
                 break;
         }
     }
