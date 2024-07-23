@@ -4,7 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="doblar derecha funcionando correctamente">
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="Listo doblar a la derecha.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -89,7 +90,7 @@
     &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;primerEntregable&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/friasluna/Desktop/Proyecto Final_ConcurrentParallel/proyectFinalConccurent/projectFinal&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/friasluna/Desktop/Proyecto Integrador/proyecto_korrenet/korrenet&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -150,6 +151,9 @@
       <workItem from="1720294263163" duration="1841000" />
       <workItem from="1720431989833" duration="7341000" />
       <workItem from="1720685281444" duration="1054000" />
+      <workItem from="1721694597907" duration="611000" />
+      <workItem from="1721722236651" duration="1378000" />
+      <workItem from="1721731589182" duration="334000" />
     </task>
     <task id="LOCAL-00001" summary="commit inicial">
       <option name="closed" value="true" />
@@ -303,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721144368979</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Listo doblar a la derecha.">
+      <option name="closed" value="true" />
+      <created>1721678995980</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1721678995980</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -334,7 +346,8 @@
     <MESSAGE value="se evita que los de emergencia colisionen." />
     <MESSAGE value="fix vehiculos normales." />
     <MESSAGE value="doblar derecha funcionando correctamente" />
-    <option name="LAST_COMMIT_MESSAGE" value="doblar derecha funcionando correctamente" />
+    <MESSAGE value="Listo doblar a la derecha." />
+    <option name="LAST_COMMIT_MESSAGE" value="Listo doblar a la derecha." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

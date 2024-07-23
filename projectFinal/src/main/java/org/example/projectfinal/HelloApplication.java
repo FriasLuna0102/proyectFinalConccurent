@@ -493,18 +493,18 @@ public class HelloApplication extends Application {
         switch (vehiculo.getDireccion()) {
             case ARRIBA:
                 vehiculo.setPosX(210);  // Ajustar a la posición correcta en la calle vertical
-                vehiculo.setPosY(50);   // Colocar en la posición correcta para moverse hacia arriba
+                vehiculo.setPosY(150);   // Colocar en la posición correcta para moverse hacia arriba
                 break;
             case ABAJO:
                 vehiculo.setPosX(190);  // Ajustar a la posición correcta en la calle vertical
-                vehiculo.setPosY(350);  // Colocar en la posición correcta para moverse hacia abajo
+                vehiculo.setPosY(250);  // Colocar en la posición correcta para moverse hacia abajo
                 break;
             case DERECHA:
-                vehiculo.setPosX(350);  // Colocar en la posición correcta para moverse hacia la derecha
+                vehiculo.setPosX(250);  // Colocar en la posición correcta para moverse hacia la derecha
                 vehiculo.setPosY(210);  // Ajustar a la posición correcta en la calle horizontal
                 break;
             case IZQUIERDA:
-                vehiculo.setPosX(50);   // Colocar en la posición correcta para moverse hacia la izquierda
+                vehiculo.setPosX(120);   // Colocar en la posición correcta para moverse hacia la izquierda
                 vehiculo.setPosY(180);  // Ajustar a la posición correcta en la calle horizontal
                 break;
         }
