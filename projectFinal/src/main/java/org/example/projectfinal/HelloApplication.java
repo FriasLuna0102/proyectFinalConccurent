@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.projectfinal.enumeraciones.*;
+import org.example.projectfinal.escenario2.Escenario2;
 import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
@@ -34,8 +35,9 @@ public class HelloApplication extends Application {
     private GraphicsContext gc;
     private boolean simulacionIniciada = false;
     private Queue<Vehiculo> vehiculosEnInterseccion;
-    private Button agregarVehiculoButton; //
-    private Timeline validacionTimeline;
+    private static Button agregarVehiculoButton; //
+    private static Timeline validacionTimeline;
+    private static Escenario2 escenario2;
 
     @Override
     public void start(Stage stage) {
@@ -50,7 +52,7 @@ public class HelloApplication extends Application {
         gc = canvas.getGraphicsContext2D();
 
         ComboBox<String> escenarioComboBox = new ComboBox<>();
-        escenarioComboBox.getItems().addAll("Escenario 1");
+        escenarioComboBox.getItems().addAll("Escenario 1", "Escenario 2");
         escenarioComboBox.setValue("Escenario 1");
 
         Button iniciarButton = new Button("Iniciar Simulación");
@@ -111,63 +113,16 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-
-    private void iniciarSimulacion(String escenario) {
-        interseccion = new Interseccion("1");
-
-        if ("Escenario 1".equals(escenario)) {
-            //interseccion.agregarVehiculo(Direccion.DERECHA, new Vehiculo("1", TipoVehiculo.NORMAL, Direccion.DERECHA, EstadoVehiculo.ESPERANDO, 50, 210, 0.1));
-            //interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350,
-            //interseccion.agregarVehiculo(Direccion.IZQUIERDA, new Vehiculo("2", TipoVehiculo.EMERGENCIA, Direccion.IZQUIERDA, EstadoVehiculo.ESPERANDO, 350, 180, 0.1));
-        }
-
-        if (timeline != null) {
-            timeline.stop();
-        }
-
-        timeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.02),
-                        event -> {
-                            interseccion.controlarSemaforos();
-                            moverYdibujarVehiculos(gc);
-                        }
-                )
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
-
-        // Inicialización y reinicio del validacionTimeline
+    public static void configurarValidacionEscenario2() {
         validacionTimeline = new Timeline(
-                new KeyFrame(
-                        Duration.seconds(0.1),
+                new KeyFrame(Duration.seconds(0.1),
                         event -> {
                             ComboBox<Direccion> direccionComboBox = (ComboBox<Direccion>) ((HBox) agregarVehiculoButton.getParent()).getChildren().get(3);
                             Direccion direccion = direccionComboBox.getValue();
-                            double posX = 50;
-                            double posY = 50;
-
-                            switch (direccion) {
-                                case DERECHA:
-                                    posX = 50;
-                                    posY = 210;
-                                    break;
-                                case IZQUIERDA:
-                                    posX = 350;
-                                    posY = 180;
-                                    break;
-                                case ABAJO:
-                                    posX = 190;
-                                    posY = 0;
-                                    break;
-                                case ARRIBA:
-                                    posX = 210;
-                                    posY = 400;
-                                    break;
-                            }
+                            int interseccionIndex = 0; // Por defecto, primera intersección
 
                             // Habilitar o deshabilitar el botón según la validez de la posición
-                            if (esPosicionValida(posX, posY, direccion)) {
+                            if (escenario2.esPosicionValida(interseccionIndex, direccion)) {
                                 agregarVehiculoButton.setDisable(false);
                             } else {
                                 agregarVehiculoButton.setDisable(true);
@@ -179,56 +134,125 @@ public class HelloApplication extends Application {
         validacionTimeline.play();
     }
 
+    private void iniciarSimulacion(String escenario) {
+
+        if ("Escenario 1".equals(escenario)) {
+            interseccion = new Interseccion("1");
+
+            if (timeline != null) {
+                timeline.stop();
+            }
+
+            timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.seconds(0.02),
+                            event -> {
+                                interseccion.controlarSemaforos();
+                                moverYdibujarVehiculos(gc);
+                            }
+                    )
+            );
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+
+        }else if ("Escenario 2".equals(escenario)) {
+            escenario2 = new Escenario2();
+            escenario2.iniciar();
+
+            if (timeline != null) {
+                timeline.stop();
+            }
+
+            timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(0.02),
+                            event -> {
+                                escenario2.controlarSemaforos();
+                                escenario2.dibujar();
+                            }
+                    )
+            );
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+
+            // Reemplazar el canvas existente con el nuevo del Escenario 2
+            VBox root = (VBox) canvas.getParent();
+            root.getChildren().remove(canvas);
+            root.getChildren().add(escenario2.getCanvas());
+
+            // Configura la validación para el Escenario 2
+            configurarValidacionEscenario2();
+        }
+
+        // Modificar el validacionTimeline para que funcione con ambos escenarios
+        validacionTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.1),
+                        event -> {
+                            ComboBox<Direccion> direccionComboBox = (ComboBox<Direccion>) ((HBox) agregarVehiculoButton.getParent()).getChildren().get(3);
+                            Direccion direccion = direccionComboBox.getValue();
+
+                            boolean esValido;
+                            if (escenario2 != null) {
+                                int interseccionIndex = 0; // O el índice que corresponda
+                                esValido = escenario2.esPosicionValida(interseccionIndex, direccion);
+                            } else {
+                                double posX = 50, posY = 50;
+                                switch (direccion) {
+                                    case DERECHA: posX = 50; posY = 210; break;
+                                    case IZQUIERDA: posX = 350; posY = 180; break;
+                                    case ABAJO: posX = 190; posY = 0; break;
+                                    case ARRIBA: posX = 210; posY = 400; break;
+                                }
+                                esValido = esPosicionValida(posX, posY, direccion);
+                            }
+                            agregarVehiculoButton.setDisable(!esValido);
+                        }
+                )
+        );
+        validacionTimeline.setCycleCount(Timeline.INDEFINITE);
+        validacionTimeline.play();
+    }
+
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion, Accion accion) {
-        String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
-        double posX = 50;
-        double posY = 50;
-
-        switch (direccion) {
-            case DERECHA:
-                posX = 50;
-                posY = 210;
-                break;
-            case IZQUIERDA:
-                posX = 350;
-                posY = 180;
-                break;
-            case ABAJO:
-                posX = 190;
-                posY = 0;
-                break;
-            case ARRIBA:
-                posX = 210;
-                posY = 400;
-                break;
+        if (escenario2 != null) {
+            int interseccionIndex = 0; // O el índice que corresponda
+            escenario2.agregarVehiculo(tipoVehiculo, direccion, accion, interseccionIndex);
+        } else {
+            // Lógica existente para Escenario 1
+            String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
+            double posX = 50, posY = 50;
+            switch (direccion) {
+                case DERECHA: posX = 50; posY = 210; break;
+                case IZQUIERDA: posX = 350; posY = 180; break;
+                case ABAJO: posX = 190; posY = 0; break;
+                case ARRIBA: posX = 210; posY = 400; break;
+            }
+            if (!esPosicionValida(posX, posY, direccion)) {
+                return;
+            }
+            double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2;
+            Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad, accion);
+            interseccion.agregarVehiculo(direccion, nuevoVehiculo);
         }
-
-        // Verificar que no haya otro vehículo en la posición inicial propuesta
-        if (!esPosicionValida(posX, posY, direccion)) {
-            return; // No agrega el vehículo si la posición no es válida
-        }
-
-        double velocidad = tipoVehiculo == TipoVehiculo.EMERGENCIA ? 0.2 : 0.2;
-
-        Vehiculo nuevoVehiculo = new Vehiculo(id, tipoVehiculo, direccion, EstadoVehiculo.ESPERANDO, posX, posY, velocidad, accion);
-        interseccion.agregarVehiculo(direccion, nuevoVehiculo);
     }
 
     private boolean esPosicionValida(double posX, double posY, Direccion direccion) {
-        ConcurrentLinkedQueue<Vehiculo> colaVehiculos = interseccion.getVehiculosPorDireccion().get(direccion);
-
-        if (colaVehiculos == null) {
-            return true; // No hay vehículos en esta dirección, posición válida
-        }
-
-        for (Vehiculo vehiculo : colaVehiculos) {
-            double distancia = calcularDistancia(vehiculo.getPosX(), vehiculo.getPosY(), posX, posY);
-            if (distancia < 40) {
-                return false; // La distancia mínima no se cumple
+        if (escenario2 != null) {
+            int interseccionIndex = 0; // O el índice que corresponda
+            return escenario2.esPosicionValida(interseccionIndex, direccion);
+        } else {
+            // Lógica existente para Escenario 1
+            ConcurrentLinkedQueue<Vehiculo> colaVehiculos = interseccion.getVehiculosPorDireccion().get(direccion);
+            if (colaVehiculos == null) {
+                return true;
             }
+            for (Vehiculo vehiculo : colaVehiculos) {
+                double distancia = calcularDistancia(vehiculo.getPosX(), vehiculo.getPosY(), posX, posY);
+                if (distancia < 40) {
+                    return false;
+                }
+            }
+            return true;
         }
-
-        return true; // La posición es válida
     }
 
     private double calcularDistancia(double x1, double y1, double x2, double y2) {
