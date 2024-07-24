@@ -38,6 +38,11 @@ public class HelloApplication extends Application {
     private static Button agregarVehiculoButton; //
     private static Timeline validacionTimeline;
     private static Escenario2 escenario2;
+    private static TipoCarril tipoCarril;
+    private ComboBox<TipoVehiculo> tipoVehiculoComboBox;
+    private ComboBox<Direccion> direccionComboBox;
+    private ComboBox<Accion> accionComboBox;
+    private ComboBox<TipoCarril> carrilComboBox;
 
     @Override
     public void start(Stage stage) {
@@ -58,35 +63,31 @@ public class HelloApplication extends Application {
         Button iniciarButton = new Button("Iniciar Simulación");
         iniciarButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 18px;");
 
-        Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
-        ComboBox<TipoVehiculo> tipoVehiculoComboBox = new ComboBox<>();
-        tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
-        tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
-        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;");
-
-        Label direccionLabel = new Label("Dirección:");
-        ComboBox<Direccion> direccionComboBox = new ComboBox<>();
-        direccionComboBox.getItems().addAll(Direccion.IZQUIERDA, Direccion.DERECHA, Direccion.ABAJO, Direccion.ARRIBA);
-        direccionComboBox.setValue(Direccion.DERECHA);
-        direccionLabel.setStyle("-fx-font-size: 16px;");
-
-        Label accionLabel = new Label("Acción:");
-        ComboBox<Accion> accionComboBox = new ComboBox<>();
-        accionComboBox.getItems().addAll(Accion.values());
-        accionComboBox.setValue(Accion.SEGUIR_RECTO);
-        accionLabel.setStyle("-fx-font-size: 16px;");
-
-
         agregarVehiculoButton = new Button("Agregar Vehículo");
         agregarVehiculoButton.setStyle("-fx-background-color: #008CBA; -fx-text-fill: white; -fx-font-size: 18px;");
         agregarVehiculoButton.setDisable(true); // Inicialmente deshabilitado
 
+        // Listener para cambios en el ComboBox de escenarios
+        escenarioComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            root.getChildren().removeIf(node -> node instanceof HBox); // Elimina los controles existentes
+
+            if ("Escenario 1".equals(newValue)) {
+                createControlsEscenario1(root);
+            } else if ("Escenario 2".equals(newValue)) {
+                createControlsEscenario2(root);
+            }
+        });
+
+        root.getChildren().addAll(escenarioComboBox, iniciarButton, canvas);
+
+        // Acción para el botón de iniciar simulación
         iniciarButton.setOnAction(event -> {
             String escenarioSeleccionado = escenarioComboBox.getValue();
             iniciarSimulacion(escenarioSeleccionado);
             simulacionIniciada = true;
         });
 
+        // Acción para el botón de agregar vehículo
         agregarVehiculoButton.setOnAction(event -> {
             if (!simulacionIniciada) {
                 Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -95,23 +96,79 @@ public class HelloApplication extends Application {
                 alerta.setContentText("Aún no se ha iniciado la simulación. Favor iniciar la simulación.");
                 alerta.showAndWait();
             } else {
+                // Obtener los valores de los ComboBoxes
                 TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
                 Direccion direccion = direccionComboBox.getValue();
                 Accion accion = accionComboBox.getValue();
-                agregarVehiculo(tipoVehiculo, direccion, accion);
+                TipoCarril carril = carrilComboBox != null ? carrilComboBox.getValue() : null; // Usa el enum TipoCarril
+                agregarVehiculo(tipoVehiculo, direccion, accion, carril);
             }
         });
+
+        stage.setScene(new Scene(root));
+        stage.setFullScreen(true);
+        stage.show();
+    }
+
+    private void createControlsEscenario1(VBox root) {
+        Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
+        tipoVehiculoComboBox = new ComboBox<>();
+        tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
+        tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
+        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;");
+
+        Label direccionLabel = new Label("Dirección:");
+        direccionComboBox = new ComboBox<>();
+        direccionComboBox.getItems().addAll(Direccion.IZQUIERDA, Direccion.DERECHA, Direccion.ABAJO, Direccion.ARRIBA);
+        direccionComboBox.setValue(Direccion.DERECHA);
+        direccionLabel.setStyle("-fx-font-size: 16px;");
+
+        Label accionLabel = new Label("Acción:");
+        accionComboBox = new ComboBox<>();
+        accionComboBox.getItems().addAll(Accion.values());
+        accionComboBox.setValue(Accion.SEGUIR_RECTO);
+        accionLabel.setStyle("-fx-font-size: 16px;");
 
         HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, accionLabel, accionComboBox, agregarVehiculoButton);
         controlsBox.setAlignment(Pos.CENTER);
 
-        root.getChildren().addAll(escenarioComboBox, iniciarButton, controlsBox, canvas);
-
-        stage.setScene(new Scene(root));
-        stage.setFullScreen(true);
-
-        stage.show();
+        root.getChildren().add(controlsBox);
     }
+
+    private void createControlsEscenario2(VBox root) {
+        Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
+        tipoVehiculoComboBox = new ComboBox<>();
+        tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
+        tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
+        tipoVehiculoLabel.setStyle("-fx-font-size: 16px;");
+
+        Label direccionLabel = new Label("Dirección:");
+        direccionComboBox = new ComboBox<>();
+        direccionComboBox.getItems().addAll(Direccion.ABAJO, Direccion.ARRIBA);
+        direccionComboBox.setValue(Direccion.DERECHA);
+        direccionLabel.setStyle("-fx-font-size: 16px;");
+
+        Label accionLabel = new Label("Acción:");
+        accionComboBox = new ComboBox<>();
+        accionComboBox.getItems().addAll(Accion.values());
+        accionComboBox.setValue(Accion.SEGUIR_RECTO);
+        accionLabel.setStyle("-fx-font-size: 16px;");
+
+        Label carrilLabel = new Label("Carril:");
+        carrilComboBox = new ComboBox<>();
+        carrilComboBox.getItems().addAll(TipoCarril.values()); // Usa el enum TipoCarril
+        carrilComboBox.setValue(TipoCarril.CENTRO);
+        carrilLabel.setStyle("-fx-font-size: 16px;");
+
+        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, accionLabel, accionComboBox, carrilLabel, carrilComboBox, agregarVehiculoButton);
+        controlsBox.setAlignment(Pos.CENTER);
+
+        root.getChildren().add(controlsBox);
+    }
+
+
+
+
 
     public static void configurarValidacionEscenario2() {
         validacionTimeline = new Timeline(
@@ -212,7 +269,7 @@ public class HelloApplication extends Application {
         validacionTimeline.play();
     }
 
-    private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion, Accion accion) {
+    private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion, Accion accion, TipoCarril carril) {
         if (escenario2 != null) {
             int interseccionIndex = 0; // O el índice que corresponda
             escenario2.agregarVehiculo(tipoVehiculo, direccion, accion, interseccionIndex);
