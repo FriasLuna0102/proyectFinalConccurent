@@ -88,6 +88,17 @@ public class Escenario2 {
         for (int i = 0; i < 3; i++) {
             gc.fillRect(200 + i * 400, 0, 100, 600); // Calles verticales
         }
+
+        // Agregar líneas que dividen los carriles
+        gc.setLineWidth(2);
+        gc.setStroke(Color.WHITE);
+        gc.strokeLine(0, 130, 1200, 130); // Línea que divide el carril superior
+        gc.strokeLine(0, 170, 1200, 170); // Línea que divide el segundo carril superior
+        gc.strokeLine(0, 430, 1200, 430); // Línea que divide el carril inferior
+        gc.strokeLine(0, 470, 1200, 470); // Línea que divide el segundo carril inferior
+        for (int i = 0; i < 3; i++) {
+            gc.strokeLine(250 + i * 400, 0, 250 + i * 400, 600); // Línea que divide los carriles verticales
+        }
     }
 
     private void dibujarIntersecciones() {

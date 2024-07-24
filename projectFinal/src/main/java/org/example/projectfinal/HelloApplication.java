@@ -136,35 +136,60 @@ public class HelloApplication extends Application {
     }
 
     private void createControlsEscenario2(VBox root) {
+        // Label y ComboBox para tipo de vehículo
         Label tipoVehiculoLabel = new Label("Tipo de Vehículo:");
         tipoVehiculoComboBox = new ComboBox<>();
         tipoVehiculoComboBox.getItems().addAll(TipoVehiculo.NORMAL, TipoVehiculo.EMERGENCIA);
         tipoVehiculoComboBox.setValue(TipoVehiculo.NORMAL);
         tipoVehiculoLabel.setStyle("-fx-font-size: 16px;");
 
-        Label direccionLabel = new Label("Dirección:");
-        direccionComboBox = new ComboBox<>();
-        direccionComboBox.getItems().addAll(Direccion.ABAJO, Direccion.ARRIBA);
-        direccionComboBox.setValue(Direccion.DERECHA);
-        direccionLabel.setStyle("-fx-font-size: 16px;");
-
+        // Label y ComboBox para acción
         Label accionLabel = new Label("Acción:");
         accionComboBox = new ComboBox<>();
         accionComboBox.getItems().addAll(Accion.values());
         accionComboBox.setValue(Accion.SEGUIR_RECTO);
         accionLabel.setStyle("-fx-font-size: 16px;");
 
-        Label carrilLabel = new Label("Carril:");
-        carrilComboBox = new ComboBox<>();
-        carrilComboBox.getItems().addAll(TipoCarril.values()); // Usa el enum TipoCarril
-        carrilComboBox.setValue(TipoCarril.CENTRO);
-        carrilLabel.setStyle("-fx-font-size: 16px;");
+        // Botones para agregar vehículos en el carril superior e inferior
+        Button agregarSuperiorButton = new Button("Agregar en Carril Superior");
+        Button agregarInferiorButton = new Button("Agregar en Carril Inferior");
 
-        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, direccionLabel, direccionComboBox, accionLabel, accionComboBox, carrilLabel, carrilComboBox, agregarVehiculoButton);
+//        // Acciones para los botones
+//        agregarSuperiorButton.setOnAction(event -> {
+//            if (!simulacionIniciada) {
+//                Alert alerta = new Alert(Alert.AlertType.WARNING);
+//                alerta.setTitle("Simulación no iniciada");
+//                alerta.setHeaderText(null);
+//                alerta.setContentText("Aún no se ha iniciado la simulación. Favor iniciar la simulación.");
+//                alerta.showAndWait();
+//            } else {
+//                TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
+//                Accion accion = accionComboBox.getValue();
+//                agregarVehiculo(tipoVehiculo, accion, TipoCarril.CENTRO, false); // Asume que el carril es CENTRO para el ejemplo
+//            }
+//        });
+//
+//        agregarInferiorButton.setOnAction(event -> {
+//            if (!simulacionIniciada) {
+//                Alert alerta = new Alert(Alert.AlertType.WARNING);
+//                alerta.setTitle("Simulación no iniciada");
+//                alerta.setHeaderText(null);
+//                alerta.setContentText("Aún no se ha iniciado la simulación. Favor iniciar la simulación.");
+//                alerta.showAndWait();
+//            } else {
+//                TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
+//                Accion accion = accionComboBox.getValue();
+//                agregarVehiculo(tipoVehiculo, accion, TipoCarril.CENTRO, true); // Asume que el carril es CENTRO para el ejemplo
+//            }
+//        });
+
+        // Caja de controles
+        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, accionLabel, accionComboBox, agregarSuperiorButton, agregarInferiorButton);
         controlsBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(controlsBox);
     }
+
 
 
 
