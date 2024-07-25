@@ -11,6 +11,8 @@ public class Vehiculo {
     private EstadoVehiculo estado;
     private double posX;
     private double posY;
+    private double posXX;
+    private double posYY;
     private double velocidad;
     private boolean detenido;
     private boolean detenidoUnaVez;
@@ -19,6 +21,7 @@ public class Vehiculo {
     private boolean accionAplicada = false;
     private TipoCarril tipoCarril;
     private DoblarDonde doblarDonde;
+    boolean inferior = true;
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion) {
         this.id = id;
@@ -32,6 +35,23 @@ public class Vehiculo {
         this.detenidoUnaVez = false;
         this.tiempoDetenido = 0;
         this.accion = accion;
+    }
+
+    public Vehiculo(String id, TipoVehiculo tipo, EstadoVehiculo estado, double posXX, double posYY, double velocidad, Accion accion, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion, boolean inferior){
+        this.id = id;
+        this.tipo = tipo;
+        this.direccion = direccion;
+        this.estado = estado;
+        this.posXX = posXX;
+        this.posYY = posYY;
+        this.velocidad = velocidad;
+        this.detenido = false;
+        this.detenidoUnaVez = false;
+        this.tiempoDetenido = 0;
+        this.accion = accion;
+        this.tipoCarril = tipoCarril;
+        this.doblarDonde = doblarDonde;
+        this.inferior = inferior;
     }
 
     public Vehiculo(String id, TipoVehiculo tipo, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
@@ -88,6 +108,37 @@ public class Vehiculo {
         gc.restore(); // Restaurar el estado original del contexto gráfico
     }
 
+//    public void dibujarInferior(GraphicsContext gc) {
+//        gc.save(); // Guardar el estado actual del contexto gráfico
+//
+//        switch (direccion) {
+//            case DERECHA:
+//                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+//                gc.fillOval(posXX, posYY, 20, 10);
+//                break;
+//            case IZQUIERDA:
+//                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+//                gc.fillOval(posXX, posYY, 20, 10);
+//                break;
+//            case ABAJO:
+//                gc.translate(posXX, posYY); // Trasladar el contexto gráfico al punto del vehículo
+//                gc.rotate(90); // Rotar 90 grados para que apunte hacia abajo
+//                gc.translate(-posXX, -posYY); // Volver a la traslación original
+//                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+//                gc.fillOval(posXX, posYY, 20, 10);
+//                break;
+//            case ARRIBA:
+//                gc.translate(posXX, posYY); // Trasladar el contexto gráfico al punto del vehículo
+//                gc.rotate(-90); // Rotar -90 grados para que apunte hacia arriba
+//                gc.translate(-posXX, -posYY); // Volver a la traslación original
+//                gc.setFill(tipo == TipoVehiculo.NORMAL ? Color.BLUE : Color.RED);
+//                gc.fillOval(posXX, posYY, 20, 10);
+//                break;
+//        }
+//
+//        gc.restore(); // Restaurar el estado original del contexto gráfico
+//    }
+
 
     public void mover() {
         if (!detenido) {
@@ -114,16 +165,16 @@ public class Vehiculo {
         if (!detenido) {
             switch (direccion) {
                 case DERECHA:
-                    posY += velocidad * 5; // Aumento de velocidad
+                    posXX -= velocidad * 5; // Aumento de velocidad
                     break;
                 case IZQUIERDA:
-                    posY -= velocidad * 5;
+                    posXX -= velocidad * 5;
                     break;
                 case ABAJO:
-                    posY += velocidad * 5; // Movimiento hacia abajo
+                    posXX += velocidad * 5; // Movimiento hacia abajo
                     break;
                 case ARRIBA:
-                    posY -= velocidad * 5; // Movimiento hacia arriba
+                    posXX -= velocidad * 5; // Movimiento hacia arriba
                     break;
                 default:
                     break;
@@ -250,5 +301,21 @@ public class Vehiculo {
 
     public void setDoblarDonde(DoblarDonde doblarDonde) {
         this.doblarDonde = doblarDonde;
+    }
+
+    public double getPosXX() {
+        return posXX;
+    }
+
+    public void setPosXX(double posXX) {
+        this.posXX = posXX;
+    }
+
+    public double getPosYY() {
+        return posYY;
+    }
+
+    public void setPosYY(double posYY) {
+        this.posYY = posYY;
     }
 }

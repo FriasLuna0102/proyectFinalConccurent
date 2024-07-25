@@ -9,11 +9,13 @@ import java.util.List;
 
 public class Carril {
     private TipoCarril tipo;
-    private List<Vehiculo> vehiculos;
+    private List<Vehiculo> vehiculosSuperiores;
+    private List<Vehiculo> vehiculosInferiores;
 
     public Carril(TipoCarril tipo) {
         this.tipo = tipo;
-        this.vehiculos = new ArrayList<>();
+        this.vehiculosSuperiores = new ArrayList<>();
+        this.vehiculosInferiores = new ArrayList<>();
     }
 
     public boolean puedeRealizarAccion(Accion accion) {
@@ -32,15 +34,29 @@ public class Carril {
     public boolean tieneEspacioDisponible() {
         // Implementa la lógica para verificar si hay espacio para un nuevo vehículo
         // Por ejemplo, podrías tener un límite máximo de vehículos por carril
-        return vehiculos.size() < 5; // Ejemplo: máximo 5 vehículos por carril
+        return vehiculosSuperiores.size() < 5; // Ejemplo: máximo 5 vehículos por carril
+    }
+
+    public boolean tieneEspacioDisponibleInferiores() {
+        // Implementa la lógica para verificar si hay espacio para un nuevo vehículo
+        // Por ejemplo, podrías tener un límite máximo de vehículos por carril
+        return vehiculosInferiores.size() < 5; // Ejemplo: máximo 5 vehículos por carril
     }
 
     public void moverVehiculos() {
-        for (Vehiculo vehiculo : vehiculos) {
+        for (Vehiculo vehiculo : vehiculosSuperiores) {
             vehiculo.mover();
         }
         // Opcionalmente, elimina los vehículos que hayan salido del carril
-        vehiculos.removeIf(this::haySalidoDelCarril);
+        vehiculosSuperiores.removeIf(this::haySalidoDelCarril);
+    }
+
+    public void moverVehiculosInferiores() {
+        for (Vehiculo vehiculo : vehiculosInferiores) {
+            vehiculo.mover2();
+        }
+        // Opcionalmente, elimina los vehículos que hayan salido del carril
+        vehiculosInferiores.removeIf(this::haySalidoDelCarril);
     }
 
     private boolean haySalidoDelCarril(Vehiculo vehiculo) {
@@ -50,10 +66,19 @@ public class Carril {
     }
 
     public void agregarVehiculo(Vehiculo vehiculo) {
-        vehiculos.add(vehiculo);
+        vehiculosSuperiores.add(vehiculo);
     }
 
     public List<Vehiculo> getVehiculos() {
-        return vehiculos;
+        return vehiculosSuperiores;
+    }
+
+
+    public void agregarVehiculoInferiores(Vehiculo vehiculo) {
+        vehiculosInferiores.add(vehiculo);
+    }
+
+    public List<Vehiculo> getVehiculosInferiores() {
+        return vehiculosInferiores;
     }
 }

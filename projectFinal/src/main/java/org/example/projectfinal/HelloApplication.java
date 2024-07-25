@@ -355,8 +355,8 @@ public class HelloApplication extends Application {
 
     private void agregarVehiculo(TipoVehiculo tipoVehiculo, Direccion direccion, Accion accion, TipoCarril carril) {
         if (escenario2 != null) {
-            int interseccionIndex = 0; // O el índice que corresponda
-            escenario2.agregarVehiculo(tipoVehiculo, direccion, accion, interseccionIndex);
+//            int interseccionIndex = 0; // O el índice que corresponda
+//            escenario2.agregarVehiculo(tipoVehiculo, direccion, accion, interseccionIndex);
         } else {
             // Lógica existente para Escenario 1
             String id = String.valueOf(interseccion.getVehiculosPorDireccion().values().stream().mapToInt(ConcurrentLinkedQueue::size).sum() + 1);
