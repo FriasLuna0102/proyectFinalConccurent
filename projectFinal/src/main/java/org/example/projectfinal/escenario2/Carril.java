@@ -35,6 +35,19 @@ public class Carril {
         return vehiculos.size() < 5; // Ejemplo: máximo 5 vehículos por carril
     }
 
+    public void moverVehiculos() {
+        for (Vehiculo vehiculo : vehiculos) {
+            vehiculo.mover();
+        }
+        // Opcionalmente, elimina los vehículos que hayan salido del carril
+        vehiculos.removeIf(this::haySalidoDelCarril);
+    }
+
+    private boolean haySalidoDelCarril(Vehiculo vehiculo) {
+        // Implementa la lógica para determinar si el vehículo ha salido del carril
+        // Por ejemplo:
+        return vehiculo.getPosX() > 1200 || vehiculo.getPosX() < 0 || vehiculo.getPosY() > 800 || vehiculo.getPosY() < 0;
+    }
 
     public void agregarVehiculo(Vehiculo vehiculo) {
         vehiculos.add(vehiculo);

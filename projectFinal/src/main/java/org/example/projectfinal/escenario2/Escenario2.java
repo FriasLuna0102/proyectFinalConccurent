@@ -75,9 +75,10 @@ public class Escenario2 {
     }
 
     public void dibujar() {
-        gc.clearRect(0, 0, 1200, 400);
+        gc.clearRect(0, 0, 1200, 800);
         dibujarCalles();
         dibujarIntersecciones();
+        moverVehiculos();
         dibujarVehiculos();
     }
 
@@ -117,12 +118,13 @@ public class Escenario2 {
 
 
     private void dibujarVehiculos() {
-        for (int i = 0; i < intersecciones.size(); i++) {
-            Interseccion interseccion = intersecciones.get(i);
-            for (Map.Entry<Direccion, List<Carril>> entry : carrilesPorInterseccion.get(interseccion).entrySet()) {
-                for (Carril carril : entry.getValue()) {
+        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
+            Interseccion interseccion = interseccionEntry.getKey();
+            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
+            for (List<Carril> carriles : direccionCarriles.values()) {
+                for (Carril carril : carriles) {
                     for (Vehiculo vehiculo : carril.getVehiculos()) {
-                        dibujarVehiculo(vehiculo, i);
+                        dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
                     }
                 }
             }
@@ -140,16 +142,23 @@ public class Escenario2 {
 
         switch (vehiculo.getDireccion()) {
             case DERECHA:
+                System.out.println("Hola1");
+
             case IZQUIERDA:
+                System.out.println("Hola2");
                 gc.fillOval(posX, posY, 20, 10);
                 break;
             case ABAJO:
-                gc.translate(posX + 10, posY + 5); // Trasladar al centro del vehículo
+                System.out.println("Hola3");
+
+                gc.translate(posY - 135 , posX + 150); // Trasladar al centro del vehículo
                 gc.rotate(180);
                 gc.fillOval(-10, -5, 20, 10);
                 break;
             case ARRIBA:
-                gc.translate(posX + 10, posY + 5); // Trasladar al centro del vehículo
+                System.out.println("Hola4");
+
+                gc.translate(posX + 135, posY + 150); // Trasladar al centro del vehículo
                 gc.rotate(-90);
                 gc.fillOval(-10, -5, 20, 10);
                 break;
@@ -178,25 +187,87 @@ public class Escenario2 {
         return null;
     }
 
+    private void moverVehiculos() {
+        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
+            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
+            for (List<Carril> carriles : direccionCarriles.values()) {
+                for (Carril carril : carriles) {
+                    carril.moverVehiculos();
+                }
+            }
+        }
+    }
+
+    private boolean haySalidoDelCarril(Vehiculo vehiculo) {
+        // Implementa la lógica para determinar si el vehículo ha salido del carril
+        // Esto dependerá de cómo hayas definido los límites de los carriles
+        return false;
+    }
+    private boolean hayVehiculoEmergenciaDetras(Vehiculo vehiculo, List<Vehiculo> vehiculos) {
+        int index = vehiculos.indexOf(vehiculo);
+        for (int i = index + 1; i < vehiculos.size(); i++) {
+            if (vehiculos.get(i).getTipo() == TipoVehiculo.EMERGENCIA) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void procesarVehiculoEmergencia(Vehiculo vehiculo, Vehiculo vehiculoAnterior) {
+        if (vehiculoAnterior == null || distanciaEntre(vehiculo, vehiculoAnterior) > 30) {
+            vehiculo.setVelocidad(0.2);
+        } else {
+            vehiculo.setVelocidad(0);
+        }
+    }
+
+    private void procesarVehiculoNormal(Vehiculo vehiculo, EstadoSemaforo estadoSemaforo, boolean hayEmergenciaDetras, Vehiculo vehiculoAnterior) {
+        if (estadoSemaforo == EstadoSemaforo.ROJO && !estaEnInterseccion(vehiculo)) {
+            vehiculo.setVelocidad(0);
+        } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) <= 30) {
+            vehiculo.setVelocidad(0);
+        } else if (hayEmergenciaDetras) {
+            vehiculo.setVelocidad(0.15);
+        } else {
+            vehiculo.setVelocidad(0.1);
+        }
+    }
+
+    private boolean estaEnInterseccion(Vehiculo vehiculo) {
+        // Implementa la lógica para determinar si el vehículo está en la intersección
+        // Esto dependerá de cómo hayas definido las coordenadas de las intersecciones
+        return false;
+    }
+
+    private void aplicarAccion(Interseccion vehiculo) {
+        // Implementa la lógica para aplicar la acción del vehículo (seguir recto, girar, etc.)
+    }
+
+    private double distanciaEntre(Vehiculo v1, Vehiculo v2) {
+        return Math.sqrt(Math.pow(v1.getPosX() - v2.getPosX(), 2) + Math.pow(v1.getPosY() - v2.getPosY(), 2));
+    }
+
+
     private void posicionarVehiculoEnCarril(Vehiculo vehiculo, Carril carril, int interseccionIndex) {
-        double posX = 0, posY = 0;
-        boolean esCalleInferior = interseccionIndex >= 3;
+        double posX = 0; // Empieza desde el lado izquierdo
+        double posY = 0;
+        boolean esCalleSuperior = interseccionIndex >= 3;
         int columnIndex = interseccionIndex % 3;
 
         switch (vehiculo.getTipoCarril()) {
             case CENTRO:
-                posX = 50 + columnIndex * 400;
-                posY = esCalleInferior ? 440 : 145;
+                posY = esCalleSuperior ? 440 : 145;
                 break;
             case IZQUIERDA:
-                posX = 50 + columnIndex * 400;
-                posY = esCalleInferior ? 440 : 180;
+                posY = esCalleSuperior ? 200 : 108;
+                posX = esCalleSuperior ? 440 : 0;
                 break;
             case DERECHA:
-                posX = 50 + columnIndex * 400;
-                posY = esCalleInferior ? 440 : 110;
-                break;
+//                posY = esCalleSuperior ? 440 : 145;
+                posY = esCalleSuperior ? 50 : 180;
+                posX = esCalleSuperior ? 300 : 0;
 
+                break;
         }
 
         vehiculo.setPosX(posX);

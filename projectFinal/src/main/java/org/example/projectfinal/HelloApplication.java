@@ -321,7 +321,7 @@ public class HelloApplication extends Application {
         if (escenario2 != null) {
             int interseccionIndex = 0; // O el índice que corresponda
 
-            escenario2.agregarVehiculoEscenario2(tipoVehiculo, accion,interseccionIndex, tipoCarril, doblarDonde, Direccion.ABAJO);
+            escenario2.agregarVehiculoEscenario2(tipoVehiculo, accion,interseccionIndex, tipoCarril, doblarDonde, Direccion.DERECHA);
         }
     }
 
