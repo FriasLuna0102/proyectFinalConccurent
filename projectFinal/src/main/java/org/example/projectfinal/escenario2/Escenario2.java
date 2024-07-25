@@ -130,11 +130,33 @@ public class Escenario2 {
     }
 
     private void dibujarVehiculo(Vehiculo vehiculo, int interseccionIndex) {
-        gc.setFill(vehiculo.getTipo() == TipoVehiculo.EMERGENCIA ? Color.RED : Color.BLUE);
-        double offsetY = interseccionIndex >= 3 ? 300 : 0;  // Ajuste para vehículos en la calle inferior
-        gc.fillRect(vehiculo.getPosX(), vehiculo.getPosY() + offsetY, 20, 20);
-    }
+        gc.save(); // Guardar el estado actual del contexto gráfico
 
+        double offsetY = interseccionIndex >= 3 ? 300 : 0;  // Ajuste para vehículos en la calle inferior
+        double posX = vehiculo.getPosX();
+        double posY = vehiculo.getPosY() + offsetY;
+
+        gc.setFill(vehiculo.getTipo() == TipoVehiculo.EMERGENCIA ? Color.RED : Color.BLUE);
+
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+            case IZQUIERDA:
+                gc.fillOval(posX, posY, 20, 10);
+                break;
+            case ABAJO:
+                gc.translate(posX + 10, posY + 5); // Trasladar al centro del vehículo
+                gc.rotate(180);
+                gc.fillOval(-10, -5, 20, 10);
+                break;
+            case ARRIBA:
+                gc.translate(posX + 10, posY + 5); // Trasladar al centro del vehículo
+                gc.rotate(-90);
+                gc.fillOval(-10, -5, 20, 10);
+                break;
+        }
+
+        gc.restore(); // Restaurar el estado original del contexto gráfico
+    }
 
     public void agregarVehiculo(TipoVehiculo tipo, Direccion direccion, Accion accion, int interseccionIndex) {
         Interseccion interseccion = intersecciones.get(interseccionIndex);
@@ -161,23 +183,20 @@ public class Escenario2 {
         boolean esCalleInferior = interseccionIndex >= 3;
         int columnIndex = interseccionIndex % 3;
 
-        switch (vehiculo.getDireccion()) {
-            case DERECHA:
+        switch (vehiculo.getTipoCarril()) {
+            case CENTRO:
                 posX = 50 + columnIndex * 400;
-                posY = esCalleInferior ? 410 : 110;
+                posY = esCalleInferior ? 440 : 145;
                 break;
             case IZQUIERDA:
-                posX = 350 + columnIndex * 400;
-                posY = esCalleInferior ? 440 : 140;
+                posX = 50 + columnIndex * 400;
+                posY = esCalleInferior ? 440 : 180;
                 break;
-            case ABAJO:
-                posX = 190 + columnIndex * 400;
-                posY = esCalleInferior ? 300 : 0;
+            case DERECHA:
+                posX = 50 + columnIndex * 400;
+                posY = esCalleInferior ? 440 : 110;
                 break;
-            case ARRIBA:
-                posX = 210 + columnIndex * 400;
-                posY = esCalleInferior ? 600 : 300;
-                break;
+
         }
 
         vehiculo.setPosX(posX);
@@ -188,6 +207,18 @@ public class Escenario2 {
         return canvas;
     }
 
-    public void agregarVehiculoEscenario2(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex) {
+    public void agregarVehiculoEscenario2(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
+        Interseccion interseccion = intersecciones.get(interseccionIndex);
+        List<Carril> carriles = carrilesPorInterseccion.get(interseccion).get(direccion);
+        if (carriles != null) {
+            Carril carrilAdecuado = seleccionarCarrilAdecuado(carriles, accion);
+            if (carrilAdecuado != null) {
+                Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion);
+                posicionarVehiculoEnCarril(vehiculo, carrilAdecuado, interseccionIndex);
+                carrilAdecuado.agregarVehiculo(vehiculo);
+            }
+        } else {
+            System.out.println("No se encontraron carriles para la dirección especificada.");
+        }
     }
 }

@@ -2,10 +2,7 @@ package org.example.projectfinal.modelo;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import org.example.projectfinal.enumeraciones.Accion;
-import org.example.projectfinal.enumeraciones.Direccion;
-import org.example.projectfinal.enumeraciones.EstadoVehiculo;
-import org.example.projectfinal.enumeraciones.TipoVehiculo;
+import org.example.projectfinal.enumeraciones.*;
 
 public class Vehiculo {
     private String id;
@@ -20,6 +17,8 @@ public class Vehiculo {
     private long tiempoDetenido;
     private Accion accion;
     private boolean accionAplicada = false;
+    private TipoCarril tipoCarril;
+    private DoblarDonde doblarDonde;
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion) {
         this.id = id;
@@ -33,8 +32,24 @@ public class Vehiculo {
         this.detenidoUnaVez = false;
         this.tiempoDetenido = 0;
         this.accion = accion;
-
     }
+
+    public Vehiculo(String id, TipoVehiculo tipo, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
+        this.id = id;
+        this.tipo = tipo;
+        this.direccion = direccion;
+        this.estado = estado;
+        this.posX = posX;
+        this.posY = posY;
+        this.velocidad = velocidad;
+        this.detenido = false;
+        this.detenidoUnaVez = false;
+        this.tiempoDetenido = 0;
+        this.accion = accion;
+        this.tipoCarril = tipoCarril;
+        this.doblarDonde = doblarDonde;
+    }
+
     public boolean getAccionAplicada() {
         return accionAplicada;
     }
@@ -194,5 +209,25 @@ public class Vehiculo {
 
     public void setAccion(Accion accion) {
         this.accion = accion;
+    }
+
+    public boolean isAccionAplicada() {
+        return accionAplicada;
+    }
+
+    public TipoCarril getTipoCarril() {
+        return tipoCarril;
+    }
+
+    public void setTipoCarril(TipoCarril tipoCarril) {
+        this.tipoCarril = tipoCarril;
+    }
+
+    public DoblarDonde getDoblarDonde() {
+        return doblarDonde;
+    }
+
+    public void setDoblarDonde(DoblarDonde doblarDonde) {
+        this.doblarDonde = doblarDonde;
     }
 }
