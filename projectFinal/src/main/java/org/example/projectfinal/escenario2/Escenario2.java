@@ -187,4 +187,7 @@ public class Escenario2 {
     public Canvas getCanvas() {
         return canvas;
     }
+
+    public void agregarVehiculoEscenario2(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex) {
+    }
 }
