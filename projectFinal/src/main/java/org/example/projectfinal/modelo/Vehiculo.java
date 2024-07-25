@@ -110,6 +110,27 @@ public class Vehiculo {
         }
     }
 
+    public void mover2() {
+        if (!detenido) {
+            switch (direccion) {
+                case DERECHA:
+                    posY += velocidad * 5; // Aumento de velocidad
+                    break;
+                case IZQUIERDA:
+                    posY -= velocidad * 5;
+                    break;
+                case ABAJO:
+                    posY += velocidad * 5; // Movimiento hacia abajo
+                    break;
+                case ARRIBA:
+                    posY -= velocidad * 5; // Movimiento hacia arriba
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     public void detener() {
         this.detenido = true;
         this.tiempoDetenido = System.currentTimeMillis();
