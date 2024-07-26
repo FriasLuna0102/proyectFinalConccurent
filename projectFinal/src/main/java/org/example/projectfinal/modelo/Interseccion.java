@@ -22,7 +22,7 @@ public class Interseccion {
 
         // Inicializar semáforos
         for (Direccion direccion : Direccion.values()) {
-            semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 10, 20, 20));
+            semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 10, 20, 2));
         }
 
         semaforos.get(direccionVerde).cambiarEstado(EstadoSemaforo.VERDE);
