@@ -12,6 +12,8 @@ public class Interseccion {
     private String id;
     private Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion;
     private Map<Direccion, Semaforo> semaforos;
+    private double posX;
+    private double posY;
 
     private Direccion direccionVerde; // Dirección del semáforo en verde actual
 
@@ -91,5 +93,21 @@ public class Interseccion {
 
     public void setDireccionVerde(Direccion direccionVerde) {
         this.direccionVerde = direccionVerde;
+    }
+
+    public double getPosX() {
+        return posX;
+    }
+
+    public void setPosX(double posX) {
+        this.posX = posX;
+    }
+
+    public double getPosY() {
+        return posY;
+    }
+
+    public void setPosY(double posY) {
+        this.posY = posY;
     }
 }

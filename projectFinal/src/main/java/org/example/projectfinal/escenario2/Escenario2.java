@@ -23,7 +23,7 @@ public class Escenario2 {
     private Map<Interseccion, Instant> ultimoCambioSemaforo;
     private Map<Interseccion, EstadoSemaforo> estadoActualSemaforo;
     private static final Duration DURACION_VERDE = Duration.ofSeconds(5);
-    private static final Duration DURACION_ROJO = Duration.ofSeconds(2);
+    private static final Duration DURACION_ROJO = Duration.ofSeconds(10);
 
     public Escenario2() {
         intersecciones = new ArrayList<>();
@@ -179,8 +179,21 @@ public class Escenario2 {
 
     private void dibujarIntersecciones() {
         for (int i = 0; i < 3; i++) {
-            dibujarInterseccion(250 + i * 400, 150, intersecciones.get(i));  // Intersecciones superiores
-            dibujarInterseccion(250 + i * 400, 450, intersecciones.get(i + 3));  // Intersecciones inferiores
+            Interseccion interseccionSuperior = intersecciones.get(i);
+            Interseccion interseccionInferior = intersecciones.get(i + 3);
+
+            double xSuperior = 250 + i * 400;
+            double ySuperior = 150;
+            double xInferior = 250 + i * 400;
+            double yInferior = 450;
+
+            interseccionSuperior.setPosX(xSuperior);
+            interseccionSuperior.setPosY(ySuperior);
+            interseccionInferior.setPosX(xInferior);
+            interseccionInferior.setPosY(yInferior);
+
+            dibujarInterseccion(xSuperior, ySuperior, interseccionSuperior);
+            dibujarInterseccion(xInferior, yInferior, interseccionInferior);
         }
     }
 
@@ -306,7 +319,7 @@ public class Escenario2 {
     }
 
     private void moverYdibujarVehiculos(GraphicsContext gc) {
-        gc.clearRect(0, 0, 1200, 800); // Limpiar el canvas
+        gc.clearRect(0, 0, 1200, 800);
         dibujarCalles();
         dibujarIntersecciones();
 
@@ -314,33 +327,24 @@ public class Escenario2 {
             Interseccion interseccion = interseccionEntry.getKey();
             Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
 
-            for (List<Carril> carriles : direccionCarriles.values()) {
+            for (Map.Entry<Direccion, List<Carril>> entry : direccionCarriles.entrySet()) {
+                Direccion direccion = entry.getKey();
+                List<Carril> carriles = entry.getValue();
+
                 for (Carril carril : carriles) {
                     List<Vehiculo> vehiculos = carril.getVehiculos();
                     Vehiculo vehiculoAnterior = null;
 
                     for (Vehiculo vehiculo : vehiculos) {
-                        EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(vehiculo.getDireccion()).getEstado();
-                        boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, vehiculos);
+                        EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
+                        double distanciaAlSemaforo = distanciaAlSemaforoMasCercano(vehiculo);
 
-                        // Ajustar la velocidad del vehículo según el estado del semáforo
-                        if (estadoSemaforo == ROJO) {
-                            // Detener el vehículo si está cerca del semáforo o del vehículo anterior
-                            if (distanciaHastaSemaforo(vehiculo, interseccion) < 40 ||
-                                    (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40)) {
-                                vehiculo.setVelocidad(0); // Detener el vehículo
-                            } else {
-                                vehiculo.setVelocidad(0.1); // Velocidad mínima para el caso de vehículos que están lejos
-                            }
-                        } else if (estadoSemaforo == VERDE) {
-                            // Reanudar el movimiento si no hay un vehículo delante o si está en un estado adecuado
-                            if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
-                                vehiculo.setVelocidad(0); // Mantener distancia del vehículo anterior
-                            } else {
-                                vehiculo.setVelocidad(0.1); // Velocidad normal cuando el semáforo está verde
-                            }
+                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80) {
+                            vehiculo.setVelocidad(0);
+                        } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
+                            vehiculo.setVelocidad(0);
                         } else {
-                            vehiculo.setVelocidad(0.1); // Velocidad normal si no está detenido por otra razón
+                            vehiculo.setVelocidad(0.1); // velocidad normal
                         }
 
                         vehiculo.mover();
@@ -350,6 +354,22 @@ public class Escenario2 {
                 }
             }
         }
+    }
+
+    private double distanciaAlSemaforoMasCercano(Vehiculo vehiculo) {
+        double distanciaMinima = Double.MAX_VALUE;
+        for (Interseccion interseccion : intersecciones) {
+            double distancia = calcularDistancia(vehiculo.getPosX(), vehiculo.getPosY(),
+                    interseccion.getPosX(), interseccion.getPosY());
+            if (distancia < distanciaMinima) {
+                distanciaMinima = distancia;
+            }
+        }
+        return distanciaMinima;
+    }
+
+    private double calcularDistancia(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
     private double distanciaHastaSemaforo(Vehiculo vehiculo, Interseccion interseccion) {
