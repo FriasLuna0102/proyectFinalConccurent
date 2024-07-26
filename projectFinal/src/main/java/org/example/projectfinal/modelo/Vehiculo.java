@@ -320,7 +320,7 @@ public class Vehiculo {
     }
 
     public boolean estaEnInterseccion(double interseccionX, double interseccionY) {
-        double margen = 20.0; // Ajustar este margen según el tamaño de la intersección
+        double margen = 50.0; // Ajustar este margen según el tamaño de la intersección
         return (Math.abs(this.posX - interseccionX) < margen) && (Math.abs(this.posY - interseccionY) < margen);
     }
 

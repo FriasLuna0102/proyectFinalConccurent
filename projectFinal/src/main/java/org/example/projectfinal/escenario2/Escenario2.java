@@ -352,6 +352,7 @@ public class Escenario2 {
 
 
 
+
     private void moverYdibujarVehiculosInferiores() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
             Interseccion interseccion = interseccionEntry.getKey();
@@ -595,6 +596,7 @@ public class Escenario2 {
     }
 
 
+
     private void girarDerecha(Vehiculo vehiculo) {
         switch (vehiculo.getDireccion()) {
             case DERECHA:
@@ -644,5 +646,6 @@ public class Escenario2 {
                 break;
         }
     }
+
 
 }
