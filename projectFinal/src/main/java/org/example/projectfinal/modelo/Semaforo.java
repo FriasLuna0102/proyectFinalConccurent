@@ -88,4 +88,8 @@ public class Semaforo {
     public void setTiempoInicio(long tiempoInicio) {
         this.tiempoInicio = tiempoInicio;
     }
+
+    public void setEstado(EstadoSemaforo estado) {
+        this.estado = estado;
+    }
 }

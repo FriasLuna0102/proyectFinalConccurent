@@ -8,6 +8,8 @@ import org.example.projectfinal.modelo.Interseccion;
 import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 import static org.example.projectfinal.enumeraciones.EstadoSemaforo.*;
@@ -17,6 +19,11 @@ public class Escenario2 {
     private Canvas canvas;
     private GraphicsContext gc;
     private Map<Interseccion, Map<Direccion, List<Carril>>> carrilesPorInterseccion;
+    private Map<Interseccion, Integer> tiempoSemaforos; // Tiempo restante para cada semáforo
+    private Map<Interseccion, Instant> ultimoCambioSemaforo;
+    private Map<Interseccion, EstadoSemaforo> estadoActualSemaforo;
+    private static final Duration DURACION_VERDE = Duration.ofSeconds(5);
+    private static final Duration DURACION_ROJO = Duration.ofSeconds(2);
 
     public Escenario2() {
         intersecciones = new ArrayList<>();
@@ -26,23 +33,91 @@ public class Escenario2 {
         canvas = new Canvas(1200, 800);  // Aumentado el alto del canvas
         gc = canvas.getGraphicsContext2D();
         inicializarCarriles();
+        inicializarTemporizadoresSemaforos();
     }
 
-    public void controlarSemaforos() {
+
+    private void inicializarTemporizadoresSemaforos() {
+        ultimoCambioSemaforo = new HashMap<>();
+        estadoActualSemaforo = new HashMap<>();
+        Instant ahora = Instant.now();
         for (Interseccion interseccion : intersecciones) {
-            interseccion.controlarSemaforos();
+            ultimoCambioSemaforo.put(interseccion, ahora);
+            estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
+            // Inicializar todos los semáforos en rojo excepto uno
+            for (Semaforo semaforo : interseccion.getSemaforos().values()) {
+                semaforo.cambiarEstado(EstadoSemaforo.ROJO);
+            }
+            Direccion direccionInicial = Direccion.values()[0];
+            interseccion.getSemaforos().get(direccionInicial).cambiarEstado(EstadoSemaforo.VERDE);
+            interseccion.setDireccionVerde(direccionInicial);
         }
     }
 
+    public void controlarSemaforos() {
+        Instant ahora = Instant.now();
+        for (Interseccion interseccion : intersecciones) {
+            Instant ultimoCambio = ultimoCambioSemaforo.get(interseccion);
+            Duration tiempoTranscurrido = Duration.between(ultimoCambio, ahora);
+            EstadoSemaforo estadoActual = estadoActualSemaforo.get(interseccion);
+
+            if (estadoActual == EstadoSemaforo.VERDE && tiempoTranscurrido.compareTo(DURACION_VERDE) >= 0) {
+                cambiarAEstadoRojo(interseccion, ahora);
+            } else if (estadoActual == EstadoSemaforo.ROJO && tiempoTranscurrido.compareTo(DURACION_ROJO) >= 0) {
+                cambiarAEstadoVerde(interseccion, ahora);
+            }
+        }
+    }
+
+    private void cambiarAEstadoRojo(Interseccion interseccion, Instant ahora) {
+        Direccion direccionActual = interseccion.getDireccionVerde();
+        interseccion.getSemaforos().get(direccionActual).cambiarEstado(EstadoSemaforo.ROJO);
+        estadoActualSemaforo.put(interseccion, EstadoSemaforo.ROJO);
+        ultimoCambioSemaforo.put(interseccion, ahora);
+        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + " a ROJO");
+    }
+
+    private void cambiarAEstadoVerde(Interseccion interseccion, Instant ahora) {
+        Direccion direccionActual = interseccion.getDireccionVerde();
+        Direccion[] direcciones = Direccion.values();
+        Direccion nuevaDireccion;
+
+        if (direccionActual == null) {
+            // Si no hay dirección verde actual, elegimos la primera dirección
+            nuevaDireccion = direcciones[0];
+        } else {
+            int index = (direccionActual.ordinal() + 1) % direcciones.length;
+            nuevaDireccion = direcciones[index];
+
+            // Cambiamos el semáforo actual a rojo
+            Semaforo semaforoActual = interseccion.getSemaforos().get(direccionActual);
+            if (semaforoActual != null) {
+                semaforoActual.cambiarEstado(EstadoSemaforo.ROJO);
+            }
+        }
+
+        // Cambiamos el nuevo semáforo a verde
+        Semaforo nuevoSemaforo = interseccion.getSemaforos().get(nuevaDireccion);
+        if (nuevoSemaforo != null) {
+            nuevoSemaforo.cambiarEstado(EstadoSemaforo.VERDE);
+        }
+
+        interseccion.setDireccionVerde(nuevaDireccion);
+        estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
+        ultimoCambioSemaforo.put(interseccion, ahora);
+
+        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() +
+                ": " + (direccionActual != null ? direccionActual + " a ROJO, " : "") +
+                nuevaDireccion + " a VERDE");
+    }
+
+
     public boolean esPosicionValida(int interseccionIndex, Direccion direccion) {
-        // Implementa la lógica para verificar si es válido agregar un vehículo
-        // en la intersección y dirección dadas
         Interseccion interseccion = intersecciones.get(interseccionIndex);
         Map<Direccion, List<Carril>> carriles = carrilesPorInterseccion.get(interseccion);
-        List<Carril> carribesDireccion = carriles.get(direccion);
+        List<Carril> carrilesDireccion = carriles.get(direccion);
 
-        // Verifica si hay espacio en alguno de los carriles de la dirección dada
-        for (Carril carril : carribesDireccion) {
+        for (Carril carril : carrilesDireccion) {
             if (carril.tieneEspacioDisponible()) {
                 return true;
             }
@@ -51,12 +126,6 @@ public class Escenario2 {
     }
 
     public void iniciar() {
-        // No es necesario inicializar los semáforos aquí
-        // ya que se hace en el constructor de Interseccion
-
-        // Puedes añadir otra lógica de inicialización si es necesaria
-        // Por ejemplo, configurar posiciones iniciales de vehículos, etc.
-
         System.out.println("Escenario 2 iniciado con " + intersecciones.size() + " intersecciones.");
     }
         // Aquí puedes añadir más lógica de inicialización si es necesario
@@ -77,12 +146,13 @@ public class Escenario2 {
         }
     }
 
+
     public void dibujar() {
         gc.clearRect(0, 0, 1200, 800);
         dibujarCalles();
-        controlarSemaforos();
+        controlarSemaforos();  // Asegurarse de que esto se llame en cada frame
         dibujarIntersecciones();
-        moverVehiculos();
+        moverYdibujarVehiculos(gc);
         dibujarVehiculos();
         moverVehiculosInferiores();
         dibujarVehiculosInferiores();
@@ -96,7 +166,6 @@ public class Escenario2 {
             gc.fillRect(200 + i * 400, 0, 100, 600); // Calles verticales
         }
 
-        // Agregar líneas que dividen los carriles
         gc.setLineWidth(2);
         gc.setStroke(Color.WHITE);
         gc.strokeLine(0, 130, 1200, 130); // Línea que divide el carril superior
@@ -119,15 +188,17 @@ public class Escenario2 {
         gc.setFill(Color.BLACK);
         gc.fillRect(x - 10, y - 15, 20, 30);
 
-        // Obtener el semáforo activo (el que está en verde)
-        Direccion direccionVerde = interseccion.getDireccionVerde();
+        EstadoSemaforo estadoActual = estadoActualSemaforo.get(interseccion);
+        Color colorSemaforo = (estadoActual == EstadoSemaforo.VERDE) ? Color.GREEN : Color.RED;
 
-        // Dibujar el semáforo con el color correcto
-        Color colorSemaforo = (direccionVerde != null) ? Color.GREEN : Color.RED;
         gc.setFill(colorSemaforo);
         gc.fillOval(x - 5, y - 10, 10, 10);
-    }
 
+        // Añadir información de depuración
+        System.out.println("Intersección: " + interseccion.getId() +
+                ", Dirección verde: " + interseccion.getDireccionVerde() +
+                ", Estado: " + estadoActual);
+    }
 
     private void dibujarVehiculos() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
@@ -154,29 +225,24 @@ public class Escenario2 {
 
         switch (vehiculo.getDireccion()) {
             case DERECHA:
-                System.out.println("Hola1");
-
-            case IZQUIERDA:
-                System.out.println("Hola2");
+                // Dibuja el vehículo en dirección derecha
                 gc.fillOval(posX, posY, 20, 10);
                 break;
-            case ABAJO:
-                System.out.println("Hola3");
-
-                gc.translate(posY - 135 , posX + 150); // Trasladar al centro del vehículo
-                gc.rotate(180);
-                gc.fillOval(-10, -5, 20, 10);
+            case IZQUIERDA:
+                // Dibuja el vehículo en dirección izquierda
+                gc.fillOval(posX, posY, 20, 10);
                 break;
             case ARRIBA:
-                System.out.println("Hola4");
-
-                gc.translate(posX + 135, posY + 150); // Trasladar al centro del vehículo
-                gc.rotate(-90);
-                gc.fillOval(-10, -5, 20, 10);
+                // Dibuja el vehículo en dirección arriba
+                gc.fillOval(posX, posY, 10, 20);
+                break;
+            case ABAJO:
+                // Dibuja el vehículo en dirección abajo
+                gc.fillOval(posX, posY, 10, 20);
                 break;
         }
 
-        gc.restore(); // Restaurar el estado original del contexto gráfico
+        gc.restore(); // Restaurar el estado del contexto gráfico
     }
 
     private void dibujarVehiculosInferiores() {
@@ -239,16 +305,59 @@ public class Escenario2 {
         return null;
     }
 
-    private void moverVehiculos() {
+    private void moverYdibujarVehiculos(GraphicsContext gc) {
+        gc.clearRect(0, 0, 1200, 800); // Limpiar el canvas
+        dibujarCalles();
+        dibujarIntersecciones();
+
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
+            Interseccion interseccion = interseccionEntry.getKey();
             Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
+
             for (List<Carril> carriles : direccionCarriles.values()) {
                 for (Carril carril : carriles) {
-                    carril.moverVehiculos();
+                    List<Vehiculo> vehiculos = carril.getVehiculos();
+                    Vehiculo vehiculoAnterior = null;
+
+                    for (Vehiculo vehiculo : vehiculos) {
+                        EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(vehiculo.getDireccion()).getEstado();
+                        boolean hayEmergenciaDetras = hayVehiculoEmergenciaDetras(vehiculo, vehiculos);
+
+                        // Ajustar la velocidad del vehículo según el estado del semáforo
+                        if (estadoSemaforo == ROJO) {
+                            // Detener el vehículo si está cerca del semáforo o del vehículo anterior
+                            if (distanciaHastaSemaforo(vehiculo, interseccion) < 40 ||
+                                    (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40)) {
+                                vehiculo.setVelocidad(0); // Detener el vehículo
+                            } else {
+                                vehiculo.setVelocidad(0.1); // Velocidad mínima para el caso de vehículos que están lejos
+                            }
+                        } else if (estadoSemaforo == VERDE) {
+                            // Reanudar el movimiento si no hay un vehículo delante o si está en un estado adecuado
+                            if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
+                                vehiculo.setVelocidad(0); // Mantener distancia del vehículo anterior
+                            } else {
+                                vehiculo.setVelocidad(0.1); // Velocidad normal cuando el semáforo está verde
+                            }
+                        } else {
+                            vehiculo.setVelocidad(0.1); // Velocidad normal si no está detenido por otra razón
+                        }
+
+                        vehiculo.mover();
+                        dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
+                        vehiculoAnterior = vehiculo;
+                    }
                 }
             }
         }
     }
+
+    private double distanciaHastaSemaforo(Vehiculo vehiculo, Interseccion interseccion) {
+        // Implementa la lógica para calcular la distancia del vehículo al semáforo
+        // Esto dependerá de cómo se representan las posiciones en el canvas y las intersecciones
+        return 0;
+    }
+
 
     private void moverVehiculosInferiores() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {

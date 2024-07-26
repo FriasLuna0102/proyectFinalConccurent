@@ -3,6 +3,7 @@ package org.example.projectfinal.modelo;
 import org.example.projectfinal.enumeraciones.Direccion;
 import org.example.projectfinal.enumeraciones.EstadoSemaforo;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -19,6 +20,7 @@ public class Interseccion {
         this.vehiculosPorDireccion = new HashMap<>();
         this.semaforos = new HashMap<>();
         this.direccionVerde = Direccion.DERECHA; // Inicializar con un semáforo en verde
+//        this.semaforos = new EnumMap<>(Direccion.class);
 
         // Inicializar semáforos
         for (Direccion direccion : Direccion.values()) {
@@ -69,5 +71,25 @@ public class Interseccion {
 
     public Map<Direccion, Semaforo> getSemaforos() {
         return semaforos;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setVehiculosPorDireccion(Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> vehiculosPorDireccion) {
+        this.vehiculosPorDireccion = vehiculosPorDireccion;
+    }
+
+    public void setSemaforos(Map<Direccion, Semaforo> semaforos) {
+        this.semaforos = semaforos;
+    }
+
+    public void setDireccionVerde(Direccion direccionVerde) {
+        this.direccionVerde = direccionVerde;
     }
 }
