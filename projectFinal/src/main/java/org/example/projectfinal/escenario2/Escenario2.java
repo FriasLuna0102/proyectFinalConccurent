@@ -5,9 +5,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.example.projectfinal.enumeraciones.*;
 import org.example.projectfinal.modelo.Interseccion;
+import org.example.projectfinal.modelo.Semaforo;
 import org.example.projectfinal.modelo.Vehiculo;
 
 import java.util.*;
+
+import static org.example.projectfinal.enumeraciones.EstadoSemaforo.*;
 
 public class Escenario2 {
     private List<Interseccion> intersecciones;
@@ -77,6 +80,7 @@ public class Escenario2 {
     public void dibujar() {
         gc.clearRect(0, 0, 1200, 800);
         dibujarCalles();
+        controlarSemaforos();
         dibujarIntersecciones();
         moverVehiculos();
         dibujarVehiculos();
@@ -106,15 +110,21 @@ public class Escenario2 {
 
     private void dibujarIntersecciones() {
         for (int i = 0; i < 3; i++) {
-            dibujarInterseccion(250 + i * 400, 150);  // Intersecciones superiores
-            dibujarInterseccion(250 + i * 400, 450);  // Intersecciones inferiores
+            dibujarInterseccion(250 + i * 400, 150, intersecciones.get(i));  // Intersecciones superiores
+            dibujarInterseccion(250 + i * 400, 450, intersecciones.get(i + 3));  // Intersecciones inferiores
         }
     }
 
-    private void dibujarInterseccion(double x, double y) {
+    private void dibujarInterseccion(double x, double y, Interseccion interseccion) {
         gc.setFill(Color.BLACK);
         gc.fillRect(x - 10, y - 15, 20, 30);
-        gc.setFill(Color.RED);
+
+        // Obtener el semáforo activo (el que está en verde)
+        Direccion direccionVerde = interseccion.getDireccionVerde();
+
+        // Dibujar el semáforo con el color correcto
+        Color colorSemaforo = (direccionVerde != null) ? Color.GREEN : Color.RED;
+        gc.setFill(colorSemaforo);
         gc.fillOval(x - 5, y - 10, 10, 10);
     }
 
@@ -275,7 +285,7 @@ public class Escenario2 {
     }
 
     private void procesarVehiculoNormal(Vehiculo vehiculo, EstadoSemaforo estadoSemaforo, boolean hayEmergenciaDetras, Vehiculo vehiculoAnterior) {
-        if (estadoSemaforo == EstadoSemaforo.ROJO && !estaEnInterseccion(vehiculo)) {
+        if (estadoSemaforo == ROJO && !estaEnInterseccion(vehiculo)) {
             vehiculo.setVelocidad(0);
         } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) <= 30) {
             vehiculo.setVelocidad(0);

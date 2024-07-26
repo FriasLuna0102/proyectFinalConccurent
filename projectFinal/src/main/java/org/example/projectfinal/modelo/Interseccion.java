@@ -22,7 +22,7 @@ public class Interseccion {
 
         // Inicializar semáforos
         for (Direccion direccion : Direccion.values()) {
-            semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 8, 8, 2));
+            semaforos.put(direccion, new Semaforo(direccion.name(), EstadoSemaforo.ROJO, 10, 20, 20));
         }
 
         semaforos.get(direccionVerde).cambiarEstado(EstadoSemaforo.VERDE);
@@ -52,6 +52,15 @@ public class Interseccion {
         }
 
         semaforos.get(direccionVerde).cambiarEstado(EstadoSemaforo.VERDE);
+    }
+
+    public Direccion getDireccionVerde() {
+        for (Map.Entry<Direccion, Semaforo> entry : semaforos.entrySet()) {
+            if (entry.getValue().getEstado() == EstadoSemaforo.VERDE) {
+                return entry.getKey();
+            }
+        }
+        return null; // Retorna null si no hay semáforo en verde
     }
 
     public Map<Direccion, ConcurrentLinkedQueue<Vehiculo>> getVehiculosPorDireccion() {
