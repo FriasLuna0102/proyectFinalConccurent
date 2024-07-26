@@ -538,7 +538,7 @@ public class Escenario2 {
         Interseccion interseccion = intersecciones.get(interseccionIndex);
         List<Carril> carriles = carrilesPorInterseccion.get(interseccion).get(direccion);
         if (carriles != null) {
-            Carril carrilAdecuado = seleccionarCarrilAdecuado(carriles, accion);
+            Carril carrilAdecuado = seleccionarCarrilPorTipo(carriles, tipoCarril);
             if (carrilAdecuado != null) {
                 Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion);
                 posicionarVehiculoEnCarril(vehiculo, carrilAdecuado, interseccionIndex);
@@ -550,14 +550,12 @@ public class Escenario2 {
     }
 
     public void agregarVehiculoEscenario2Inferior(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
-        boolean inferior = true;
         Interseccion interseccion = intersecciones.get(interseccionIndex);
         List<Carril> carriles = carrilesPorInterseccion.get(interseccion).get(direccion);
         if (carriles != null) {
-            Carril carrilAdecuado = seleccionarCarrilAdecuado(carriles, accion);
+            Carril carrilAdecuado = seleccionarCarrilPorTipo(carriles, tipoCarril);
             if (carrilAdecuado != null) {
-                Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion, inferior);
-//                Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion, inferior);
+                Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion);
                 posicionarVehiculoEnCarrilInferior(vehiculo, carrilAdecuado, interseccionIndex);
                 carrilAdecuado.agregarVehiculoInferiores(vehiculo);
             }
@@ -565,4 +563,14 @@ public class Escenario2 {
             System.out.println("No se encontraron carriles para la dirección especificada.");
         }
     }
+
+    private Carril seleccionarCarrilPorTipo(List<Carril> carriles, TipoCarril tipoCarril) {
+        for (Carril carril : carriles) {
+            if (carril.getTipo().equals(tipoCarril)) {
+                return carril;
+            }
+        }
+        return null;
+    }
+
 }

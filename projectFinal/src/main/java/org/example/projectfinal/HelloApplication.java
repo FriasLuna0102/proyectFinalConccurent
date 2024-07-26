@@ -152,12 +152,19 @@ public class HelloApplication extends Application {
         accionComboBox.setValue(Accion.SEGUIR_RECTO);
         accionLabel.setStyle("-fx-font-size: 16px;");
 
-        // Label y ComboBox para acción
+        // Label y ComboBox para doblar donde
         Label doblarDondeLabel = new Label("Calle:");
         doblarDondeComboBox = new ComboBox<>();
         doblarDondeComboBox.getItems().addAll(DoblarDonde.values());
         doblarDondeComboBox.setValue(DoblarDonde.CALLE1);
-        accionLabel.setStyle("-fx-font-size: 16px;");
+        doblarDondeLabel.setStyle("-fx-font-size: 16px;");
+
+        // Label y ComboBox para tipo de carril
+        Label carrilLabel = new Label("Carril:");
+        carrilComboBox = new ComboBox<>();
+        carrilComboBox.getItems().addAll(TipoCarril.values());
+        carrilComboBox.setValue(TipoCarril.CENTRO);
+        carrilLabel.setStyle("-fx-font-size: 16px;");
 
         // Botones para agregar vehículos en el carril superior e inferior
         Button agregarSuperiorButton = new Button("Agregar en Carril Superior");
@@ -172,26 +179,7 @@ public class HelloApplication extends Application {
                 alerta.setContentText("Aún no se ha iniciado la simulación. Favor iniciar la simulación.");
                 alerta.showAndWait();
             } else {
-                TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
-                System.out.println(tipoVehiculo);
-                Accion accion = accionComboBox.getValue();
-                System.out.println(accion);
-                TipoCarril tipoCarril1;
-                DoblarDonde doblarDonde = doblarDondeComboBox.getValue();
-                if(accion == Accion.SEGUIR_RECTO){
-                    doblarDonde = null;
-                    tipoCarril1 = TipoCarril.CENTRO;
-                }else if(accion == Accion.DOBLAR_IZQUIERDA){
-                    tipoCarril1 = TipoCarril.IZQUIERDA;
-                }else if(accion == Accion.GIRAR_U){
-                    tipoCarril1 = TipoCarril.IZQUIERDA;
-                }else{
-                    tipoCarril1 = TipoCarril.DERECHA;
-                }
-                System.out.println(tipoCarril1);
-                System.out.println(doblarDonde);
-
-                agregarVehiculoEscenario2(tipoVehiculo, accion, tipoCarril1, doblarDonde); // Asume que el carril es CENTRO para el ejemplo
+                agregarVehiculoEnCarril(false); // false indica que no es inferior
             }
         });
 
@@ -203,35 +191,36 @@ public class HelloApplication extends Application {
                 alerta.setContentText("Aún no se ha iniciado la simulación. Favor iniciar la simulación.");
                 alerta.showAndWait();
             } else {
-                TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
-                System.out.println(tipoVehiculo);
-                Accion accion = accionComboBox.getValue();
-                System.out.println(accion);
-                TipoCarril tipoCarril1;
-                DoblarDonde doblarDonde = doblarDondeComboBox.getValue();
-                if(accion == Accion.SEGUIR_RECTO){
-                    doblarDonde = null;
-                    tipoCarril1 = TipoCarril.CENTRO;
-                }else if(accion == Accion.DOBLAR_IZQUIERDA){
-                    tipoCarril1 = TipoCarril.IZQUIERDA;
-                }else if(accion == Accion.GIRAR_U){
-                    tipoCarril1 = TipoCarril.IZQUIERDA;
-                }else{
-                    tipoCarril1 = TipoCarril.DERECHA;
-                }
-                System.out.println(tipoCarril1);
-                System.out.println(doblarDonde);
-
-                agregarVehiculoEscenario2Inferior(tipoVehiculo, accion, tipoCarril1, doblarDonde); // Asume que el carril es CENTRO para el ejemplo
+                agregarVehiculoEnCarril(true); // true indica que es inferior
             }
         });
 
         // Caja de controles
-        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, accionLabel, accionComboBox, doblarDondeLabel, doblarDondeComboBox, agregarSuperiorButton, agregarInferiorButton);
+        HBox controlsBox = new HBox(10, tipoVehiculoLabel, tipoVehiculoComboBox, accionLabel, accionComboBox, doblarDondeLabel, doblarDondeComboBox, carrilLabel, carrilComboBox, agregarSuperiorButton, agregarInferiorButton);
         controlsBox.setAlignment(Pos.CENTER);
 
         root.getChildren().add(controlsBox);
     }
+
+    private void agregarVehiculoEnCarril(boolean esInferior) {
+        TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
+        Accion accion = accionComboBox.getValue();
+        TipoCarril tipoCarril = carrilComboBox.getValue();
+        DoblarDonde doblarDonde = doblarDondeComboBox.getValue();
+        Direccion direccion = Direccion.DERECHA; // Puedes cambiar esto según la lógica de tu aplicación
+        int interseccionIndex = esInferior ? 3 : 0; // Define el índice de la intersección
+
+        if (accion == Accion.SEGUIR_RECTO) {
+            doblarDonde = null;
+        }
+
+        if (esInferior) {
+            escenario2.agregarVehiculoEscenario2Inferior(tipoVehiculo, accion, interseccionIndex, tipoCarril, doblarDonde, direccion);
+        } else {
+            escenario2.agregarVehiculoEscenario2(tipoVehiculo, accion, interseccionIndex, tipoCarril, doblarDonde, direccion);
+        }
+    }
+
 
 
     public static void configurarValidacionEscenario2() {

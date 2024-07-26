@@ -10,6 +10,27 @@ import java.util.List;
 public class Carril {
     private TipoCarril tipo;
     private List<Vehiculo> vehiculosSuperiores;
+
+    public TipoCarril getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoCarril tipo) {
+        this.tipo = tipo;
+    }
+
+    public List<Vehiculo> getVehiculosSuperiores() {
+        return vehiculosSuperiores;
+    }
+
+    public void setVehiculosSuperiores(List<Vehiculo> vehiculosSuperiores) {
+        this.vehiculosSuperiores = vehiculosSuperiores;
+    }
+
+    public void setVehiculosInferiores(List<Vehiculo> vehiculosInferiores) {
+        this.vehiculosInferiores = vehiculosInferiores;
+    }
+
     private List<Vehiculo> vehiculosInferiores;
 
     public Carril(TipoCarril tipo) {
