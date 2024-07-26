@@ -22,7 +22,7 @@ public class Escenario2 {
     private Map<Interseccion, Integer> tiempoSemaforos; // Tiempo restante para cada semáforo
     private Map<Interseccion, Instant> ultimoCambioSemaforo;
     private Map<Interseccion, EstadoSemaforo> estadoActualSemaforo;
-    private static final Duration DURACION_VERDE = Duration.ofSeconds(5);
+    private static final Duration DURACION_VERDE = Duration.ofSeconds(10);
     private static final Duration DURACION_ROJO = Duration.ofSeconds(10);
 
     public Escenario2() {
