@@ -318,4 +318,11 @@ public class Vehiculo {
     public void setPosYY(double posYY) {
         this.posYY = posYY;
     }
+
+    public boolean estaEnInterseccion(double interseccionX, double interseccionY) {
+        double margen = 20.0; // Ajustar este margen según el tamaño de la intersección
+        return (Math.abs(this.posX - interseccionX) < margen) && (Math.abs(this.posY - interseccionY) < margen);
+    }
+
+
 }

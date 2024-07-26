@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="deteniendo vehiculos en semaforos EN LA INFERIOR..">
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="poder seleccionar el carril listo">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/HelloApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -381,7 +384,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721963462338</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="poder seleccionar el carril listo">
+      <option name="closed" value="true" />
+      <created>1722026574685</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1722026574685</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -417,7 +428,8 @@
     <MESSAGE value="Agregando vehiculo calle superior." />
     <MESSAGE value="deteniendo vehiculos en semaforos." />
     <MESSAGE value="deteniendo vehiculos en semaforos EN LA INFERIOR.." />
-    <option name="LAST_COMMIT_MESSAGE" value="deteniendo vehiculos en semaforos EN LA INFERIOR.." />
+    <MESSAGE value="poder seleccionar el carril listo" />
+    <option name="LAST_COMMIT_MESSAGE" value="poder seleccionar el carril listo" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -252,25 +252,22 @@ public class Escenario2 {
 
         switch (vehiculo.getDireccion()) {
             case DERECHA:
-                // Dibuja el vehículo en dirección derecha
                 gc.fillOval(posX, posY, 20, 10);
                 break;
             case IZQUIERDA:
-                // Dibuja el vehículo en dirección izquierda
                 gc.fillOval(posX, posY, 20, 10);
                 break;
             case ARRIBA:
-                // Dibuja el vehículo en dirección arriba
                 gc.fillOval(posX, posY, 10, 20);
                 break;
             case ABAJO:
-                // Dibuja el vehículo en dirección abajo
                 gc.fillOval(posX, posY, 10, 20);
                 break;
         }
 
         gc.restore(); // Restaurar el estado del contexto gráfico
     }
+
 
 
 
@@ -342,6 +339,7 @@ public class Escenario2 {
                             vehiculo.setVelocidad(0.1); // velocidad normal
                         }
 
+                        aplicarAccionGiro(vehiculo, interseccion); // Aplicar la lógica de giro
                         vehiculo.mover();
                         dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
                         vehiculoAnterior = vehiculo;
@@ -350,6 +348,9 @@ public class Escenario2 {
             }
         }
     }
+
+
+
 
     private void moverYdibujarVehiculosInferiores() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
@@ -571,6 +572,77 @@ public class Escenario2 {
             }
         }
         return null;
+    }
+
+    private void aplicarAccionGiro(Vehiculo vehiculo, Interseccion interseccion) {
+        if (vehiculo.estaEnInterseccion(interseccion.getPosX(), interseccion.getPosY())) {
+            if (!vehiculo.isAccionAplicada()) {
+                switch (vehiculo.getAccion()) {
+                    case DOBLAR_DERECHA:
+                        girarDerecha(vehiculo);
+                        break;
+                    case DOBLAR_IZQUIERDA:
+                        girarIzquierda(vehiculo);
+                        break;
+                    default:
+                        break;
+                }
+                vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
+            }
+        } else {
+            vehiculo.setAccionAplicada(false); // Resetea la acción cuando sale de la intersección
+        }
+    }
+
+
+    private void girarDerecha(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                vehiculo.setDireccion(Direccion.ABAJO);
+                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+                break;
+            case IZQUIERDA:
+                vehiculo.setDireccion(Direccion.ARRIBA);
+                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+                break;
+            case ARRIBA:
+                vehiculo.setDireccion(Direccion.DERECHA);
+                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+                break;
+            case ABAJO:
+                vehiculo.setDireccion(Direccion.IZQUIERDA);
+                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+                break;
+        }
+    }
+
+    private void girarIzquierda(Vehiculo vehiculo) {
+        switch (vehiculo.getDireccion()) {
+            case DERECHA:
+                vehiculo.setDireccion(Direccion.ARRIBA);
+                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+                break;
+            case IZQUIERDA:
+                vehiculo.setDireccion(Direccion.ABAJO);
+                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+                break;
+            case ARRIBA:
+                vehiculo.setDireccion(Direccion.IZQUIERDA);
+                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+                break;
+            case ABAJO:
+                vehiculo.setDireccion(Direccion.DERECHA);
+                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
+                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+                break;
+        }
     }
 
 }

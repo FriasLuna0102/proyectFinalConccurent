@@ -202,6 +202,7 @@ public class HelloApplication extends Application {
         root.getChildren().add(controlsBox);
     }
 
+
     private void agregarVehiculoEnCarril(boolean esInferior) {
         TipoVehiculo tipoVehiculo = tipoVehiculoComboBox.getValue();
         Accion accion = accionComboBox.getValue();
