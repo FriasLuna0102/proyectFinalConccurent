@@ -154,7 +154,7 @@ public class Escenario2 {
         dibujarIntersecciones();
         moverYdibujarVehiculos(gc);
         dibujarVehiculos();
-        moverVehiculosInferiores();
+        moverYdibujarVehiculosInferiores();
         dibujarVehiculosInferiores();
     }
 
@@ -213,6 +213,20 @@ public class Escenario2 {
                 ", Estado: " + estadoActual);
     }
 
+    private void dibujarVehiculosInferiores() {
+        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
+            Interseccion interseccion = interseccionEntry.getKey();
+            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
+            for (List<Carril> carriles : direccionCarriles.values()) {
+                for (Carril carril : carriles) {
+                    for (Vehiculo vehiculo : carril.getVehiculosInferiores()) {
+                        dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
+                    }
+                }
+            }
+        }
+    }
+
     private void dibujarVehiculos() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
             Interseccion interseccion = interseccionEntry.getKey();
@@ -258,19 +272,7 @@ public class Escenario2 {
         gc.restore(); // Restaurar el estado del contexto gráfico
     }
 
-    private void dibujarVehiculosInferiores() {
-        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
-            Interseccion interseccion = interseccionEntry.getKey();
-            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
-            for (List<Carril> carriles : direccionCarriles.values()) {
-                for (Carril carril : carriles) {
-                    for (Vehiculo vehiculo : carril.getVehiculosInferiores()) {
-                        dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
-                    }
-                }
-            }
-        }
-    }
+
 
     private void dibujarVehiculoInferiores(Vehiculo vehiculo, int interseccionIndex) {
         gc.save(); // Guardar el estado actual del contexto gráfico
@@ -283,28 +285,21 @@ public class Escenario2 {
 
         switch (vehiculo.getDireccion()) {
             case DERECHA:
-                System.out.println("Hola1");
-
+                gc.fillOval(posXX, posYY, 20, 10);
             case IZQUIERDA:
-                System.out.println("Hola2");
                 gc.fillOval(posXX, posYY, 20, 10);
                 break;
             case ABAJO:
-                System.out.println("Hola3");
-
                 gc.translate(posYY - 135 , posXX + 150); // Trasladar al centro del vehículo
                 gc.rotate(180);
                 gc.fillOval(-10, -5, 20, 10);
                 break;
             case ARRIBA:
-                System.out.println("Hola4");
-
                 gc.translate(posXX + 135, posYY + 150); // Trasladar al centro del vehículo
                 gc.rotate(-90);
                 gc.fillOval(-10, -5, 20, 10);
                 break;
         }
-
         gc.restore(); // Restaurar el estado original del contexto gráfico
     }
 
@@ -356,6 +351,59 @@ public class Escenario2 {
         }
     }
 
+    private void moverYdibujarVehiculosInferiores() {
+        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
+            Interseccion interseccion = interseccionEntry.getKey();
+            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
+
+            for (Map.Entry<Direccion, List<Carril>> entry : direccionCarriles.entrySet()) {
+                Direccion direccion = entry.getKey();
+                List<Carril> carriles = entry.getValue();
+
+                for (Carril carril : carriles) {
+                    List<Vehiculo> vehiculos = carril.getVehiculosInferiores();
+                    Vehiculo vehiculoAnterior = null;
+
+                    for (Vehiculo vehiculo : vehiculos) {
+                        EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
+                        double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
+
+                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80) {
+                            System.out.println("Entro1");
+                            vehiculo.setVelocidad(0);
+                        } else if (vehiculoAnterior != null && distanciaEntreInferiores(vehiculo, vehiculoAnterior) < 40) {
+                            System.out.println("Entro2");
+                            vehiculo.setVelocidad(0);
+                        } else {
+                            System.out.println("Entro3");
+                            vehiculo.setVelocidad(0.1); // velocidad normal
+                        }
+
+                        vehiculo.mover2();
+                        dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
+                        vehiculoAnterior = vehiculo;
+                    }
+                }
+            }
+        }
+    }
+
+    private double distanciaAlSemaforoMasCercanoInferior(Vehiculo vehiculo) {
+        double distanciaMinima = Double.MAX_VALUE;
+        for (Interseccion interseccion : intersecciones) {
+            double distancia = calcularDistancia(vehiculo.getPosXX(), vehiculo.getPosYY(),
+                    interseccion.getPosX(), interseccion.getPosY());
+            if (distancia < distanciaMinima) {
+                distanciaMinima = distancia;
+            }
+        }
+        return distanciaMinima;
+    }
+
+    private double distanciaEntreInferiores(Vehiculo v1, Vehiculo v2) {
+        return Math.sqrt(Math.pow(v1.getPosXX() - v2.getPosXX(), 2) + Math.pow(v1.getPosYY() - v2.getPosYY(), 2));
+    }
+
     private double distanciaAlSemaforoMasCercano(Vehiculo vehiculo) {
         double distanciaMinima = Double.MAX_VALUE;
         for (Interseccion interseccion : intersecciones) {
@@ -378,17 +426,6 @@ public class Escenario2 {
         return 0;
     }
 
-
-    private void moverVehiculosInferiores() {
-        for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
-            Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
-            for (List<Carril> carriles : direccionCarriles.values()) {
-                for (Carril carril : carriles) {
-                    carril.moverVehiculosInferiores();
-                }
-            }
-        }
-    }
 
     private boolean haySalidoDelCarril(Vehiculo vehiculo) {
         // Implementa la lógica para determinar si el vehículo ha salido del carril
@@ -444,7 +481,6 @@ public class Escenario2 {
         double posX = 0; // Empieza desde el lado izquierdo
         double posY = 0;
         boolean esCalleSuperior = interseccionIndex >= 3;
-        int columnIndex = interseccionIndex % 3;
 
         switch (vehiculo.getTipoCarril()) {
             case CENTRO:
@@ -468,10 +504,9 @@ public class Escenario2 {
 
 
     private void posicionarVehiculoEnCarrilInferior(Vehiculo vehiculo, Carril carril, int interseccionIndex) {
-        double posXX = 0; // Empieza desde el lado izquierdo
+        double posXX = 0; // Empieza desde el lado derecho
         double posYY = 0;
         boolean esCalleInferior = interseccionIndex >= 3;
-        int columnIndex = interseccionIndex % 2;
 
         switch (vehiculo.getTipoCarril()) {
             case CENTRO:

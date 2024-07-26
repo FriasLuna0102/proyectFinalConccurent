@@ -14,6 +14,8 @@ public class Interseccion {
     private Map<Direccion, Semaforo> semaforos;
     private double posX;
     private double posY;
+    private double posXX;
+    private double posYY;
 
     private Direccion direccionVerde; // Dirección del semáforo en verde actual
 
@@ -109,5 +111,21 @@ public class Interseccion {
 
     public void setPosY(double posY) {
         this.posY = posY;
+    }
+
+    public double getPosXX() {
+        return posXX;
+    }
+
+    public void setPosXX(double posXX) {
+        this.posXX = posXX;
+    }
+
+    public double getPosYY() {
+        return posYY;
+    }
+
+    public void setPosYY(double posYY) {
+        this.posYY = posYY;
     }
 }
