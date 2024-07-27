@@ -41,62 +41,82 @@ public class Escenario2 {
         ultimoCambioSemaforo = new HashMap<>();
         estadoActualSemaforo = new HashMap<>();
         Instant ahora = Instant.now();
-        for (Interseccion interseccion : intersecciones) {
+        for (int i = 0; i < intersecciones.size(); i++) {
+            Interseccion interseccion = intersecciones.get(i);
             ultimoCambioSemaforo.put(interseccion, ahora);
-            estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
-            // Inicializar todos los semáforos en rojo excepto uno
-            for (Semaforo semaforo : interseccion.getSemaforos().values()) {
-                semaforo.cambiarEstado(EstadoSemaforo.ROJO);
+
+            // Para las intersecciones superiores (índices 0, 1, 2)
+            if (i < 3) {
+                estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
+                Direccion direccionInicial = Direccion.values()[0];
+                for (Semaforo semaforo : interseccion.getSemaforos().values()) {
+                    semaforo.cambiarEstado(EstadoSemaforo.ROJO);
+                }
+                interseccion.getSemaforos().get(direccionInicial).cambiarEstado(EstadoSemaforo.VERDE);
+                interseccion.setDireccionVerde(direccionInicial);
             }
-            Direccion direccionInicial = Direccion.values()[0];
-            interseccion.getSemaforos().get(direccionInicial).cambiarEstado(EstadoSemaforo.VERDE);
-            interseccion.setDireccionVerde(direccionInicial);
+            // Para las intersecciones inferiores (índices 3, 4, 5)
+            else {
+                estadoActualSemaforo.put(interseccion, EstadoSemaforo.ROJO);
+                for (Semaforo semaforo : interseccion.getSemaforos().values()) {
+                    semaforo.cambiarEstado(EstadoSemaforo.ROJO);
+                }
+                interseccion.setDireccionVerde(null); // No hay dirección verde inicial
+            }
         }
     }
 
     public void controlarSemaforos() {
         Instant ahora = Instant.now();
-        for (Interseccion interseccion : intersecciones) {
-            Instant ultimoCambio = ultimoCambioSemaforo.get(interseccion);
-            Duration tiempoTranscurrido = Duration.between(ultimoCambio, ahora);
-            EstadoSemaforo estadoActual = estadoActualSemaforo.get(interseccion);
+        for (int i = 0; i < 3; i++) {
+            Interseccion interseccionSuperior = intersecciones.get(i);
+            Interseccion interseccionInferior = intersecciones.get(i + 3);
 
-            if (estadoActual == EstadoSemaforo.VERDE && tiempoTranscurrido.compareTo(DURACION_VERDE) >= 0) {
-                cambiarAEstadoRojo(interseccion, ahora);
-            } else if (estadoActual == EstadoSemaforo.ROJO && tiempoTranscurrido.compareTo(DURACION_ROJO) >= 0) {
-                cambiarAEstadoVerde(interseccion, ahora);
+            Instant ultimoCambioSuperior = ultimoCambioSemaforo.get(interseccionSuperior);
+            Instant ultimoCambioInferior = ultimoCambioSemaforo.get(interseccionInferior);
+
+            Duration tiempoTranscurridoSuperior = Duration.between(ultimoCambioSuperior, ahora);
+            Duration tiempoTranscurridoInferior = Duration.between(ultimoCambioInferior, ahora);
+
+            EstadoSemaforo estadoActualSuperior = estadoActualSemaforo.get(interseccionSuperior);
+            EstadoSemaforo estadoActualInferior = estadoActualSemaforo.get(interseccionInferior);
+
+            if (estadoActualSuperior == EstadoSemaforo.VERDE && tiempoTranscurridoSuperior.compareTo(DURACION_VERDE) >= 0) {
+                cambiarAEstadoRojo(interseccionSuperior, ahora);
+                cambiarAEstadoVerde(interseccionInferior, ahora);
+            } else if (estadoActualInferior == EstadoSemaforo.VERDE && tiempoTranscurridoInferior.compareTo(DURACION_VERDE) >= 0) {
+                cambiarAEstadoRojo(interseccionInferior, ahora);
+                cambiarAEstadoVerde(interseccionSuperior, ahora);
             }
         }
     }
 
     private void cambiarAEstadoRojo(Interseccion interseccion, Instant ahora) {
         Direccion direccionActual = interseccion.getDireccionVerde();
-        interseccion.getSemaforos().get(direccionActual).cambiarEstado(EstadoSemaforo.ROJO);
+        if (direccionActual != null) {
+            interseccion.getSemaforos().get(direccionActual).cambiarEstado(EstadoSemaforo.ROJO);
+        }
         estadoActualSemaforo.put(interseccion, EstadoSemaforo.ROJO);
         ultimoCambioSemaforo.put(interseccion, ahora);
         System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + " a ROJO");
     }
 
     private void cambiarAEstadoVerde(Interseccion interseccion, Instant ahora) {
-        Direccion direccionActual = interseccion.getDireccionVerde();
         Direccion[] direcciones = Direccion.values();
         Direccion nuevaDireccion;
 
-        if (direccionActual == null) {
-            // Si no hay dirección verde actual, elegimos la primera dirección
+        if (interseccion.getDireccionVerde() == null) {
             nuevaDireccion = direcciones[0];
         } else {
-            int index = (direccionActual.ordinal() + 1) % direcciones.length;
+            int index = (interseccion.getDireccionVerde().ordinal() + 1) % direcciones.length;
             nuevaDireccion = direcciones[index];
 
-            // Cambiamos el semáforo actual a rojo
-            Semaforo semaforoActual = interseccion.getSemaforos().get(direccionActual);
+            Semaforo semaforoActual = interseccion.getSemaforos().get(interseccion.getDireccionVerde());
             if (semaforoActual != null) {
                 semaforoActual.cambiarEstado(EstadoSemaforo.ROJO);
             }
         }
 
-        // Cambiamos el nuevo semáforo a verde
         Semaforo nuevoSemaforo = interseccion.getSemaforos().get(nuevaDireccion);
         if (nuevoSemaforo != null) {
             nuevoSemaforo.cambiarEstado(EstadoSemaforo.VERDE);
@@ -106,11 +126,10 @@ public class Escenario2 {
         estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
         ultimoCambioSemaforo.put(interseccion, ahora);
 
-        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() +
-                ": " + (direccionActual != null ? direccionActual + " a ROJO, " : "") +
+        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + ": " +
+                (interseccion.getDireccionVerde() != null ? interseccion.getDireccionVerde() + " a ROJO, " : "") +
                 nuevaDireccion + " a VERDE");
     }
-
 
     public boolean esPosicionValida(int interseccionIndex, Direccion direccion) {
         Interseccion interseccion = intersecciones.get(interseccionIndex);
