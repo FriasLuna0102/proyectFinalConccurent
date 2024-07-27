@@ -152,7 +152,7 @@ public class Escenario2 {
         dibujarCalles();
         controlarSemaforos();  // Asegurarse de que esto se llame en cada frame
         dibujarIntersecciones();
-        moverYdibujarVehiculos(gc);
+        moverYdibujarVehiculos();
         dibujarVehiculos();
         moverYdibujarVehiculosInferiores();
         dibujarVehiculosInferiores();
@@ -310,11 +310,7 @@ public class Escenario2 {
         return null;
     }
 
-    private void moverYdibujarVehiculos(GraphicsContext gc) {
-        gc.clearRect(0, 0, 1200, 800);
-        dibujarCalles();
-        dibujarIntersecciones();
-
+    private void moverYdibujarVehiculos() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
             Interseccion interseccion = interseccionEntry.getKey();
             Map<Direccion, List<Carril>> direccionCarriles = interseccionEntry.getValue();
@@ -336,10 +332,14 @@ public class Escenario2 {
                         } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
                             vehiculo.setVelocidad(0);
                         } else {
-                            vehiculo.setVelocidad(0.1); // velocidad normal
+                            vehiculo.setVelocidad(0.1);
                         }
 
-                        aplicarAccionGiro(vehiculo, interseccion); // Aplicar la lógica de giro
+                        if (carril.puedeRealizarAccion(vehiculo.getAccion())) {
+                            aplicarAccionGiro(vehiculo, interseccion); // Aplicar la lógica de giro
+                        } else {
+                            vehiculo.setAccion(Accion.SEGUIR_RECTO); // Forzar a seguir recto si la acción no es permitida
+                        }
                         vehiculo.mover();
                         dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
                         vehiculoAnterior = vehiculo;

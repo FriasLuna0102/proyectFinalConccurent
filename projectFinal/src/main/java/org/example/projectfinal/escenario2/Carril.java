@@ -44,13 +44,14 @@ public class Carril {
             case CENTRO:
                 return accion == Accion.SEGUIR_RECTO;
             case DERECHA:
-                return accion == Accion.SEGUIR_RECTO || accion == Accion.DOBLAR_DERECHA;
+                return accion == Accion.DOBLAR_DERECHA;
             case IZQUIERDA:
                 return accion == Accion.DOBLAR_IZQUIERDA;
             default:
                 return false;
         }
     }
+
 
     public boolean tieneEspacioDisponible() {
         // Implementa la lógica para verificar si hay espacio para un nuevo vehículo
@@ -102,4 +103,6 @@ public class Carril {
     public List<Vehiculo> getVehiculosInferiores() {
         return vehiculosInferiores;
     }
+
+
 }
