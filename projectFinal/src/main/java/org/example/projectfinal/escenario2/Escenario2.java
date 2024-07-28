@@ -24,6 +24,7 @@ public class Escenario2 {
     private Map<Interseccion, EstadoSemaforo> estadoActualSemaforo;
     private static final Duration DURACION_VERDE = Duration.ofSeconds(10);
     private static final Duration DURACION_ROJO = Duration.ofSeconds(10);
+    private DoblarDonde doblarDondeF;
 
     public Escenario2() {
         intersecciones = new ArrayList<>();
@@ -98,7 +99,7 @@ public class Escenario2 {
         }
         estadoActualSemaforo.put(interseccion, EstadoSemaforo.ROJO);
         ultimoCambioSemaforo.put(interseccion, ahora);
-        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + " a ROJO");
+//        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + " a ROJO");
     }
 
     private void cambiarAEstadoVerde(Interseccion interseccion, Instant ahora) {
@@ -126,9 +127,9 @@ public class Escenario2 {
         estadoActualSemaforo.put(interseccion, EstadoSemaforo.VERDE);
         ultimoCambioSemaforo.put(interseccion, ahora);
 
-        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + ": " +
-                (interseccion.getDireccionVerde() != null ? interseccion.getDireccionVerde() + " a ROJO, " : "") +
-                nuevaDireccion + " a VERDE");
+//        System.out.println("Cambiando semáforo en intersección " + interseccion.getId() + ": " +
+//                (interseccion.getDireccionVerde() != null ? interseccion.getDireccionVerde() + " a ROJO, " : "") +
+//                nuevaDireccion + " a VERDE");
     }
 
     public boolean esPosicionValida(int interseccionIndex, Direccion direccion) {
@@ -226,10 +227,10 @@ public class Escenario2 {
         gc.setFill(colorSemaforo);
         gc.fillOval(x - 5, y - 10, 10, 10);
 
-        // Añadir información de depuración
-        System.out.println("Intersección: " + interseccion.getId() +
-                ", Dirección verde: " + interseccion.getDireccionVerde() +
-                ", Estado: " + estadoActual);
+//        // Añadir información de depuración
+//        System.out.println("Intersección: " + interseccion.getId() +
+//                ", Dirección verde: " + interseccion.getDireccionVerde() +
+//                ", Estado: " + estadoActual);
     }
 
     private void dibujarVehiculosInferiores() {
@@ -351,7 +352,7 @@ public class Escenario2 {
                         } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
                             vehiculo.setVelocidad(0);
                         } else {
-                            vehiculo.setVelocidad(0.1);
+                            vehiculo.setVelocidad(0.8);
                         }
 
                         if (carril.puedeRealizarAccion(vehiculo.getAccion())) {
@@ -390,13 +391,10 @@ public class Escenario2 {
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
 
                         if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80) {
-                            System.out.println("Entro1");
                             vehiculo.setVelocidad(0);
                         } else if (vehiculoAnterior != null && distanciaEntreInferiores(vehiculo, vehiculoAnterior) < 40) {
-                            System.out.println("Entro2");
                             vehiculo.setVelocidad(0);
                         } else {
-                            System.out.println("Entro3");
                             vehiculo.setVelocidad(0.1); // velocidad normal
                         }
 
@@ -556,6 +554,7 @@ public class Escenario2 {
     }
 
     public void agregarVehiculoEscenario2(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
+        doblarDondeF = doblarDonde;
         Interseccion interseccion = intersecciones.get(interseccionIndex);
         List<Carril> carriles = carrilesPorInterseccion.get(interseccion).get(direccion);
         if (carriles != null) {
@@ -563,6 +562,7 @@ public class Escenario2 {
             if (carrilAdecuado != null) {
                 Vehiculo vehiculo = new Vehiculo(UUID.randomUUID().toString(), tipoVehiculo, EstadoVehiculo.ESPERANDO, 0, 0, 0.1, accion, tipoCarril, doblarDonde, direccion);
                 posicionarVehiculoEnCarril(vehiculo, carrilAdecuado, interseccionIndex);
+                vehiculo.setDoblarDonde(doblarDonde);
                 carrilAdecuado.agregarVehiculo(vehiculo);
             }
         } else {
@@ -595,22 +595,63 @@ public class Escenario2 {
     }
 
     private void aplicarAccionGiro(Vehiculo vehiculo, Interseccion interseccion) {
-        if (vehiculo.estaEnInterseccion(interseccion.getPosX(), interseccion.getPosY())) {
-            if (!vehiculo.isAccionAplicada()) {
-                switch (vehiculo.getAccion()) {
-                    case DOBLAR_DERECHA:
-                        girarDerecha(vehiculo);
-                        break;
-                    case DOBLAR_IZQUIERDA:
-                        girarIzquierda(vehiculo);
-                        break;
-                    default:
-                        break;
+        if(vehiculo.getDoblarDonde() == DoblarDonde.CALLE1){
+            if (vehiculo.estaEnInterseccion(250.0, 150.0)) {
+                System.out.println("Aplicando acción en la interseccion: " + interseccion.getPosX() + " " + interseccion.getPosY());
+                if (!vehiculo.isAccionAplicada()) {
+                    switch (vehiculo.getAccion()) {
+                        case DOBLAR_DERECHA:
+                            girarDerecha(vehiculo);
+                            break;
+                        case DOBLAR_IZQUIERDA:
+                            girarIzquierda(vehiculo);
+                            break;
+                        default:
+                            break;
+                    }
+                    vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
                 }
-                vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
+            } else {
+                vehiculo.setAccionAplicada(false); // Resetea la acción cuando sale de la intersección
             }
-        } else {
-            vehiculo.setAccionAplicada(false); // Resetea la acción cuando sale de la intersección
+        }else if(vehiculo.getDoblarDonde() == DoblarDonde.CALLE2) {
+            if (vehiculo.estaEnInterseccion(650, 150.0)) {
+                System.out.println("Aplicando acción en la interseccion: " + interseccion.getPosX() + " " + interseccion.getPosY());
+                if (!vehiculo.isAccionAplicada()) {
+                    switch (vehiculo.getAccion()) {
+                        case DOBLAR_DERECHA:
+                            girarDerecha(vehiculo);
+                            break;
+                        case DOBLAR_IZQUIERDA:
+                            girarIzquierda(vehiculo);
+                            break;
+                        default:
+                            break;
+                    }
+                    vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
+                }
+            } else {
+                vehiculo.setAccionAplicada(false); // Resetea la acción cuando sale de la intersección
+            }
+        }else {
+            if (vehiculo.estaEnInterseccion(1050, 150.0)) {
+                System.out.println("Aplicando acción en la interseccion: " + interseccion.getPosX() + " " + interseccion.getPosY());
+                if (!vehiculo.isAccionAplicada()) {
+                    switch (vehiculo.getAccion()) {
+                        case DOBLAR_DERECHA:
+                            girarDerecha(vehiculo);
+                            break;
+                        case DOBLAR_IZQUIERDA:
+                            girarIzquierda(vehiculo);
+                            break;
+                        default:
+                            break;
+                    }
+                    vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
+                }
+            } else {
+                vehiculo.setAccionAplicada(false); // Resetea la acción cuando sale de la intersección
+            }
         }
     }
 
