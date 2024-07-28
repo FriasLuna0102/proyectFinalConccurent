@@ -168,13 +168,34 @@ public class Vehiculo {
                     posXX -= velocidad * 5; // Aumento de velocidad
                     break;
                 case IZQUIERDA:
-                    posXX -= velocidad * 5;
+                    posYY += velocidad * 5;
                     break;
                 case ABAJO:
                     posXX += velocidad * 5; // Movimiento hacia abajo
                     break;
                 case ARRIBA:
-                    posXX -= velocidad * 5; // Movimiento hacia arriba
+                    posYY += velocidad * 5; // Movimiento hacia arriba
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void mover3() {
+        if (!detenido) {
+            switch (direccion) {
+                case DERECHA:
+                    posXX += velocidad * 5;
+                    break;
+                case IZQUIERDA:
+                    posXX -= velocidad * 5;
+                    break;
+                case ABAJO:
+                    posYY += velocidad * 5;
+                    break;
+                case ARRIBA:
+                    posYY -= velocidad * 5;
                     break;
                 default:
                     break;
@@ -324,5 +345,9 @@ public class Vehiculo {
         return (Math.abs(this.posX - interseccionX) < margen) && (Math.abs(this.posY - interseccionY) < margen);
     }
 
+    public boolean estaEnInterseccionInferior(double interseccionX, double interseccionY) {
+        double margen = 50.0; // Ajustar este margen según el tamaño de la intersección
+        return (Math.abs(this.posXX - interseccionX) < margen) && (Math.abs(this.posYY - interseccionY) < margen);
+    }
 
 }
