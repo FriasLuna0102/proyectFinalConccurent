@@ -176,32 +176,15 @@ public class Vehiculo {
                 case ARRIBA:
                     posYY += velocidad * 5; // Movimiento hacia arriba
                     break;
+                case ABAJO_CARRIL_OPUESTO:
+                    posYY -= velocidad * 5; // Movimiento hacia arriba
+                    break;
                 default:
                     break;
             }
         }
     }
 
-    public void mover3() {
-        if (!detenido) {
-            switch (direccion) {
-                case DERECHA:
-                    posXX += velocidad * 5;
-                    break;
-                case IZQUIERDA:
-                    posXX -= velocidad * 5;
-                    break;
-                case ABAJO:
-                    posYY += velocidad * 5;
-                    break;
-                case ARRIBA:
-                    posYY -= velocidad * 5;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
     public void detener() {
         this.detenido = true;
