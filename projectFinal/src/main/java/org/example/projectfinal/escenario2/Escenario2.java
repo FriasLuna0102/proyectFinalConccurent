@@ -728,22 +728,22 @@ public class Escenario2 {
     private void girarDerecha(Vehiculo vehiculo) {
         switch (vehiculo.getDireccion()) {
             case DERECHA:
-                vehiculo.setDireccion(Direccion.ARRIBA);
+                vehiculo.setDireccion(Direccion.ABAJO);
                 vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
                 vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
                 break;
             case IZQUIERDA:
-                vehiculo.setDireccion(Direccion.ABAJO);
+                vehiculo.setDireccion(Direccion.ARRIBA);
                 vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
                 vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
                 break;
             case ARRIBA:
-                vehiculo.setDireccion(Direccion.IZQUIERDA);
+                vehiculo.setDireccion(Direccion.DERECHA);
                 vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
                 vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
                 break;
             case ABAJO:
-                vehiculo.setDireccion(Direccion.DERECHA);
+                vehiculo.setDireccion(Direccion.IZQUIERDA);
                 vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
                 vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
                 break;
