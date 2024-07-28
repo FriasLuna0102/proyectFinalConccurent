@@ -443,12 +443,12 @@ public class Escenario2 {
 
                         vehiculo.mover2();
 
-//                        // Verificar si el vehículo está fuera del canvas
-//                        if (vehiculoFueraDelCanvasInferiores(vehiculo)) {
-//                            vehiculos.remove(i);
-//                        } else {
-//                            dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
-//                        }
+                        // Verificar si el vehículo está fuera del canvas
+                        if (vehiculoFueraDelCanvasInferiores(vehiculo)) {
+                            vehiculos.remove(i);
+                        } else {
+                            dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
+                        }
                     }
                 }
             }
@@ -457,7 +457,8 @@ public class Escenario2 {
 
 
     private boolean vehiculoFueraDelCanvasInferiores(Vehiculo vehiculo) {
-        return vehiculo.getPosXX() < 0 || vehiculo.getPosXX() > 1200 || vehiculo.getPosYY() < 0 || vehiculo.getPosYY() > 1200;
+//        System.out.println("Posicion X: " + vehiculo.getPosXX() + " Posicion Y: " + vehiculo.getPosYY());
+        return vehiculo.getPosXX() < -1200 || vehiculo.getPosXX() > 1500 || vehiculo.getPosYY() < -1200 || vehiculo.getPosYY() > 1500;
     }
 
 
