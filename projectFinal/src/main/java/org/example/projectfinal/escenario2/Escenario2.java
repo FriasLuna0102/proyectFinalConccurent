@@ -391,9 +391,6 @@ public class Escenario2 {
         }
     }
 
-    private boolean vehiculoFueraDelCanvasInferiores(Vehiculo vehiculo) {
-        return vehiculo.getPosXX() < 0 || vehiculo.getPosXX() > 1200 || vehiculo.getPosYY() < 0 || vehiculo.getPosYY() > 1200;
-    }
 
     private boolean vehiculoFueraDelCanvas(Vehiculo vehiculo) {
         return vehiculo.getPosX() < 0 || vehiculo.getPosX() > 1200 || vehiculo.getPosY() < 0 || vehiculo.getPosY() > 800;
@@ -411,34 +408,58 @@ public class Escenario2 {
 
                 for (Carril carril : carriles) {
                     List<Vehiculo> vehiculos = carril.getVehiculosInferiores();
-                    Vehiculo vehiculoAnterior = null;
+                    boolean hayVehiculoEmergenciaDetras = false;
 
-                    for (Vehiculo vehiculo : vehiculos) {
+                    for (int i = vehiculos.size() - 1; i >= 0; i--) {
+                        Vehiculo vehiculo = vehiculos.get(i);
+                        Vehiculo vehiculoDelante = (i > 0) ? vehiculos.get(i - 1) : null;
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
 
-                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80 && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA)  {
-                            vehiculo.setVelocidad(0);
-                        } else if (vehiculoAnterior != null && distanciaEntreInferiores(vehiculo, vehiculoAnterior) < 40) {
+                        // Verificar si hay un vehículo de emergencia detrás
+                        if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                            hayVehiculoEmergenciaDetras = true;
+                        }
+
+                        boolean debeDetenerseEnSemaforo = estadoSemaforo == EstadoSemaforo.ROJO
+                                && distanciaAlSemaforo <= 80
+                                && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA
+                                && !hayVehiculoEmergenciaDetras;
+
+                        boolean debeDetenerseParaMinima = vehiculoDelante != null &&
+                                distanciaEntreInferiores(vehiculo, vehiculoDelante) < 40;
+
+                        if (debeDetenerseEnSemaforo || debeDetenerseParaMinima) {
                             vehiculo.setVelocidad(0);
                         } else {
-                            vehiculo.setVelocidad(0.8); // velocidad normal
+                            vehiculo.setVelocidad(0.8);
                         }
 
                         if (carril.puedeRealizarAccion(vehiculo.getAccion())) {
-                            aplicarAccionGiroInferior(vehiculo, interseccion); // Aplicar la lógica de giro
+                            aplicarAccionGiroInferior(vehiculo, interseccion);
                         } else {
-                            vehiculo.setAccion(Accion.SEGUIR_RECTO); // Forzar a seguir recto si la acción no es permitida
+                            vehiculo.setAccion(Accion.SEGUIR_RECTO);
                         }
 
                         vehiculo.mover2();
-                        dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
-                        vehiculoAnterior = vehiculo;
+
+//                        // Verificar si el vehículo está fuera del canvas
+//                        if (vehiculoFueraDelCanvasInferiores(vehiculo)) {
+//                            vehiculos.remove(i);
+//                        } else {
+//                            dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
+//                        }
                     }
                 }
             }
         }
     }
+
+
+    private boolean vehiculoFueraDelCanvasInferiores(Vehiculo vehiculo) {
+        return vehiculo.getPosXX() < 0 || vehiculo.getPosXX() > 1200 || vehiculo.getPosYY() < 0 || vehiculo.getPosYY() > 1200;
+    }
+
 
     private double distanciaAlSemaforoMasCercanoInferior(Vehiculo vehiculo) {
         double distanciaMinima = Double.MAX_VALUE;
