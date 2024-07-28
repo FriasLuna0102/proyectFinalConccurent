@@ -353,7 +353,7 @@ public class Escenario2 {
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercano(vehiculo);
 
-                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80) {
+                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80 && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA) {
                             vehiculo.setVelocidad(0);
                         } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
                             vehiculo.setVelocidad(0);
@@ -392,7 +392,7 @@ public class Escenario2 {
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
 
-                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80) {
+                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80 && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA)  {
                             vehiculo.setVelocidad(0);
                         } else if (vehiculoAnterior != null && distanciaEntreInferiores(vehiculo, vehiculoAnterior) < 40) {
                             vehiculo.setVelocidad(0);
