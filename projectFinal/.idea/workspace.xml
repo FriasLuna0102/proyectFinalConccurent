@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="doblar a la izquierda arriba indicando calle.">
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="vehiculos de emergencia no respetan semaforos.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -409,7 +409,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722165213153</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="vehiculos de emergencia no respetan semaforos.">
+      <option name="closed" value="true" />
+      <created>1722186805025</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1722186805025</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -448,7 +456,8 @@
     <MESSAGE value="poder seleccionar el carril listo" />
     <MESSAGE value="solo estan girando los vehiculos del carril del centro" />
     <MESSAGE value="doblar a la izquierda arriba indicando calle." />
-    <option name="LAST_COMMIT_MESSAGE" value="doblar a la izquierda arriba indicando calle." />
+    <MESSAGE value="vehiculos de emergencia no respetan semaforos." />
+    <option name="LAST_COMMIT_MESSAGE" value="vehiculos de emergencia no respetan semaforos." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -347,33 +347,58 @@ public class Escenario2 {
 
                 for (Carril carril : carriles) {
                     List<Vehiculo> vehiculos = carril.getVehiculos();
-                    Vehiculo vehiculoAnterior = null;
+                    boolean hayVehiculoEmergenciaDetras = false;
 
-                    for (Vehiculo vehiculo : vehiculos) {
+                    for (int i = vehiculos.size() - 1; i >= 0; i--) {
+                        Vehiculo vehiculo = vehiculos.get(i);
+                        Vehiculo vehiculoDelante = (i > 0) ? vehiculos.get(i - 1) : null;
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercano(vehiculo);
 
-                        if (estadoSemaforo == EstadoSemaforo.ROJO && distanciaAlSemaforo <= 80 && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA) {
-                            vehiculo.setVelocidad(0);
-                        } else if (vehiculoAnterior != null && distanciaEntre(vehiculo, vehiculoAnterior) < 40) {
+                        if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
+                            hayVehiculoEmergenciaDetras = true;
+                        }
+
+                        boolean debeDetenerseEnSemaforo = estadoSemaforo == EstadoSemaforo.ROJO
+                                && distanciaAlSemaforo <= 80
+                                && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA
+                                && !hayVehiculoEmergenciaDetras;
+
+                        boolean debeDetenerseParaMinima = vehiculoDelante != null &&
+                                distanciaEntre(vehiculo, vehiculoDelante) < 40;
+
+                        if (debeDetenerseEnSemaforo || debeDetenerseParaMinima) {
                             vehiculo.setVelocidad(0);
                         } else {
                             vehiculo.setVelocidad(0.8);
                         }
 
                         if (carril.puedeRealizarAccion(vehiculo.getAccion())) {
-                            aplicarAccionGiro(vehiculo, interseccion); // Aplicar la lógica de giro
+                            aplicarAccionGiro(vehiculo, interseccion);
                         } else {
-                            vehiculo.setAccion(Accion.SEGUIR_RECTO); // Forzar a seguir recto si la acción no es permitida
+                            vehiculo.setAccion(Accion.SEGUIR_RECTO);
                         }
                         vehiculo.mover();
-                        dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
-                        vehiculoAnterior = vehiculo;
+
+                        if (vehiculoFueraDelCanvas(vehiculo)) {
+                            vehiculos.remove(i);
+                        } else {
+                            dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
+                        }
                     }
                 }
             }
         }
     }
+
+    private boolean vehiculoFueraDelCanvasInferiores(Vehiculo vehiculo) {
+        return vehiculo.getPosXX() < 0 || vehiculo.getPosXX() > 1200 || vehiculo.getPosYY() < 0 || vehiculo.getPosYY() > 1200;
+    }
+
+    private boolean vehiculoFueraDelCanvas(Vehiculo vehiculo) {
+        return vehiculo.getPosX() < 0 || vehiculo.getPosX() > 1200 || vehiculo.getPosY() < 0 || vehiculo.getPosY() > 800;
+    }
+
 
     private void moverYdibujarVehiculosInferiores() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
