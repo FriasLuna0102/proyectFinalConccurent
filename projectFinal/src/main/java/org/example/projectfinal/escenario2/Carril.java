@@ -44,7 +44,7 @@ public class Carril {
             case CENTRO:
                 return accion == Accion.SEGUIR_RECTO;
             case DERECHA:
-                return accion == Accion.DOBLAR_DERECHA;
+                return accion == Accion.DOBLAR_DERECHA || accion == Accion.GIRAR_U;
             case IZQUIERDA:
                 return accion == Accion.DOBLAR_IZQUIERDA;
             default:
