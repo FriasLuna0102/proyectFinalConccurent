@@ -179,6 +179,10 @@ public class Vehiculo {
                 case ABAJO_CARRIL_OPUESTO:
                     posYY -= velocidad * 5; // Movimiento hacia arriba
                     break;
+
+                case PARA_GIRAR_U_INFERIOR:
+                    posXX += velocidad * 5; // Movimiento hacia arriba
+                    break;
                 default:
                     break;
             }

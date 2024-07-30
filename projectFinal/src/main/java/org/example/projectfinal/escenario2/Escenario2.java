@@ -330,6 +330,12 @@ public class Escenario2 {
                 gc.rotate(-90);
                 gc.fillOval(-10, -5, 20, 10);
                 break;
+
+            case PARA_GIRAR_U_INFERIOR:
+                gc.translate(posXX + 140, posYY + 155); // Trasladar al centro del vehículo
+                gc.rotate(0);
+                gc.fillOval(-10, -5, 20, 10);
+                break;
         }
         gc.restore(); // Restaurar el estado original del contexto gráfico
     }
@@ -416,7 +422,6 @@ public class Escenario2 {
                         Vehiculo vehiculoDelante = (i > 0) ? vehiculos.get(i - 1) : null;
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
                         double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
-
                         // Verificar si hay un vehículo de emergencia detrás
                         if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
                             hayVehiculoEmergenciaDetras = true;
@@ -587,6 +592,7 @@ public class Escenario2 {
 
     public void agregarVehiculoEscenario2Inferior(TipoVehiculo tipoVehiculo, Accion accion, int interseccionIndex, TipoCarril tipoCarril, DoblarDonde doblarDonde, Direccion direccion) {
         doblarDondeF = doblarDonde;
+//        System.out.println("Aqui es: "+accion);
         Interseccion interseccion = intersecciones.get(interseccionIndex);
         List<Carril> carriles = carrilesPorInterseccion.get(interseccion).get(direccion);
         if (carriles != null) {
@@ -677,6 +683,7 @@ public class Escenario2 {
 
 
     private void aplicarAccionGiroInferior(Vehiculo vehiculo, Interseccion interseccion) {
+//        System.out.println(vehiculo.getAccion());
 //        System.out.println(vehiculo.getDoblarDonde());
         if(vehiculo.getDoblarDonde() == DoblarDonde.CALLE1){
 //            System.out.println(vehiculo.getPosXX() + " " + vehiculo.getPosYY());
@@ -704,7 +711,12 @@ public class Escenario2 {
 //                System.out.println("Aplicando acción en la interseccion: " + interseccion.getPosXX() + " " + interseccion.getPosYY());
                 if (!vehiculo.isAccionAplicada()) {
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
+                        System.out.println("Entro22");
+
                         girarDerechaInferior(vehiculo);
+                    }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
+                        System.out.println("Girando en U");
+                        girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
                 }
@@ -737,6 +749,9 @@ public class Escenario2 {
                 if (!vehiculo.isAccionAplicada()) {
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
                         girarDerechaInferior(vehiculo);
+                    }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
+                        System.out.println("Girando en U");
+                        girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
                 }
@@ -769,6 +784,9 @@ public class Escenario2 {
                 if (!vehiculo.isAccionAplicada()) {
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
                         girarDerechaInferior(vehiculo);
+                    }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
+                        System.out.println("Girando en U");
+                        girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
                 }
@@ -818,7 +836,50 @@ public class Escenario2 {
         }
     }
 
+    private void girarEnUInferior(Vehiculo vehiculo) {
+        // Primero, movemos el vehículo a la siguiente calle
+        // Descomenta y ajusta según sea necesario
+        // if (Objects.requireNonNull(vehiculo.getDireccion()) == Direccion.DERECHA) {
+        //     vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta esta distancia según tu diseño
+        // }
 
+        // Luego, giramos a la izquierda
+        if (Objects.requireNonNull(vehiculo.getDireccion()) == Direccion.DERECHA) {
+            vehiculo.setDireccion(Direccion.ABAJO_CARRIL_OPUESTO);
+            vehiculo.setPosXX(vehiculo.getPosXX() - 140);  // Ajusta según sea necesario
+            vehiculo.setPosYY(vehiculo.getPosYY() - 140);  // Ajusta según sea necesario
+            // Descomenta y ajusta según sea necesario
+            // vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+        }
+
+
+
+        // Crear un ScheduledExecutorService para manejar la espera
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        // Programar una tarea para que se ejecute después de medio segundo (0.5 segundos)
+        scheduler.schedule(() -> {
+            System.out.println("Han pasado 0.5 segundos. Aquí está el mensaje.");
+
+            // Cambiar la dirección del vehículo
+            vehiculo.setDireccion(Direccion.PARA_GIRAR_U_INFERIOR);
+
+            // Cierra el scheduler después de ejecutar la tarea
+            scheduler.shutdown();
+        }, 1200, TimeUnit.MILLISECONDS);
+
+
+        // Puedes realizar la actualización de posición aquí
+        // Por ejemplo, este ciclo parece estar destinado a mostrar la posición X en un rango
+        for (double i = vehiculo.getPosXX(); i > 0; i--) {
+            System.out.println("Posición X: " + vehiculo.getPosXX() + " " + vehiculo.getPosYY());
+            if(vehiculo.getPosXX() == 956 && vehiculo.getPosYY() == -6) {
+                vehiculo.setDireccion(Direccion.PARA_GIRAR_U_INFERIOR);
+            }
+            // Aquí podrías agregar una pausa si deseas ver el cambio en el tiempo
+            // por ejemplo, usando Thread.sleep(100) para pausas de 100 ms
+        }
+    }
 
 
     private void girarDerechaInferior(Vehiculo vehiculo) {

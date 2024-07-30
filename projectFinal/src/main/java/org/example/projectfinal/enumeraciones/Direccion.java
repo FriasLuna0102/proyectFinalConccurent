@@ -7,6 +7,7 @@ public enum Direccion {
     ARRIBA_CARRIL_OPUESTO,
 
     ABAJO,
-    ABAJO_CARRIL_OPUESTO
+    ABAJO_CARRIL_OPUESTO,
+    PARA_GIRAR_U_INFERIOR
 
 }
