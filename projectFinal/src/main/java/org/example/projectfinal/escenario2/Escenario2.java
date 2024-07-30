@@ -179,6 +179,11 @@ public class Escenario2 {
     }
 
     private void dibujarCalles() {
+        // Dibuja el fondo verde (césped)
+        gc.setFill(Color.GREEN);
+        gc.fillRect(0, 0, 1200, 600);
+
+        // Dibuja las calles grises
         gc.setFill(Color.GRAY);
         gc.fillRect(0, 100, 1200, 100); // Calle horizontal superior
         gc.fillRect(0, 400, 1200, 100); // Calle horizontal inferior
