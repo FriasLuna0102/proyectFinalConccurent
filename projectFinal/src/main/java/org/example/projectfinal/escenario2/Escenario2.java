@@ -369,7 +369,8 @@ public class Escenario2 {
                         boolean debeDetenerseEnSemaforo = estadoSemaforo == EstadoSemaforo.ROJO
                                 && distanciaAlSemaforo <= 80
                                 && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA
-                                && !hayVehiculoEmergenciaDetras;
+                                && !hayVehiculoEmergenciaDetras
+                                && !puedeSeguir(vehiculo);
 
                         boolean debeDetenerseParaMinima = vehiculoDelante != null &&
                                 distanciaEntre(vehiculo, vehiculoDelante) < 40;
@@ -401,6 +402,13 @@ public class Escenario2 {
 
     private boolean vehiculoFueraDelCanvas(Vehiculo vehiculo) {
         return vehiculo.getPosX() < 0 || vehiculo.getPosX() > 1200 || vehiculo.getPosY() < 0 || vehiculo.getPosY() > 800;
+    }
+
+    public boolean puedeSeguir(Vehiculo vehiculo){
+        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA) {
+            return true;
+        }
+        return false;
     }
 
 
@@ -623,6 +631,7 @@ public class Escenario2 {
                 if (!vehiculo.isAccionAplicada()) {
                     switch (vehiculo.getAccion()) {
                         case DOBLAR_DERECHA:
+                            System.out.println("Aqui estamos");
                             girarDerecha(vehiculo);
                             break;
                         case DOBLAR_IZQUIERDA:
@@ -931,21 +940,21 @@ public class Escenario2 {
                 vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
                 vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
                 break;
-            case IZQUIERDA:
-                vehiculo.setDireccion(Direccion.ARRIBA);
-                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
-                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
-                break;
-            case ARRIBA:
-                vehiculo.setDireccion(Direccion.DERECHA);
-                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
-                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
-                break;
-            case ABAJO:
-                vehiculo.setDireccion(Direccion.IZQUIERDA);
-                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
-                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
-                break;
+//            case IZQUIERDA:
+//                vehiculo.setDireccion(Direccion.ARRIBA);
+//                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+//                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+//                break;
+//            case ARRIBA:
+//                vehiculo.setDireccion(Direccion.DERECHA);
+//                vehiculo.setPosX(vehiculo.getPosX() + 20);  // Ajusta según sea necesario
+//                vehiculo.setPosY(vehiculo.getPosY() - 20);  // Ajusta según sea necesario
+//                break;
+//            case ABAJO:
+//                vehiculo.setDireccion(Direccion.IZQUIERDA);
+//                vehiculo.setPosX(vehiculo.getPosX() - 20);  // Ajusta según sea necesario
+//                vehiculo.setPosY(vehiculo.getPosY() + 20);  // Ajusta según sea necesario
+//                break;
         }
     }
 

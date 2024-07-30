@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="feat(calle): girando en U carril superior.">
-      <change beforePath="$PROJECT_DIR$/.idea/cody_history.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cody_history.xml" afterDir="false" />
+    <list default="true" id="3c1b1e31-d927-4773-a604-7797c0f18ad7" name="Changes" comment="feat(calle): girando en U carril inferior.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/enumeraciones/Direccion.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/escenario2/Escenario2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/projectfinal/modelo/Vehiculo.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +164,7 @@
       <workItem from="1722258932340" duration="1829000" />
       <workItem from="1722306407644" duration="7017000" />
       <workItem from="1722363143342" duration="5084000" />
-      <workItem from="1722376644980" duration="2635000" />
+      <workItem from="1722376644980" duration="3794000" />
     </task>
     <task id="LOCAL-00001" summary="commit inicial">
       <option name="closed" value="true" />
@@ -457,7 +454,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722369433644</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="feat(calle): girando en U carril inferior.">
+      <option name="closed" value="true" />
+      <created>1722380041079</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1722380041079</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -475,7 +480,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Definiciones de clases." />
     <MESSAGE value="cruces." />
     <MESSAGE value="interfaz mejorada." />
     <MESSAGE value="vehiculos de norte a sur" />
@@ -500,7 +504,8 @@
     <MESSAGE value="Logica de gestion emergencia en el inferior." />
     <MESSAGE value="feat(calle): rellenando bordes con el verde." />
     <MESSAGE value="feat(calle): girando en U carril superior." />
-    <option name="LAST_COMMIT_MESSAGE" value="feat(calle): girando en U carril superior." />
+    <MESSAGE value="feat(calle): girando en U carril inferior." />
+    <option name="LAST_COMMIT_MESSAGE" value="feat(calle): girando en U carril inferior." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
