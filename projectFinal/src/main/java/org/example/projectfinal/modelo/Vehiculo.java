@@ -22,6 +22,7 @@ public class Vehiculo {
     private TipoCarril tipoCarril;
     private DoblarDonde doblarDonde;
     boolean inferior = true;
+    private Cruces cruces = Cruces.NINGUNO; // O el valor por defecto que consideres adecuado
 
     public Vehiculo(String id, TipoVehiculo tipo, Direccion direccion, EstadoVehiculo estado, double posX, double posY, double velocidad, Accion accion) {
         this.id = id;
@@ -337,4 +338,19 @@ public class Vehiculo {
         return (Math.abs(this.posXX - interseccionX) < margen) && (Math.abs(this.posYY - interseccionY) < margen);
     }
 
+    public boolean isInferior() {
+        return inferior;
+    }
+
+    public void setInferior(boolean inferior) {
+        this.inferior = inferior;
+    }
+
+    public Cruces getCruces() {
+        return cruces;
+    }
+
+    public void setCruces(Cruces cruces) {
+        this.cruces = cruces;
+    }
 }

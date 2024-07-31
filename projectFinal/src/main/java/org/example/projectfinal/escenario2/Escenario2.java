@@ -15,8 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static org.example.projectfinal.enumeraciones.EstadoSemaforo.*;
-
 public class Escenario2 {
     private List<Interseccion> intersecciones;
     private Canvas canvas;
@@ -341,7 +339,17 @@ public class Escenario2 {
     }
 
 
-
+//    public boolean puedeContinuarAunqueEsteRojo(Vehiculo vehiculo){
+//        if(vehiculo.getPosX() > 172 && vehiculo.getPosY() == 145){
+//            vehiculo.setSemafaro(Semafaro.PASO1S);
+//        }
+//    }
+    final double SEMAFORO1_X = 172;
+    final double SEMAFORO1_Y = 145;
+    final double SEMAFORO2_X = 572;
+    final double SEMAFORO2_Y = 145;
+    final double SEMAFORO3_X = 972;
+    final double SEMAFORO3_Y = 145;
 
     private void moverYdibujarVehiculos() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
@@ -360,22 +368,38 @@ public class Escenario2 {
                         Vehiculo vehiculo = vehiculos.get(i);
                         Vehiculo vehiculoDelante = (i > 0) ? vehiculos.get(i - 1) : null;
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
-                        double distanciaAlSemaforo = distanciaAlSemaforoMasCercano(vehiculo);
 
                         if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
                             hayVehiculoEmergenciaDetras = true;
                         }
 
-                        boolean debeDetenerseEnSemaforo = estadoSemaforo == EstadoSemaforo.ROJO
-                                && distanciaAlSemaforo <= 80
-                                && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA
-                                && !hayVehiculoEmergenciaDetras
-                                && !puedeSeguir(vehiculo);
+                        boolean debeDetenerse = false;
+
+                        // Lógica para cada semáforo
+                        if (vehiculo.getPosX() <= SEMAFORO1_X) {
+                            // Antes del primer semáforo
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosX() - SEMAFORO1_X) <= 1;
+                        } else if (vehiculo.getPosX() <= SEMAFORO2_X) {
+                            // Entre el primer y segundo semáforo
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosX() - SEMAFORO2_X) <= 1;
+                        } else if (vehiculo.getPosX() <= SEMAFORO3_X) {
+                            // Entre el segundo y tercer semáforo
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosX() - SEMAFORO3_X) <= 1;
+                        }
+
+                        // Condiciones adicionales para no detenerse
+                        debeDetenerse = debeDetenerse &&
+                                vehiculo.getTipo() != TipoVehiculo.EMERGENCIA &&
+                                !hayVehiculoEmergenciaDetras &&
+                                !puedeSeguir(vehiculo);
 
                         boolean debeDetenerseParaMinima = vehiculoDelante != null &&
                                 distanciaEntre(vehiculo, vehiculoDelante) < 40;
 
-                        if (debeDetenerseEnSemaforo || debeDetenerseParaMinima) {
+                        if (debeDetenerse || debeDetenerseParaMinima) {
                             vehiculo.setVelocidad(0);
                         } else {
                             vehiculo.setVelocidad(0.8);
@@ -393,6 +417,11 @@ public class Escenario2 {
                         } else {
                             dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
                         }
+
+                        // Imprimir información de depuración
+                        System.out.println("Vehículo en (" + vehiculo.getPosX() + ", " + vehiculo.getPosY() +
+                                "), Debe detenerse: " + debeDetenerse +
+                                ", Velocidad: " + vehiculo.getVelocidad());
                     }
                 }
             }
@@ -411,6 +440,15 @@ public class Escenario2 {
         return false;
     }
 
+//1128.0 145.0 pARA EL 1
+//728.0 145.0 Para el 2
+//328.0 145.0
+final double SEMAFORO1_XX = 1128;
+    final double SEMAFORO1_YY = 145;
+    final double SEMAFORO2_XX = 728;
+    final double SEMAFORO2_YY = 145;
+    final double SEMAFORO3_XX = 328;
+    final double SEMAFORO3_YY = 145;
 
     private void moverYdibujarVehiculosInferiores() {
         for (Map.Entry<Interseccion, Map<Direccion, List<Carril>>> interseccionEntry : carrilesPorInterseccion.entrySet()) {
@@ -429,21 +467,38 @@ public class Escenario2 {
                         Vehiculo vehiculo = vehiculos.get(i);
                         Vehiculo vehiculoDelante = (i > 0) ? vehiculos.get(i - 1) : null;
                         EstadoSemaforo estadoSemaforo = interseccion.getSemaforos().get(direccion).getEstado();
-                        double distanciaAlSemaforo = distanciaAlSemaforoMasCercanoInferior(vehiculo);
-                        // Verificar si hay un vehículo de emergencia detrás
+
                         if (vehiculo.getTipo() == TipoVehiculo.EMERGENCIA) {
                             hayVehiculoEmergenciaDetras = true;
                         }
 
-                        boolean debeDetenerseEnSemaforo = estadoSemaforo == EstadoSemaforo.ROJO
-                                && distanciaAlSemaforo <= 80
-                                && vehiculo.getTipo() != TipoVehiculo.EMERGENCIA
-                                && !hayVehiculoEmergenciaDetras;
+                        boolean debeDetenerse = false;
+
+                        // Lógica para cada semáforo
+                        if (vehiculo.getPosXX() >= SEMAFORO1_XX) {
+                            // Antes del primer semáforo (recuerda que los vehículos inferiores van de derecha a izquierda)
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosXX() - SEMAFORO1_XX) <= 1;
+                        } else if (vehiculo.getPosXX() >= SEMAFORO2_XX) {
+                            // Entre el primer y segundo semáforo
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosXX() - SEMAFORO2_XX) <= 1;
+                        } else if (vehiculo.getPosXX() >= SEMAFORO3_XX) {
+                            // Entre el segundo y tercer semáforo
+                            debeDetenerse = estadoSemaforo == EstadoSemaforo.ROJO &&
+                                    Math.abs(vehiculo.getPosXX() - SEMAFORO3_XX) <= 1;
+                        }
+
+                        // Condiciones adicionales para no detenerse
+                        debeDetenerse = debeDetenerse &&
+                                vehiculo.getTipo() != TipoVehiculo.EMERGENCIA &&
+                                !hayVehiculoEmergenciaDetras &&
+                                !puedeSeguir(vehiculo);
 
                         boolean debeDetenerseParaMinima = vehiculoDelante != null &&
                                 distanciaEntreInferiores(vehiculo, vehiculoDelante) < 40;
 
-                        if (debeDetenerseEnSemaforo || debeDetenerseParaMinima) {
+                        if (debeDetenerse || debeDetenerseParaMinima) {
                             vehiculo.setVelocidad(0);
                         } else {
                             vehiculo.setVelocidad(0.8);
@@ -454,15 +509,18 @@ public class Escenario2 {
                         } else {
                             vehiculo.setAccion(Accion.SEGUIR_RECTO);
                         }
-
                         vehiculo.mover2();
 
-                        // Verificar si el vehículo está fuera del canvas
                         if (vehiculoFueraDelCanvasInferiores(vehiculo)) {
                             vehiculos.remove(i);
                         } else {
                             dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
                         }
+
+                        // Imprimir información de depuración
+                        System.out.println("Vehículo inferior en (" + vehiculo.getPosXX() + ", " + vehiculo.getPosYY() +
+                                "), Debe detenerse: " + debeDetenerse +
+                                ", Velocidad: " + vehiculo.getVelocidad());
                     }
                 }
             }
