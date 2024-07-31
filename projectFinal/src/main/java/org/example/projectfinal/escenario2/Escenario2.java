@@ -434,7 +434,7 @@ public class Escenario2 {
     }
 
     public boolean puedeSeguir(Vehiculo vehiculo){
-        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA) {
+        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA || vehiculo.getDireccion() == Direccion.PARA_GIRAR_U_INFERIOR) {
             return true;
         }
         return false;
