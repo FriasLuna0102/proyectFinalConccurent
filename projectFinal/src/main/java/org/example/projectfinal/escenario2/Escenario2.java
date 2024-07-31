@@ -434,7 +434,7 @@ public class Escenario2 {
     }
 
     public boolean puedeSeguir(Vehiculo vehiculo){
-        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA) {
+        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA || vehiculo.getDireccion() == Direccion.PARA_GIRAR_U_INFERIOR) {
             return true;
         }
         return false;
@@ -936,16 +936,16 @@ final double SEMAFORO1_XX = 1128;
         }, 1200, TimeUnit.MILLISECONDS);
 
 
-        // Puedes realizar la actualización de posición aquí
-        // Por ejemplo, este ciclo parece estar destinado a mostrar la posición X en un rango
-        for (double i = vehiculo.getPosXX(); i > 0; i--) {
-            System.out.println("Posición X: " + vehiculo.getPosXX() + " " + vehiculo.getPosYY());
-            if(vehiculo.getPosXX() == 956 && vehiculo.getPosYY() == -6) {
-                vehiculo.setDireccion(Direccion.PARA_GIRAR_U_INFERIOR);
-            }
-            // Aquí podrías agregar una pausa si deseas ver el cambio en el tiempo
-            // por ejemplo, usando Thread.sleep(100) para pausas de 100 ms
-        }
+//        // Puedes realizar la actualización de posición aquí
+//        // Por ejemplo, este ciclo parece estar destinado a mostrar la posición X en un rango
+//        for (double i = vehiculo.getPosXX(); i > 0; i--) {
+//            System.out.println("Posición X: " + vehiculo.getPosXX() + " " + vehiculo.getPosYY());
+//            if(vehiculo.getPosXX() == 956 && vehiculo.getPosYY() == -6) {
+//                vehiculo.setDireccion(Direccion.PARA_GIRAR_U_INFERIOR);
+//            }
+//            // Aquí podrías agregar una pausa si deseas ver el cambio en el tiempo
+//            // por ejemplo, usando Thread.sleep(100) para pausas de 100 ms
+//        }
     }
 
 
