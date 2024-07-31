@@ -418,10 +418,10 @@ public class Escenario2 {
                             dibujarVehiculo(vehiculo, intersecciones.indexOf(interseccion));
                         }
 
-                        // Imprimir información de depuración
-                        System.out.println("Vehículo en (" + vehiculo.getPosX() + ", " + vehiculo.getPosY() +
-                                "), Debe detenerse: " + debeDetenerse +
-                                ", Velocidad: " + vehiculo.getVelocidad());
+//                        // Imprimir información de depuración
+//                        System.out.println("Vehículo en (" + vehiculo.getPosX() + ", " + vehiculo.getPosY() +
+//                                "), Debe detenerse: " + debeDetenerse +
+//                                ", Velocidad: " + vehiculo.getVelocidad());
                     }
                 }
             }
@@ -434,7 +434,7 @@ public class Escenario2 {
     }
 
     public boolean puedeSeguir(Vehiculo vehiculo){
-        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA || vehiculo.getDireccion() == Direccion.PARA_GIRAR_U_INFERIOR) {
+        if(vehiculo.getDireccion() == Direccion.ABAJO || vehiculo.getDireccion() == Direccion.IZQUIERDA) {
             return true;
         }
         return false;
@@ -517,10 +517,10 @@ final double SEMAFORO1_XX = 1128;
                             dibujarVehiculoInferiores(vehiculo, intersecciones.indexOf(interseccion));
                         }
 
-                        // Imprimir información de depuración
-                        System.out.println("Vehículo inferior en (" + vehiculo.getPosXX() + ", " + vehiculo.getPosYY() +
-                                "), Debe detenerse: " + debeDetenerse +
-                                ", Velocidad: " + vehiculo.getVelocidad());
+//                        // Imprimir información de depuración
+//                        System.out.println("Vehículo inferior en (" + vehiculo.getPosXX() + ", " + vehiculo.getPosYY() +
+//                                "), Debe detenerse: " + debeDetenerse +
+//                                ", Velocidad: " + vehiculo.getVelocidad());
                     }
                 }
             }
@@ -689,7 +689,7 @@ final double SEMAFORO1_XX = 1128;
                 if (!vehiculo.isAccionAplicada()) {
                     switch (vehiculo.getAccion()) {
                         case DOBLAR_DERECHA:
-                            System.out.println("Aqui estamos");
+//                            System.out.println("Aqui estamos");
                             girarDerecha(vehiculo);
                             break;
                         case DOBLAR_IZQUIERDA:
@@ -778,11 +778,11 @@ final double SEMAFORO1_XX = 1128;
 //                System.out.println("Aplicando acción en la interseccion: " + interseccion.getPosXX() + " " + interseccion.getPosYY());
                 if (!vehiculo.isAccionAplicada()) {
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
-                        System.out.println("Entro22");
+//                        System.out.println("Entro22");
 
                         girarDerechaInferior(vehiculo);
                     }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
-                        System.out.println("Girando en U");
+//                        System.out.println("Girando en U");
                         girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
@@ -817,7 +817,7 @@ final double SEMAFORO1_XX = 1128;
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
                         girarDerechaInferior(vehiculo);
                     }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
-                        System.out.println("Girando en U");
+//                        System.out.println("Girando en U");
                         girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
@@ -852,7 +852,7 @@ final double SEMAFORO1_XX = 1128;
                     if (Objects.requireNonNull(vehiculo.getAccion()) == Accion.DOBLAR_DERECHA) {
                         girarDerechaInferior(vehiculo);
                     }else if(Objects.requireNonNull(vehiculo.getAccion()) == Accion.GIRAR_U) {
-                        System.out.println("Girando en U");
+//                        System.out.println("Girando en U");
                         girarEnUInferior(vehiculo);
                     }
                     vehiculo.setAccionAplicada(true); // Marca la acción como aplicada
@@ -896,11 +896,11 @@ final double SEMAFORO1_XX = 1128;
 
         // Puedes realizar la actualización de posición aquí
         // Por ejemplo, este ciclo parece estar destinado a mostrar la posición X en un rango
-        for (double i = vehiculo.getPosX(); i > 0; i--) {
-            System.out.println("Posición X: " + vehiculo.getPosX());
-            // Aquí podrías agregar una pausa si deseas ver el cambio en el tiempo
-            // por ejemplo, usando Thread.sleep(100) para pausas de 100 ms
-        }
+//        for (double i = vehiculo.getPosX(); i > 0; i--) {
+//            System.out.println("Posición X: " + vehiculo.getPosX());
+//            // Aquí podrías agregar una pausa si deseas ver el cambio en el tiempo
+//            // por ejemplo, usando Thread.sleep(100) para pausas de 100 ms
+//        }
     }
 
     private void girarEnUInferior(Vehiculo vehiculo) {
@@ -936,7 +936,7 @@ final double SEMAFORO1_XX = 1128;
         }, 1200, TimeUnit.MILLISECONDS);
 
 
-//        // Puedes realizar la actualización de posición aquí
+        // Puedes realizar la actualización de posición aquí
 //        // Por ejemplo, este ciclo parece estar destinado a mostrar la posición X en un rango
 //        for (double i = vehiculo.getPosXX(); i > 0; i--) {
 //            System.out.println("Posición X: " + vehiculo.getPosXX() + " " + vehiculo.getPosYY());
