@@ -949,6 +949,7 @@ final double SEMAFORO1_XX = 1128;
     }
 
 
+
     private void girarDerechaInferior(Vehiculo vehiculo) {
         switch (vehiculo.getDireccion()) {
             case DERECHA:
